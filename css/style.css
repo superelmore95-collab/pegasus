@@ -95,7 +95,7 @@ header {
 }
 
 .logo img {
-  height: 120px;
+  height: 40px;
   margin-right: 10px;
 }
 
@@ -548,10 +548,13 @@ footer {
     left: -100%;
     background: var(--primary);
     width: 100%;
+    height: calc(100vh - 70px);
     flex-direction: column;
-    padding: 20px 0;
+    padding: 30px 0;
     transition: var(--transition);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 999;
   }
   
   .nav-links.active {
@@ -561,11 +564,18 @@ footer {
   .nav-links li {
     margin: 15px 0;
     text-align: center;
+    width: 100%;
+  }
+  
+  .nav-links a {
+    display: block;
+    padding: 12px 0;
+    font-size: 18px;
   }
   
   .hamburger {
     display: block;
-    width: 24px;
+    width: 30px;
     height: 24px;
     position: relative;
     z-index: 1000;
@@ -573,23 +583,42 @@ footer {
 
   .hamburger span {
     display: block;
+    position: absolute;
+    height: 3px;
     width: 100%;
-    height: 2px;
     background: white;
-    margin: 5px 0;
-    transition: all 0.3s ease;
+    border-radius: 3px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+  }
+
+  .hamburger span:nth-child(1) {
+    top: 0px;
+  }
+
+  .hamburger span:nth-child(2) {
+    top: 10px;
+  }
+
+  .hamburger span:nth-child(3) {
+    top: 20px;
   }
 
   .hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    top: 10px;
+    transform: rotate(135deg);
   }
 
   .hamburger.active span:nth-child(2) {
     opacity: 0;
+    left: -60px;
   }
 
   .hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
+    top: 10px;
+    transform: rotate(-135deg);
   }
   
   .slide-content {
@@ -607,12 +636,30 @@ footer {
 
   /* Adjust auth buttons size on mobile */
   .auth-buttons {
-    gap: 8px;
+    position: absolute;
+    right: 60px;
+    gap: 5px;
   }
 
   .auth-buttons .btn {
     padding: 8px 12px;
     font-size: 12px;
+    min-width: 80px;
+  }
+  
+  /* Mobile menu auth buttons */
+  .mobile-auth {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 0 20px;
+  }
+  
+  .mobile-auth .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
   }
 }
 
@@ -641,5 +688,13 @@ footer {
   
   .section {
     padding: 40px 0;
+  }
+  
+  .auth-buttons {
+    display: none;
+  }
+  
+  .mobile-auth {
+    display: flex !important;
   }
 }
