@@ -95,7 +95,7 @@ header {
 }
 
 .logo img {
-  height: 130px;
+  height: 40px;
   margin-right: 10px;
 }
 
@@ -149,6 +149,10 @@ header {
   display: none;
   cursor: pointer;
   z-index: 1001;
+}
+
+.mobile-auth {
+  display: none;
 }
 
 /* ===== HERO SECTION ===== */
@@ -634,32 +638,26 @@ footer {
     font-size: 1.8rem;
   }
 
-  /* Adjust auth buttons size on mobile */
+  /* Hide desktop auth buttons on mobile */
   .auth-buttons {
-    position: absolute;
-    right: 60px;
-    gap: 5px;
-  }
-
-  .auth-buttons .btn {
-    padding: 8px 12px;
-    font-size: 12px;
-    min-width: 80px;
+    display: none;
   }
   
-  /* Mobile menu auth buttons */
+  /* Show mobile auth buttons */
   .mobile-auth {
     display: flex;
     justify-content: center;
     gap: 10px;
     margin-top: 20px;
     padding: 0 20px;
+    width: 100%;
   }
   
   .mobile-auth .btn {
-    width: 100%;
+    flex: 1;
     padding: 12px;
     font-size: 14px;
+    text-align: center;
   }
 }
 
@@ -690,11 +688,8 @@ footer {
     padding: 40px 0;
   }
   
-  .auth-buttons {
-    display: none;
-  }
-  
   .mobile-auth {
-    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
   }
 }
