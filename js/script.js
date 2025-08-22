@@ -1,3 +1,24 @@
+// PEGASUS Backend API URL - Replace with your actual worker URL
+const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
+
+// Function to test the backend connection
+async function testBackend() {
+  try {
+    const response = await fetch(`${API_BASE}/api/test`);
+    const data = await response.json();
+    console.log('Backend connection successful:', data);
+  } catch (error) {
+    console.error('Backend connection failed:', error);
+  }
+}
+
+// Call this when your page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Your existing code here
+  
+  // Test the backend connection
+  testBackend();
+});
 // Initialize mobile menu functionality
 const initMobileMenu = () => {
   const hamburger = document.querySelector('.hamburger');
