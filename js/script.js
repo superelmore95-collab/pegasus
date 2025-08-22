@@ -1,5 +1,6 @@
 // PEGASUS Backend API URL - Replace with your actual worker URL
-const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
+// REMOVE any trailing slash at the end of the URL
+const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
 // Initialize mobile menu functionality
 const initMobileMenu = () => {
@@ -99,8 +100,11 @@ const initCardHover = () => {
 // Function to test the backend connection
 async function testBackend() {
   try {
-    console.log('Testing connection to:', `${API_BASE}/api/test`);
-    const response = await fetch(`${API_BASE}/api/test`);
+    // Use a clean URL without double slashes
+    const testUrl = `${API_BASE}/api/test`;
+    console.log('Testing connection to:', testUrl);
+    
+    const response = await fetch(testUrl);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -111,15 +115,45 @@ async function testBackend() {
     return true;
   } catch (error) {
     console.error('Backend connection failed:', error);
+    
+    // Add more detailed error information
+    if (error.message.includes('Failed to fetch')) {
+      console.error('This usually means:');
+      console.error('1. Your worker URL is incorrect');
+      console.error('2. Your worker is not deployed');
+      console.error('3. There is a network issue');
+      
+      // Test if the worker URL is accessible
+      testWorkerAccessibility();
+    }
+    
     return false;
+  }
+}
+
+// Function to test if the worker URL is accessible
+async function testWorkerAccessibility() {
+  try {
+    // Test if we can access the worker root
+    const response = await fetch(API_BASE);
+    if (response.ok) {
+      const text = await response.text();
+      console.log('Worker is accessible. Root response:', text.substring(0, 100) + '...');
+    } else {
+      console.error(`Worker returned status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Cannot access worker at all:', error);
   }
 }
 
 // Function to load content from backend
 async function loadContent() {
   try {
-    console.log('Loading content from:', `${API_BASE}/api/content`);
-    const response = await fetch(`${API_BASE}/api/content`);
+    const contentUrl = `${API_BASE}/api/content`;
+    console.log('Loading content from:', contentUrl);
+    
+    const response = await fetch(contentUrl);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -240,6 +274,8 @@ function loadFallbackContent() {
 
 // Initialize all functions when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('PEGASUS website initialized');
+  
   initMobileMenu();
   initHeroSlider();
   setActiveLink();
