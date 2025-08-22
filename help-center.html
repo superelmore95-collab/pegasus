@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center | PEGASUS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-stream.html">Live</a></li>
+          <li><a href="video-on-demand.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="#" class="btn btn-outline">Sign In</a>
+              <a href="#" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons">
+          <a href="#" class="btn btn-outline">Sign In</a>
+          <a href="#" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero" style="height: 50vh; min-height: 300px;">
+    <div style="background-image: url('images/support-banner.jpg');" class="slide active">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <h2>Help Center</h2>
+        <p>Find answers to common questions and get support</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Help Center Content -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">How Can We Help You?</h2>
+      
+      <div class="help-search">
+        <input type="text" placeholder="Search for help articles..." class="search-input">
+        <button class="btn">Search</button>
+      </div>
+      
+      <div class="help-categories">
+        <div class="help-category">
+          <div class="help-icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <h3>Account & Billing</h3>
+          <p>Manage your account, update payment methods, and understand billing</p>
+          <a href="faq.html#account" class="btn btn-outline">Learn More</a>
+        </div>
+        
+        <div class="help-category">
+          <div class="help-icon">
+            <i class="fas fa-desktop"></i>
+          </div>
+          <h3>Streaming & Devices</h3>
+          <p>Troubleshoot streaming issues and device compatibility</p>
+          <a href="faq.html#streaming" class="btn btn-outline">Learn More</a>
+        </div>
+        
+        <div class="help-category">
+          <div class="help-icon">
+            <i class="fas fa-tv"></i>
+          </div>
+          <h3>Content & Availability</h3>
+          <p>Learn about available content and regional restrictions</p>
+          <a href="faq.html#content" class="btn btn-outline">Learn More</a>
+        </div>
+      </div>
+      
+      <div class="contact-support">
+        <h2>Still Need Help?</h2>
+        <p>Our support team is available 24/7 to assist you with any issues</p>
+        
+        <div class="support-options">
+          <div class="support-option">
+            <div class="support-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h3>Email Support</h3>
+            <p>Send us an email and we'll respond within 24 hours</p>
+            <a href="contact.html" class="btn">Contact Us</a>
+          </div>
+          
+          <div class="support-option">
+            <div class="support-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h3>Live Chat</h3>
+            <p>Chat with our support agents in real-time</p>
+            <a href="#" class="btn">Start Chat</a>
+          </div>
+          
+          <div class="support-option">
+            <div class="support-icon">
+              <i class="fas fa-phone"></i>
+            </div>
+            <h3>Phone Support</h3>
+            <p>Call us for immediate assistance with urgent issues</p>
+            <a href="tel:+18007342787" class="btn">+1 (800) PEGASUS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <!-- Same footer as cookie-policy.html -->
+  
+  <style>
+    .help-search {
+      display: flex;
+      margin: 40px 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      background: var(--card-bg);
+      color: var(--text);
+      border-radius: 4px 0 0 4px;
+      font-size: 16px;
+    }
+    
+    .help-search .btn {
+      border-radius: 0 4px 4px 0;
+    }
+    
+    .help-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 50px 0;
+    }
+    
+    .help-category {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      transition: var(--transition);
+    }
+    
+    .help-category:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .help-icon {
+      font-size: 3rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    
+    .help-category h3 {
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    
+    .help-category p {
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+    }
+    
+    .contact-support {
+      margin-top: 60px;
+      text-align: center;
+    }
+    
+    .contact-support h2 {
+      margin-bottom: 15px;
+    }
+    
+    .contact-support > p {
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    
+    .support-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    
+    .support-option {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .support-icon {
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    
+    .support-option h3 {
+      margin-bottom: 15px;
+    }
+    
+    .support-option p {
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+    }
+    
+    @media (max-width: 768px) {
+      .help-search {
+        flex-direction: column;
+      }
+      
+      .search-input {
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+      
+      .help-search .btn {
+        border-radius: 4px;
+      }
+    }
+  </style>
+</body>
+</html>
