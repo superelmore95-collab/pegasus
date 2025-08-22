@@ -1,5 +1,5 @@
 // PEGASUS Backend API URL - Replace with your actual worker URL
-const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
+const API_BASE = 'https://pegasus-backend111.super-elmore95.workers.dev/';
 
 // Function to test the backend connection
 async function testBackend() {
