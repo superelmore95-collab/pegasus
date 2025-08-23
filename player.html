@@ -6,6 +6,7 @@
   <title>Player | PEGASUS</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <!-- Header -->
@@ -13,7 +14,7 @@
     <div class="container">
       <nav class="navbar">
         <a href="index.html" class="logo">
-          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">PEGASUS
         </a>
         
         <ul class="nav-links">
@@ -52,25 +53,28 @@
     <div class="container">
       <div class="player-wrapper">
         <div class="video-player" id="video-player">
-          <!-- Content will be loaded dynamically -->
           <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
             <p>Loading content...</p>
           </div>
         </div>
         
         <div class="player-info">
-          <h1 class="player-title" id="player-title">Loading...</h1>
+          <h1 id="player-title">Loading content...</h1>
           <div class="player-meta">
-            <span id="player-status">Loading...</span>
-            <span id="player-viewers">0 viewers</span>
+            <span id="player-views">0 views</span>
+            <span id="player-date"></span>
           </div>
+          <p id="player-description">Content description will appear here.</p>
+          
           <div class="player-actions">
-            <a href="#" class="btn">Share</a>
-            <a href="#" class="btn btn-outline">Remind Me</a>
+            <button class="btn" id="share-btn">Share</button>
+            <button class="btn btn-outline" id="favorite-btn">Add to Favorites</button>
           </div>
         </div>
       </div>
       
+      <!-- Ad Section -->
       <div class="ad-container">
         <h3>Advertisement</h3>
         <div class="ad-placeholder">
@@ -78,9 +82,10 @@
         </div>
       </div>
       
+      <!-- Related Content -->
       <h2 class="section-title">Related Content</h2>
       <div class="stream-grid" id="related-content">
-        <!-- Related content will be loaded dynamically -->
+        <!-- Related content will be loaded here -->
       </div>
     </div>
   </section>
@@ -138,8 +143,273 @@
     </div>
   </footer>
 
-  <script src="js/script.js"></script>
-  <script src="js/player.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    // API base URL
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const contentType = urlParams.get('type');
+    const contentId = urlParams.get('id');
+    
+    // Function to load player content
+    async function loadPlayerContent() {
+      try {
+        console.log('Loading player content for:', contentType, contentId);
+        
+        // First, try to get all content
+        const response = await fetch(`${API_BASE}/api/content`);
+        const allContent = await response.json();
+        
+        let content = null;
+        let contentArray = null;
+        
+        // Find the specific content based on type and ID
+        if (contentType && contentId) {
+          if (contentType === 'live') {
+            contentArray = allContent.live;
+          } else if (contentType === 'vod') {
+            contentArray = allContent.vod;
+          } else if (contentType === 'highlight') {
+            contentArray = allContent.highlights;
+          }
+          
+          if (contentArray) {
+            content = contentArray.find(item => item.id == contentId);
+          }
+        }
+        
+        if (content) {
+          updatePlayer(content);
+          loadRelatedContent(content.category, contentId);
+        } else {
+          // If no specific content found, show a message
+          document.getElementById('player-title').textContent = 'Content not found';
+          document.getElementById('player-description').textContent = 'The requested content could not be found.';
+          
+          // Load some related content anyway
+          loadRelatedContent('sports');
+        }
+      } catch (error) {
+        console.error('Error loading player content:', error);
+        document.getElementById('player-title').textContent = 'Error loading content';
+        document.getElementById('player-description').textContent = 'There was an error loading the content. Please try again later.';
+      }
+    }
+    
+    // Function to update player with content
+    function updatePlayer(content) {
+      console.log('Updating player with content:', content);
+      
+      // Update title
+      document.getElementById('player-title').textContent = content.title;
+      
+      // Update description
+      if (content.description) {
+        document.getElementById('player-description').textContent = content.description;
+      }
+      
+      // Update views
+      if (content.views_count !== undefined) {
+        document.getElementById('player-views').textContent = `${content.views_count.toLocaleString()} views`;
+      } else if (content.viewers_count !== undefined) {
+        document.getElementById('player-views').textContent = `${content.viewers_count.toLocaleString()} watching`;
+      }
+      
+      // Update date
+      if (content.created_at) {
+        const date = new Date(content.created_at);
+        document.getElementById('player-date').textContent = date.toLocaleDateString();
+      }
+      
+      // Update embed code
+      const videoPlayer = document.getElementById('video-player');
+      if (content.embed_code) {
+        videoPlayer.innerHTML = content.embed_code;
+      } else if (content.thumbnail) {
+        // Fallback to thumbnail if no embed code
+        videoPlayer.innerHTML = `
+          <div style="position: relative; width: 100%; height: 100%;">
+            <img src="${content.thumbnail}" alt="${content.title}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="play-button-overlay">
+              <i class="fas fa-play-circle"></i>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Update page title
+      document.title = `${content.title} - PEGASUS`;
+    }
+    
+    // Function to load related content
+    async function loadRelatedContent(category, excludeId) {
+      try {
+        const response = await fetch(`${API_BASE}/api/content`);
+        const content = await response.json();
+        
+        let relatedContent = [];
+        
+        // Get content from all types that matches the category
+        if (content.live) {
+          relatedContent = relatedContent.concat(
+            content.live.filter(item => item.category === category && item.id != excludeId)
+          );
+        }
+        
+        if (content.vod) {
+          relatedContent = relatedContent.concat(
+            content.vod.filter(item => item.category === category && item.id != excludeId)
+          );
+        }
+        
+        if (content.highlights) {
+          relatedContent = relatedContent.concat(
+            content.highlights.filter(item => item.category === category && item.id != excludeId)
+          );
+        }
+        
+        // If no category-specific content, get any content
+        if (relatedContent.length === 0) {
+          if (content.live) relatedContent = relatedContent.concat(content.live);
+          if (content.vod) relatedContent = relatedContent.concat(content.vod);
+          if (content.highlights) relatedContent = relatedContent.concat(content.highlights);
+        }
+        
+        // Remove the excluded item and limit to 4 items
+        relatedContent = relatedContent
+          .filter(item => item.id != excludeId)
+          .slice(0, 4);
+        
+        // Update the related content section
+        const relatedContainer = document.getElementById('related-content');
+        
+        if (relatedContent.length > 0) {
+          relatedContainer.innerHTML = relatedContent.map(item => {
+            const isLive = item.is_live || false;
+            const type = isLive ? 'live' : 'vod';
+            return `
+              <a href="player.html?type=${type}&id=${item.id}" class="stream-card">
+                <div class="card-img">
+                  <img src="${item.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+                  ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">${item.title}</h3>
+                  <div class="card-meta">
+                    <span>${item.category || 'Sports'}</span>
+                    <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                  </div>
+                </div>
+              </a>
+            `;
+          }).join('');
+        } else {
+          relatedContainer.innerHTML = '<p>No related content found.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading related content:', error);
+        document.getElementById('related-content').innerHTML = '<p>Error loading related content.</p>';
+      }
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Player page initialized');
+      
+      // Initialize mobile menu
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
+      }
+      
+      // Load player content
+      loadPlayerContent();
+      
+      // Set up share button
+      document.getElementById('share-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (navigator.share) {
+          navigator.share({
+            title: document.title,
+            url: window.location.href
+          }).catch(console.error);
+        } else {
+          alert('Share feature not available in your browser. Copy this URL: ' + window.location.href);
+        }
+      });
+      
+      // Set up favorite button
+      document.getElementById('favorite-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        if (this.classList.contains('active')) {
+          this.textContent = 'Remove from Favorites';
+        } else {
+          this.textContent = 'Add to Favorites';
+        }
+      });
+    });
+  </script>
+  
+  <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 400px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top: 5px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .play-button-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 5rem;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .play-button-overlay:hover {
+      opacity: 1;
+    }
+    
+    .btn.active {
+      background: var(--success);
+      color: white;
+    }
+  </style>
 </body>
 </html>
