@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player | PEGASUS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-stream.html">Live</a></li>
+          <li><a href="video-on-demand.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="#" class="btn btn-outline">Sign In</a>
+              <a href="#" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons">
+          <a href="#" class="btn btn-outline">Sign In</a>
+          <a href="#" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Player Section -->
+  <section class="player-container">
+    <div class="container">
+      <div class="player-wrapper">
+        <div class="video-player" id="video-player">
+          <!-- Content will be loaded dynamically -->
+          <div class="loading-placeholder">
+            <p>Loading content...</p>
+          </div>
+        </div>
+        
+        <div class="player-info">
+          <h1 class="player-title" id="player-title">Loading...</h1>
+          <div class="player-meta">
+            <span id="player-status">Loading...</span>
+            <span id="player-viewers">0 viewers</span>
+          </div>
+          <div class="player-actions">
+            <a href="#" class="btn">Share</a>
+            <a href="#" class="btn btn-outline">Remind Me</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ad-container">
+        <h3>Advertisement</h3>
+        <div class="ad-placeholder">
+          Ad content would be displayed here
+        </div>
+      </div>
+      
+      <h2 class="section-title">Related Content</h2>
+      <div class="stream-grid" id="related-content">
+        <!-- Related content will be loaded dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>PEGASUS</h3>
+          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-stream.html">Live Streams</a></li>
+            <li><a href="video-on-demand.html">Video On Demand</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="dmca.html">DMCA Policy</a></li>
+            <li><a href="cookie.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="help.html">Help Center</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/player.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
