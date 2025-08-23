@@ -6,6 +6,49 @@
   <title>Live Streams | PEGASUS</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .filter select {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -25,16 +68,16 @@
           <!-- Mobile Auth Buttons (Hidden on Desktop) -->
           <li class="mobile-auth-item">
             <div class="mobile-auth">
-              <a href="#" class="btn btn-outline">Sign In</a>
-              <a href="#" class="btn">Subscribe</a>
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
             </div>
           </li>
         </ul>
         
         <!-- Desktop Auth Buttons (Hidden on Mobile) -->
         <div class="auth-buttons">
-          <a href="#" class="btn btn-outline">Sign In</a>
-          <a href="#" class="btn">Subscribe</a>
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
         </div>
         
         <div class="hamburger">
@@ -63,138 +106,215 @@
       <div class="section-header">
         <h2 class="section-title">Live & Upcoming</h2>
         <div class="filter">
-          <select>
-            <option>All Sports</option>
-            <option>Football</option>
-            <option>Basketball</option>
-            <option>Tennis</option>
-            <option>Formula 1</option>
-            <option>MMA</option>
+          <select id="sport-filter">
+            <option value="all">All Sports</option>
+            <option value="Football">Football</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Formula 1">Formula 1</option>
+            <option value="MMA">MMA</option>
           </select>
         </div>
       </div>
       
-      <div class="stream-grid">
-        <!-- Stream Card 1 -->
-        <a href="player.html?type=live&id=1" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/0p8Rj3tD/stream-thumb-1.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 1</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 2 -->
-        <a href="player.html?type=live&id=2" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/vCNdcWq1/stream-thumb-2.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 2</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 3 -->
-        <a href="player.html?type=live&id=3" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/4wcfRV8T/stream-thumb-3.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 3</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 4 -->
-        <a href="player.html?type=live&id=4" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/LzcrS8Xr/stream-thumb-4.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 4</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 5 -->
-        <a href="player.html?type=live&id=5" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/FkKnFm0L/stream-thumb-5.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 5</h3>
-            <div class="card-meta">
-              <span></span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 6 -->
-        <a href="player.html?type=live&id=6" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/BHdxzQhN/stream-thumb-6.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 6</h3>
-            <div class="card-meta">
-              <span></span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 7 -->
-        <a href="player.html?type=live&id=7" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/MDZLBhQz/stream-thumb-7.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 7</h3>
-            <div class="card-meta">
-              <span></span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 8 -->
-        <a href="player.html?type=live&id=8" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/60VSdZRy/stream-thumb-8.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 8</h3>
-            <div class="card-meta">
-              <span></span>
-            </div>
-          </div>
-        </a>
+      <div class="stream-grid" id="live-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading live streams...</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer same as index.html -->
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>PEGASUS</h3>
+          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="dmca.html">DMCA Policy</a></li>
+            <li><a href="cookie.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="help.html">Help Center</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
   <script src="js/script.js"></script>
+  <script>
+    // Live streams specific functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize mobile menu
+      if (typeof initMobileMenu === 'function') {
+        initMobileMenu();
+      }
+      
+      // Set active navigation link
+      if (typeof setActiveLink === 'function') {
+        setActiveLink();
+      }
+      
+      // Check auth status
+      if (typeof checkAuthStatus === 'function') {
+        checkAuthStatus();
+      }
+      
+      // Load live streams content
+      loadLiveStreams();
+      
+      // Set up filter
+      const sportFilter = document.getElementById('sport-filter');
+      if (sportFilter) {
+        sportFilter.addEventListener('change', function() {
+          loadLiveStreams(this.value);
+        });
+      }
+    });
+    
+    async function loadLiveStreams(filter = 'all') {
+      try {
+        const contentUrl = `${API_BASE}/api/content`;
+        const response = await fetch(contentUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        let liveStreams = content.live || [];
+        
+        // Apply filter if needed
+        if (filter !== 'all') {
+          liveStreams = liveStreams.filter(stream => stream.category === filter);
+        }
+        
+        // Update the content section
+        updateLiveContentSection(liveStreams);
+        
+      } catch (error) {
+        console.error('Error loading live streams:', error);
+        // Fallback to hardcoded content
+        loadFallbackLiveStreams();
+      }
+    }
+    
+    function updateLiveContentSection(streams) {
+      const contentSection = document.getElementById('live-content');
+      
+      if (!contentSection) {
+        console.warn('Live content section not found');
+        return;
+      }
+      
+      // Clear loading state
+      contentSection.innerHTML = '';
+      
+      if (!streams || streams.length === 0) {
+        contentSection.innerHTML = '<p class="no-content">No live streams available at the moment.</p>';
+        return;
+      }
+      
+      // Add content items
+      streams.forEach(stream => {
+        const card = createLiveStreamCard(stream);
+        contentSection.appendChild(card);
+      });
+    }
+    
+    function createLiveStreamCard(stream) {
+      const card = document.createElement('a');
+      card.href = `player.html?type=live&id=${stream.id}`;
+      card.className = 'stream-card';
+      
+      const isLive = stream.is_live;
+      const viewersText = isLive ? `${stream.viewers_count || 0} watching` : 'Upcoming';
+      
+      card.innerHTML = `
+        <div class="card-img">
+          <img src="${stream.thumbnail}" alt="${stream.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+          ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${stream.title}</h3>
+          <div class="card-meta">
+            <span>${stream.category || 'Sports'}</span>
+            <span class="card-views">${viewersText}</span>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+    
+    function loadFallbackLiveStreams() {
+      const fallbackStreams = [
+        {
+          id: 1,
+          title: "Manchester United vs Liverpool",
+          thumbnail: "https://via.placeholder.com/400x225",
+          category: "Football",
+          is_live: true,
+          viewers_count: 24500
+        },
+        {
+          id: 2,
+          title: "LA Lakers vs Boston Celtics",
+          thumbnail: "https://via.placeholder.com/400x225",
+          category: "Basketball",
+          is_live: true,
+          viewers_count: 18700
+        },
+        {
+          id: 3,
+          title: "UFC Fight Night",
+          thumbnail: "https://via.placeholder.com/400x225",
+          category: "MMA",
+          is_live: false,
+          start_time: "2023-12-15T20:00:00Z"
+        }
+      ];
+      
+      updateLiveContentSection(fallbackStreams);
+    }
+  </script>
 </body>
-
 </html>
-
-
-
