@@ -1,8 +1,12 @@
 // PEGASUS Backend API URL
 const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
+// Global variables
+let currentUser = null;
+let authToken = null;
+
 // Initialize mobile menu functionality
-const initMobileMenu = () => {
+function initMobileMenu() {
   const hamburger = document.querySelector('.hamburger');
   const navLinks = document.querySelector('.nav-links');
   
@@ -28,10 +32,23 @@ const initMobileMenu = () => {
       });
     });
   }
-};
+}
 
-// Hero Slider
-const initHeroSlider = () => {
+// Active navigation link
+function setActiveLink() {
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  navLinks.forEach(link => {
+    const linkPage = link.getAttribute('href').split('/').pop();
+    if (linkPage === currentPage) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// Initialize hero slider
+function initHeroSlider() {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.slider-dot');
   
@@ -65,23 +82,10 @@ const initHeroSlider = () => {
       dots[currentSlide].classList.add('active');
     }
   }
-};
-
-// Active navigation link
-const setActiveLink = () => {
-  const navLinks = document.querySelectorAll('.nav-links a');
-  const currentPage = window.location.pathname.split('/').pop();
-  
-  navLinks.forEach(link => {
-    const linkPage = link.getAttribute('href').split('/').pop();
-    if (linkPage === currentPage) {
-      link.classList.add('active');
-    }
-  });
-};
+}
 
 // Card hover animations
-const initCardHover = () => {
+function initCardHover() {
   const streamCards = document.querySelectorAll('.stream-card');
   streamCards.forEach(card => {
     card.addEventListener('mouseenter', () => {
@@ -94,7 +98,7 @@ const initCardHover = () => {
       card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)';
     });
   });
-};
+}
 
 // Function to test the backend connection
 async function testBackend() {
@@ -242,6 +246,91 @@ function loadFallbackContent() {
   updateContentSections(fallbackData);
 }
 
+// User authentication functions
+function checkAuthStatus() {
+  const userData = localStorage.getItem('pegasus_user');
+  const token = localStorage.getItem('pegasus_token');
+  
+  if (userData && token) {
+    currentUser = JSON.parse(userData);
+    authToken = token;
+    updateUIForLoggedInUser();
+    return true;
+  }
+  
+  return false;
+}
+
+function updateUIForLoggedInUser() {
+  const authButtons = document.querySelector('.auth-buttons');
+  const mobileAuth = document.querySelector('.mobile-auth');
+  
+  if (authButtons) {
+    authButtons.innerHTML = `
+      <div class="user-menu">
+        <button class="user-btn" id="user-menu-btn">
+          <img src="${currentUser.avatar || 'images/default-avatar.png'}" alt="${currentUser.name}" class="user-avatar">
+          <span>${currentUser.name}</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+          <a href="favorites.html"><i class="fas fa-heart"></i> Favorites</a>
+          ${currentUser.role === 'admin' ? '<a href="admin.html"><i class="fas fa-cog"></i> Admin</a>' : ''}
+          <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </div>
+    `;
+  }
+  
+  if (mobileAuth) {
+    mobileAuth.innerHTML = `
+      <a href="profile.html" class="btn btn-outline">Profile</a>
+      <a href="#" id="mobile-logout-btn" class="btn">Logout</a>
+    `;
+  }
+  
+  // Initialize user dropdown
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  const logoutBtn = document.getElementById('logout-btn');
+  const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+  
+  if (userMenuBtn && userDropdown) {
+    userMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      userDropdown.classList.remove('show');
+    });
+  }
+  
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  }
+  
+  if (mobileLogoutBtn) {
+    mobileLogoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+  }
+}
+
+function logout() {
+  localStorage.removeItem('pegasus_user');
+  localStorage.removeItem('pegasus_token');
+  currentUser = null;
+  authToken = null;
+  window.location.reload();
+}
+
 // Initialize all functions when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
   console.log('PEGASUS website initialized');
@@ -250,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initHeroSlider();
   setActiveLink();
   initCardHover();
+  checkAuthStatus();
   
   // Only load content if we're on a page that needs it
   if (document.querySelector('.stream-grid')) {
@@ -263,5 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
         loadFallbackContent();
       }
     });
+  }
+  
+  // Check if we're on a page that requires authentication
+  if (document.querySelector('.auth-required')) {
+    if (!checkAuthStatus()) {
+      window.location.href = 'signin.html';
+    }
   }
 });
