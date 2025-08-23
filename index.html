@@ -6,46 +6,75 @@
   <title>PEGASUS - Premium Sports Streaming</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
-<header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="live-streams.html">Live</a></li>
-        <li><a href="vod.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
         
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
-            <a href="#" class="btn btn-outline">Sign In</a>
-            <a href="#" class="btn">Subscribe</a>
-          </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons">
-        <a href="#" class="btn btn-outline">Sign In</a>
-        <a href="#" class="btn">Subscribe</a>
-      </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </div>
-</header>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons">
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -56,7 +85,7 @@
         <div class="slide-content">
           <h2>Premier League Finals Live</h2>
           <p>Watch the championship match live with exclusive commentary and analysis</p>
-          <a href="players/live-player1.html?event=1" class="btn">Watch Live Now</a>
+          <a href="player.html?type=live&id=1" class="btn">Watch Live Now</a>
         </div>
       </div>
       
@@ -66,7 +95,7 @@
         <div class="slide-content">
           <h2>UEFA Champions League</h2>
           <p>All matches available live and on demand. Subscribe now!</p>
-          <a href="players/live-player2.html?event=2" class="btn">Watch Live Now</a>
+          <a href="player.html?type=live&id=2" class="btn">Watch Live Now</a>
         </div>
       </div>
       
@@ -79,7 +108,7 @@
         <div class="slide-content">
           <h2>NBA Finals Game 7</h2>
           <p>Don't miss the decisive game of the season. Exclusive coverage.</p>
-          <a href="players/live-player3.html?event=3" class="btn">Watch Live Now</a>
+          <a href="player.html?type=live&id=3" class="btn">Watch Live Now</a>
         </div>
       </div>
     </div>
@@ -92,7 +121,7 @@
   </section>
 
   <!-- Live & Upcoming Section -->
-  <section class="section">
+  <section class="section" id="live-section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Live & Upcoming</h2>
@@ -100,123 +129,16 @@
       </div>
       
       <div class="stream-grid">
-        <!-- Stream Card 1 -->
-        <a href="player.html?type=live&id=1" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/0p8Rj3tD/stream-thumb-1.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 1</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 2 -->
-        <a href="player.html?type=live&id=2" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/vCNdcWq1/stream-thumb-2.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 2</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 3 -->
-        <a href="player.html?type=live&id=3" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/4wcfRV8T/stream-thumb-3.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 3</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 4 -->
-        <a href="player.html?type=live&id=4" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/LzcrS8Xr/stream-thumb-4.jpg" alt="-" border="0">
-            <div class="live-badge">LIVE</div>
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 4</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">0K</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 5 -->
-        <a href="player.html?type=live&id=5" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/FkKnFm0L/stream-thumb-5.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 5</h3>
-            <div class="card-meta">
-              <span>Starts in 2h 15m</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 6 -->
-        <a href="player.html?type=live&id=6" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/BHdxzQhN/stream-thumb-6.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 6</h3>
-            <div class="card-meta">
-              <span>Starts in 3h 45m</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 7 -->
-        <a href="player.html?type=live&id=7" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/MDZLBhQz/stream-thumb-7.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 7</h3>
-            <div class="card-meta">
-              <span>Starts in 1d 2h</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Stream Card 8 -->
-        <a href="player.html?type=live&id=8" class="stream-card">
-          <div class="card-img">
-            <img src="https://i.ibb.co/60VSdZRy/stream-thumb-8.jpg" alt="-" border="0">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Live 8</h3>
-            <div class="card-meta">
-              <span>Starts in 4h 30m</span>
-            </div>
-          </div>
-        </a>
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading live streams...</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Video On Demand Section -->
-  <section class="section" style="background: var(--secondary);">
+  <section class="section" style="background: var(--secondary);" id="vod-section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Video On Demand</h2>
@@ -224,67 +146,16 @@
       </div>
       
       <div class="stream-grid">
-        <!-- VOD Card 1 -->
-        <a href="player.html?type=vod&id=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-1.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 1</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 2 -->
-        <a href="player.html?type=vod&id=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-2.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 2</h3>
-            <div class="card-meta">
-              <span>Basketball</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 3 -->
-        <a href="player.html?type=vod&id=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-3.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 3</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 4 -->
-        <a href="player.html?type=vod&id=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-4.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 4</h3>
-            <div class="card-meta">
-              <span>Tennis</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading VOD content...</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Highlights Section -->
-  <section class="section">
+  <section class="section" id="highlights-section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Top Highlights</h2>
@@ -292,61 +163,10 @@
       </div>
       
       <div class="stream-grid">
-        <!-- Highlight Card 1 -->
-        <a href="player.html?type=highlight&id=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/highlight-thumb-1.jpg" alt="Football Highlight">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Highlight 1</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Highlight Card 2 -->
-        <a href="player.html?type=highlight&id=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/highlight-thumb-2.jpg" alt="Basketball Highlight">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Highlight 2</h3>
-            <div class="card-meta">
-              <span>Basketball</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Highlight Card 3 -->
-        <a href="player.html?type=highlight&id=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/highlight-thumb-3.jpg" alt="Tennis Highlight">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Highlight 3</h3>
-            <div class="card-meta">
-              <span>Tennis</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Highlight Card 4 -->
-        <a href="player.html?type=highlight&id=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/highlight-thumb-4.jpg" alt="F1 Highlight">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Highlight 4</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">0</span>
-            </div>
-          </div>
-        </a>
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading highlights...</p>
+        </div>
       </div>
     </div>
   </section>
@@ -434,8 +254,8 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="live-stream.html">Live Streams</a></li>
-            <li><a href="video-on-demand.html">Video On Demand</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
           </ul>
@@ -469,6 +289,5 @@
   </footer>
 
   <script src="js/script.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
