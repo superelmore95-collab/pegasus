@@ -35,6 +35,10 @@
       margin-bottom: 10px;
     }
     
+    .auth-header p {
+      color: var(--text-secondary);
+    }
+    
     .form-group {
       margin-bottom: 20px;
     }
@@ -53,6 +57,13 @@
       border-radius: 4px;
       color: var(--text);
       font-size: 16px;
+      transition: var(--transition);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 0, 60, 0.2);
     }
     
     .btn-auth {
@@ -71,6 +82,59 @@
     .auth-footer a {
       color: var(--accent);
       text-decoration: none;
+    }
+    
+    .form-message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .form-message.error {
+      background: rgba(255, 23, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(255, 23, 68, 0.3);
+    }
+    
+    .form-message.success {
+      background: rgba(0, 200, 83, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(0, 200, 83, 0.3);
+    }
+    
+    .social-auth {
+      margin-top: 25px;
+      text-align: center;
+    }
+    
+    .social-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .social-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .social-btn.google {
+      color: #DB4437;
+    }
+    
+    .social-btn.facebook {
+      color: #4267B2;
     }
   </style>
 </head>
@@ -132,8 +196,22 @@
             <a href="forgot-password.html" style="color: var(--accent); text-decoration: none;">Forgot password?</a>
           </div>
           
+          <div class="form-message" id="form-message"></div>
+          
           <button type="submit" class="btn btn-auth">Sign In</button>
         </form>
+        
+        <div class="social-auth">
+          <p>Or sign in with</p>
+          <div class="social-buttons">
+            <button type="button" class="social-btn google">
+              <i class="fab fa-google"></i> Google
+            </button>
+            <button type="button" class="social-btn facebook">
+              <i class="fab fa-facebook-f"></i> Facebook
+            </button>
+          </div>
+        </div>
         
         <div class="auth-footer">
           Don't have an account? <a href="signup.html">Sign up now</a>
@@ -144,27 +222,93 @@
 
   <!-- Footer -->
   <footer>
-    <!-- Same footer as index.html -->
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>PEGASUS</h3>
+          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="dmca.html">DMCA Policy</a></li>
+            <li><a href="cookie.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="help.html">Help Center</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+      </div>
+    </div>
   </footer>
 
   <script>
+    // Define API_BASE constant
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    
+    // Initialize mobile menu
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize mobile menu
-      if (typeof initMobileMenu === 'function') {
-        initMobileMenu();
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
       }
       
       // Handle sign in form submission
       const signinForm = document.getElementById('signin-form');
+      const formMessage = document.getElementById('form-message');
+      
       if (signinForm) {
         signinForm.addEventListener('submit', async function(e) {
           e.preventDefault();
           
           const email = document.getElementById('email').value;
           const password = document.getElementById('password').value;
-          const remember = document.getElementById('remember').checked;
+          const rememberMe = document.getElementById('remember').checked;
           
           try {
+            // Show loading state
+            const submitBtn = signinForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+            
+            // Send login request to backend
             const response = await fetch(`${API_BASE}/api/auth/signin`, {
               method: 'POST',
               headers: {
@@ -173,23 +317,51 @@
               body: JSON.stringify({ email, password })
             });
             
-            if (!response.ok) {
-              throw new Error('Invalid credentials');
-            }
-            
             const data = await response.json();
             
-            // Store user data and token
-            localStorage.setItem('pegasus_user', JSON.stringify(data.user));
-            localStorage.setItem('pegasus_token', data.token);
-            
-            // Redirect to home page
-            window.location.href = 'index.html';
-            
+            if (response.ok) {
+              // Login successful
+              showMessage('Sign in successful! Redirecting...', 'success');
+              
+              // Store user data and token
+              localStorage.setItem('pegasus_user', JSON.stringify(data.user));
+              localStorage.setItem('pegasus_token', data.token);
+              
+              // Set longer expiration if "remember me" is checked
+              if (rememberMe) {
+                const expiration = new Date();
+                expiration.setDate(expiration.getDate() + 30); // 30 days
+                localStorage.setItem('pegasus_expiration', expiration.toISOString());
+              }
+              
+              // Redirect to home page after a delay
+              setTimeout(() => {
+                window.location.href = 'index.html';
+              }, 1500);
+            } else {
+              // Login failed
+              showMessage(data.error || 'Invalid email or password', 'error');
+            }
           } catch (error) {
-            alert(error.message || 'Sign in failed. Please try again.');
+            showMessage('Network error. Please check your connection and try again.', 'error');
+          } finally {
+            // Restore button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
           }
         });
+      }
+      
+      // Helper function to show messages
+      function showMessage(message, type) {
+        if (formMessage) {
+          formMessage.textContent = message;
+          formMessage.className = 'form-message ' + type;
+          formMessage.style.display = 'block';
+          
+          // Scroll to message
+          formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       }
     });
   </script>
