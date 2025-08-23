@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | PEGASUS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .profile-container {
+      padding: 40px 0;
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 3px solid var(--accent);
+    }
+    
+    .profile-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .profile-section {
+      margin-bottom: 25px;
+    }
+    
+    .profile-section h3 {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    .info-item {
+      margin-bottom: 15px;
+    }
+    
+    .info-label {
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+    
+    .info-value {
+      font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+        </ul>
+        
+        <div class="auth-buttons">
+          <!-- Will be populated by auth.js -->
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Profile Section -->
+  <section class="profile-container">
+    <div class="container">
+      <div class="profile-header">
+        <img src="images/default-avatar.png" alt="Profile" class="profile-avatar" id="profile-avatar">
+        <h2 id="profile-name">User Name</h2>
+        <p>Member since <span id="member-since">2023</span></p>
+      </div>
+      
+      <div class="profile-card">
+        <div class="profile-section">
+          <h3>Account Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Full Name</div>
+              <div class="info-value" id="info-name">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email Address</div>
+              <div class="info-value" id="info-email">-</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Account Type</div>
+              <div class="info-value" id="info-type">Free Account</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Subscription Status</div>
+              <div class="info-value" id="info-status">Active</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <h3>Subscription</h3>
+          <div id="subscription-info">
+            <p>You're currently on a free account. Upgrade to premium for access to exclusive content and features.</p>
+            <a href="pricing.html" class="btn">Upgrade Account</a>
+          </div>
+        </div>
+        
+        <div class="profile-section">
+          <h3>Preferences</h3>
+          <div class="info-item">
+            <label>
+              <input type="checkbox" id="email-notifications" checked>
+              Email notifications
+            </label>
+          </div>
+          <div class="info-item">
+            <label>
+              <input type="checkbox" id="newsletter">
+              Newsletter subscription
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <!-- Same footer as other pages -->
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script>
+    // Check if user is authenticated
+    if (!checkAuthStatus()) {
+      window.location.href = 'signin.html?redirect=profile.html';
+    }
+    
+    // Load user data
+    document.addEventListener('DOMContentLoaded', function() {
+      const user = getCurrentUser();
+      
+      if (user) {
+        // Populate profile with user data
+        document.getElementById('profile-name').textContent = user.name;
+        document.getElementById('profile-avatar').src = user.avatar || 'images/default-avatar.png';
+        document.getElementById('info-name').textContent = user.name;
+        document.getElementById('info-email').textContent = user.email;
+        document.getElementById('info-type').textContent = user.subscription_type || 'Free Account';
+        document.getElementById('info-status').textContent = user.subscription_status || 'Active';
+        
+        // Set member since date
+        if (user.created_at) {
+          const joinDate = new Date(user.created_at);
+          document.getElementById('member-since').textContent = joinDate.getFullYear();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
