@@ -7,6 +7,165 @@
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 400px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top: 5px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .play-button-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 5rem;
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .play-button-overlay:hover {
+      opacity: 1;
+    }
+    
+    .btn.active {
+      background: var(--success);
+      color: white;
+    }
+
+    /* Video player enhancements */
+    .video-player {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      position: relative;
+      background: #000;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+    }
+    
+    .video-player > * {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Ensure all common video embed types are responsive */
+    .video-player iframe,
+    .video-player video,
+    .video-player object,
+    .video-player embed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Thumbnail fallback styling */
+    .thumbnail-fallback {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .thumbnail-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Player controls */
+    .player-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .video-player:hover .player-controls {
+      opacity: 1;
+    }
+    
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .control-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+    
+    .control-btn:hover {
+      opacity: 1;
+    }
+    
+    .progress-bar {
+      flex-grow: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+      margin: 0 15px;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -57,6 +216,7 @@
             <div class="loading-spinner"></div>
             <p>Loading content...</p>
           </div>
+          <!-- Player controls will be added dynamically -->
         </div>
         
         <div class="player-info">
@@ -224,16 +384,54 @@
       
       // Update embed code
       const videoPlayer = document.getElementById('video-player');
+      
+      // Clear previous content
+      videoPlayer.innerHTML = '';
+      
       if (content.embed_code) {
-        videoPlayer.innerHTML = content.embed_code;
+        // Create wrapper for embed code
+        const embedWrapper = document.createElement('div');
+        embedWrapper.innerHTML = content.embed_code;
+        
+        // Make all embedded content responsive
+        const iframes = embedWrapper.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.border = 'none';
+        });
+        
+        // Also handle video tags
+        const videos = embedWrapper.querySelectorAll('video');
+        videos.forEach(video => {
+          video.style.position = 'absolute';
+          video.style.top = '0';
+          video.style.left = '0';
+          video.style.width = '100%';
+          video.style.height = '100%';
+          video.setAttribute('controls', 'true');
+        });
+        
+        videoPlayer.appendChild(embedWrapper);
       } else if (content.thumbnail) {
         // Fallback to thumbnail if no embed code
         videoPlayer.innerHTML = `
-          <div style="position: relative; width: 100%; height: 100%;">
-            <img src="${content.thumbnail}" alt="${content.title}" style="width: 100%; height: 100%; object-fit: cover;">
+          <div class="thumbnail-fallback">
+            <img src="${content.thumbnail}" alt="${content.title}">
             <div class="play-button-overlay">
               <i class="fas fa-play-circle"></i>
             </div>
+          </div>
+        `;
+      } else {
+        // Show error if no content available
+        videoPlayer.innerHTML = `
+          <div class="loading-placeholder">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>Content unavailable</p>
           </div>
         `;
       }
@@ -356,60 +554,5 @@
       });
     });
   </script>
-  
-  <style>
-    .loading-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      min-height: 400px;
-      background: var(--card-bg);
-      color: var(--text-secondary);
-      border-radius: 8px;
-    }
-    
-    .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255, 255, 255, 0.1);
-      border-top: 5px solid var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .play-button-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      font-size: 5rem;
-      opacity: 0.8;
-      transition: opacity 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .play-button-overlay:hover {
-      opacity: 1;
-    }
-    
-    .btn.active {
-      background: var(--success);
-      color: white;
-    }
-  </style>
 </body>
 </html>
