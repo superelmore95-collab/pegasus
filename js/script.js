@@ -1,5 +1,4 @@
-// PEGASUS Backend API URL - Replace with your actual worker URL
-// REMOVE any trailing slash at the end of the URL
+// PEGASUS Backend API URL
 const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
 // Initialize mobile menu functionality
@@ -100,7 +99,6 @@ const initCardHover = () => {
 // Function to test the backend connection
 async function testBackend() {
   try {
-    // Use a clean URL without double slashes
     const testUrl = `${API_BASE}/api/test`;
     console.log('Testing connection to:', testUrl);
     
@@ -115,35 +113,7 @@ async function testBackend() {
     return true;
   } catch (error) {
     console.error('Backend connection failed:', error);
-    
-    // Add more detailed error information
-    if (error.message.includes('Failed to fetch')) {
-      console.error('This usually means:');
-      console.error('1. Your worker URL is incorrect');
-      console.error('2. Your worker is not deployed');
-      console.error('3. There is a network issue');
-      
-      // Test if the worker URL is accessible
-      testWorkerAccessibility();
-    }
-    
     return false;
-  }
-}
-
-// Function to test if the worker URL is accessible
-async function testWorkerAccessibility() {
-  try {
-    // Test if we can access the worker root
-    const response = await fetch(API_BASE);
-    if (response.ok) {
-      const text = await response.text();
-      console.log('Worker is accessible. Root response:', text.substring(0, 100) + '...');
-    } else {
-      console.error(`Worker returned status: ${response.status}`);
-    }
-  } catch (error) {
-    console.error('Cannot access worker at all:', error);
   }
 }
 
@@ -176,22 +146,22 @@ async function loadContent() {
 function updateContentSections(content) {
   // Update live streams section
   if (content.live && content.live.length > 0) {
-    updateSection('live-section', content.live, true);
+    updateSection('live-section', content.live, 'live');
   }
   
   // Update VOD section
   if (content.vod && content.vod.length > 0) {
-    updateSection('vod-section', content.vod, false);
+    updateSection('vod-section', content.vod, 'vod');
   }
   
   // Update highlights section
   if (content.highlights && content.highlights.length > 0) {
-    updateSection('highlights-section', content.highlights, false);
+    updateSection('highlights-section', content.highlights, 'highlight');
   }
 }
 
 // Function to update a specific section
-function updateSection(sectionId, items, isLive) {
+function updateSection(sectionId, items, type) {
   const section = document.querySelector(`#${sectionId} .stream-grid`);
   if (!section) {
     console.warn(`Section ${sectionId} not found`);
@@ -203,27 +173,27 @@ function updateSection(sectionId, items, isLive) {
   
   // Add new content
   items.forEach(item => {
-    const card = createStreamCard(item, isLive);
+    const card = createStreamCard(item, type);
     section.appendChild(card);
   });
 }
 
 // Function to create a stream card
-function createStreamCard(item, isLive) {
+function createStreamCard(item, type) {
   const card = document.createElement('a');
-  card.href = `player.html?type=${isLive ? 'live' : 'vod'}&id=${item.id}`;
+  card.href = `player.html?type=${type}&id=${item.id}`;
   card.className = 'stream-card';
   
   card.innerHTML = `
     <div class="card-img">
       <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
-      ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+      ${type === 'live' ? '<div class="live-badge">LIVE</div>' : ''}
     </div>
     <div class="card-content">
       <h3 class="card-title">${item.title}</h3>
       <div class="card-meta">
-        <span>${item.category}</span>
-        <span class="card-views">${isLive ? `${item.viewers} watching` : `${item.views} views`}</span>
+        <span>${item.category || 'Sports'}</span>
+        <span class="card-views">${type === 'live' ? `${item.viewers || 0} watching` : `${item.views || 0} views`}</span>
       </div>
     </div>
   `;
@@ -281,14 +251,17 @@ document.addEventListener('DOMContentLoaded', function() {
   setActiveLink();
   initCardHover();
   
-  // Test the backend connection and load content
-  testBackend().then(success => {
-    if (success) {
-      // If backend is working, load content
-      loadContent();
-    } else {
-      console.warn('Backend is not available, using fallback content');
-      loadFallbackContent();
-    }
-  });
+  // Only load content if we're on a page that needs it
+  if (document.querySelector('.stream-grid')) {
+    // Test the backend connection and load content
+    testBackend().then(success => {
+      if (success) {
+        // If backend is working, load content
+        loadContent();
+      } else {
+        console.warn('Backend is not available, using fallback content');
+        loadFallbackContent();
+      }
+    });
+  }
 });
