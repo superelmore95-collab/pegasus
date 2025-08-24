@@ -6,250 +6,360 @@
   <title>Video On Demand | PEGASUS</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .login-wall-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 18, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .login-wall-content {
+      background: #1a1a2e;
+      padding: 40px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .login-wall-content h2 {
+      margin-bottom: 15px;
+      color: #ff003c;
+    }
+
+    .login-wall-content p {
+      margin-bottom: 25px;
+      color: #b3b3b3;
+    }
+
+    .login-wall-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .login-wall-buttons {
+        flex-direction: column;
+      }
+    }
+    
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      background: #1a1a2e;
+      color: #b3b3b3;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid #ff003c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <nav class="navbar">
-        <a href="index.html" class="logo">
-          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-        </a>
-        
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="live-stream.html">Live</a></li>
-          <li><a href="video-on-demand.html" class="active">VOD</a></li>
-          <li><a href="highlights.html">Highlights</a></li>
-          <li><a href="channels.html">Channels</a></li>
-          
-          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-          <li class="mobile-auth-item">
-            <div class="mobile-auth">
-              <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn">Subscribe</a>
-            </div>
-          </li>
-        </ul>
-        
-        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-        <div class="auth-buttons">
-          <a href="#" class="btn btn-outline">Sign In</a>
-          <a href="#" class="btn">Subscribe</a>
+  <!-- Login Wall -->
+  <div id="login-wall" style="display: none;">
+    <div class="login-wall-overlay">
+      <div class="login-wall-content">
+        <h2>Content Restricted</h2>
+        <p>You need to be logged in to access VOD content</p>
+        <div class="login-wall-buttons">
+          <a href="signin.html?redirect=vod.html" class="btn">Sign In</a>
+          <a href="signup.html?redirect=vod.html" class="btn btn-outline">Create Account</a>
         </div>
-        
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Banner for VOD -->
-  <section class="hero" style="height: 60vh; min-height: 400px;">
-    <div style="background-image: url('images/vod-banner.jpg');" class="slide active">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2>Video On Demand</h2>
-        <p>Watch full matches and events anytime</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- VOD Section -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Featured Content</h2>
-        <div class="filter">
-          <select>
-            <option>All Sports</option>
-            <option>Football</option>
-            <option>Basketball</option>
-            <option>Tennis</option>
-            <option>Formula 1</option>
-            <option>MMA</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="stream-grid">
-        <!-- VOD Card 1 -->
-        <a href="player.html?type=vod&id=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-1.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 1</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 2 -->
-        <a href="player.html?type=vod&id=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-2.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 2</h3>
-            <div class="card-meta">
-              <span>Basketball</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 3 -->
-        <a href="player.html?type=vod&id=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-3.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 3</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 4 -->
-        <a href="player.html?type=vod&id=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-4.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 4</h3>
-            <div class="card-meta">
-              <span>Tennis</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 5 -->
-        <a href="player.html?type=vod&id=5" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-5.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 5</h3>
-            <div class="card-meta">
-              <span>Football</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 6 -->
-        <a href="player.html?type=vod&id=6" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-6.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 6</h3>
-            <div class="card-meta">
-              <span>MMA</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 7 -->
-        <a href="player.html?type=vod&id=7" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-7.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 7</h3>
-            <div class="card-meta">
-              <span>Basketball</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- VOD Card 8 -->
-        <a href="player.html?type=vod&id=8" class="stream-card">
-          <div class="card-img">
-            <img src="images/vod-thumb-8.jpg" alt="VOD">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">VOD 8</h3>
-            <div class="card-meta">
-              <span>Formula 1</span>
-              <span class="card-views">- views</span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-<!-- Login Wall (add this to your pages) -->
-<div id="login-wall" style="display: none;">
-  <div class="login-wall-overlay">
-    <div class="login-wall-content">
-      <h2>Content Restricted</h2>
-      <p>You need to be logged in to access this content</p>
-      <div class="login-wall-buttons">
-        <a href="signin.html" class="btn">Sign In</a>
-        <a href="signup.html" class="btn btn-outline">Create Account</a>
       </div>
     </div>
   </div>
-</div>
 
-<style>
-.login-wall-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 18, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+  <!-- Main Content (initially hidden) -->
+  <div id="main-content" style="display: none;">
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a href="index.html" class="logo">
+            <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+          </a>
+          
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html">Live</a></li>
+            <li><a href="vod.html" class="active">VOD</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+            
+            <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+            <li class="mobile-auth-item">
+              <div class="mobile-auth">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="signup.html" class="btn">Subscribe</a>
+              </div>
+            </li>
+          </ul>
+          
+          <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+          <div class="auth-buttons">
+            <a href="signin.html" class="btn btn-outline">Sign In</a>
+            <a href="signup.html" class="btn">Subscribe</a>
+          </div>
+          
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </nav>
+      </div>
+    </header>
 
-.login-wall-content {
-  background: var(--card-bg);
-  padding: 40px;
-  border-radius: 8px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-}
+    <!-- Hero Banner for VOD -->
+    <section class="hero" style="height: 60vh; min-height: 400px;">
+      <div style="background-image: url('images/vod-banner.jpg');" class="slide active">
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <h2>Video On Demand</h2>
+          <p>Watch full matches and events anytime</p>
+        </div>
+      </div>
+    </section>
 
-.login-wall-content h2 {
-  margin-bottom: 15px;
-  color: var(--accent);
-}
+    <!-- VOD Section -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Featured Content</h2>
+          <div class="filter">
+            <select id="sport-filter">
+              <option value="all">All Sports</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Tennis">Tennis</option>
+              <option value="Formula 1">Formula 1</option>
+              <option value="MMA">MMA</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="stream-grid" id="vod-container">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading VOD content...</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-.login-wall-content p {
-  margin-bottom: 25px;
-  color: var(--text-secondary);
-}
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>PEGASUS</h3>
+            <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Navigation</h3>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="live-streams.html">Live Streams</a></li>
+              <li><a href="vod.html">Video On Demand</a></li>
+              <li><a href="highlights.html">Highlights</a></li>
+              <li><a href="channels.html">Channels</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Legal</h3>
+            <ul class="footer-links">
+              <li><a href="terms.html">Terms of Service</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="dmca.html">DMCA Policy</a></li>
+              <li><a href="cookie.html">Cookie Policy</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Support</h3>
+            <ul class="footer-links">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+              <li><a href="faq.html">FAQs</a></li>
+              <li><a href="help.html">Help Center</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="copyright">
+          &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
 
-.login-wall-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-@media (max-width: 480px) {
-  .login-wall-buttons {
-    flex-direction: column;
-  }
-}
-</style>
-  <!-- Footer same as index.html -->
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/auth-wall.js"></script>
+  <script>
+    // VOD-specific functionality
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Initialize mobile menu
+      if (typeof initMobileMenu === 'function') {
+        initMobileMenu();
+      }
+      
+      // Check auth status
+      if (typeof checkAuthStatus === 'function') {
+        checkAuthStatus();
+      }
+      
+      // Initialize auth wall
+      if (typeof AuthWall !== 'undefined') {
+        window.vodAuthWall = new AuthWall();
+        const isAuthenticated = await window.vodAuthWall.init();
+        
+        if (isAuthenticated) {
+          // Load VOD content
+          loadVODContent();
+          
+          // Set up filter
+          const sportFilter = document.getElementById('sport-filter');
+          if (sportFilter) {
+            sportFilter.addEventListener('change', function() {
+              loadVODContent(this.value);
+            });
+          }
+        }
+      } else {
+        // Fallback if AuthWall is not available
+        const isAuthenticated = localStorage.getItem('pegasus_token') !== null;
+        
+        if (isAuthenticated) {
+          document.getElementById('login-wall').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
+          loadVODContent();
+        } else {
+          document.getElementById('login-wall').style.display = 'flex';
+          document.getElementById('main-content').style.display = 'none';
+        }
+      }
+    });
+    
+    async function loadVODContent(filter = 'all') {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const token = localStorage.getItem('pegasus_token');
+        
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            // Token is invalid, show login wall
+            if (window.vodAuthWall) {
+              window.vodAuthWall.showLoginWall();
+            } else {
+              document.getElementById('login-wall').style.display = 'flex';
+              document.getElementById('main-content').style.display = 'none';
+            }
+            return;
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        let vodContent = content.vod || [];
+        
+        // Apply filter if needed
+        if (filter !== 'all') {
+          vodContent = vodContent.filter(item => item.category === filter);
+        }
+        
+        // Update the VOD container
+        updateVODContainer(vodContent);
+        
+      } catch (error) {
+        console.error('Error loading VOD content:', error);
+        // Show error message
+        const container = document.getElementById('vod-container');
+        container.innerHTML = '<p class="error-message">Failed to load VOD content. Please try again later.</p>';
+      }
+    }
+    
+    function updateVODContainer(vodItems) {
+      const container = document.getElementById('vod-container');
+      
+      if (!container) {
+        console.warn('VOD container not found');
+        return;
+      }
+      
+      // Clear loading state
+      container.innerHTML = '';
+      
+      if (!vodItems || vodItems.length === 0) {
+        container.innerHTML = '<p class="no-content">No VOD content available.</p>';
+        return;
+      }
+      
+      // Add VOD items
+      vodItems.forEach(item => {
+        const card = document.createElement('a');
+        card.href = `player.html?type=vod&id=${item.id}`;
+        card.className = 'stream-card';
+        
+        card.innerHTML = `
+          <div class="card-img">
+            <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${item.title}</h3>
+            <div class="card-meta">
+              <span>${item.category || 'Sports'}</span>
+              <span class="card-views">${item.views_count || 0} views</span>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+    }
+  </script>
 </body>
 </html>
