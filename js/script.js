@@ -70,7 +70,7 @@ function isAuthenticated() {
 function logout() {
   localStorage.removeItem('pegasus_token');
   localStorage.removeItem('pegasus_user');
-  window.location.reload();
+  window.location.href = 'index.html';
 }
 
 // Example of making an authenticated request
@@ -114,7 +114,7 @@ function updateAuthUI() {
       authButtons.innerHTML = `
         <div class="user-menu">
           <button class="user-btn" id="user-menu-btn">
-            <img src="${user.avatar || 'images/default-avatar.png'}" alt="${user.name}" class="user-avatar">
+            <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
             <span>${user.name}</span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -126,6 +126,22 @@ function updateAuthUI() {
           </div>
         </div>
       `;
+      
+      // Add event listeners for the dropdown
+      const userMenuBtn = document.getElementById('user-menu-btn');
+      const userDropdown = document.getElementById('user-dropdown');
+      
+      if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          userDropdown.classList.toggle('show');
+        });
+        
+        // Close dropdown when clicking elsewhere
+        document.addEventListener('click', () => {
+          userDropdown.classList.remove('show');
+        });
+      }
     }
     
     // Update mobile auth buttons
@@ -174,4 +190,15 @@ function updateAuthUI() {
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
   updateAuthUI();
+  
+  // Initialize mobile menu
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
+    });
+  }
 });
