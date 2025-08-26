@@ -139,6 +139,14 @@
   </style>
 </head>
 <body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS Logo" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header>
     <div class="container">
@@ -149,6 +157,7 @@
         
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
           <li><a href="live-streams.html">Live</a></li>
           <li><a href="vod.html">VOD</a></li>
           <li><a href="highlights.html">Highlights</a></li>
@@ -239,6 +248,7 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
             <li><a href="live-streams.html">Live Streams</a></li>
             <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
@@ -274,11 +284,12 @@
   </footer>
 
   <script>
-    // Define API_BASE constant
-    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    // API base URL
+    const API_BASE = 'https://your-worker-url.workers.dev';
     
-    // Initialize mobile menu
+    // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize mobile menu
       const hamburger = document.querySelector('.hamburger');
       const navLinks = document.querySelector('.nav-links');
       
@@ -334,9 +345,9 @@
                 localStorage.setItem('pegasus_expiration', expiration.toISOString());
               }
               
-              // Redirect to home page after a delay
+              // Redirect to explore page after a delay
               setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = 'explore.html';
               }, 1500);
             } else {
               // Login failed
