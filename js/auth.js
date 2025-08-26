@@ -1,5 +1,5 @@
 // Enhanced Authentication System
-const API_BASE = 'https://your-worker-url.workers.dev';
+const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
 
 // Authentication functions
 async function signIn(email, password, remember) {
