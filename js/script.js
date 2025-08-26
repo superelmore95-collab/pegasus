@@ -148,6 +148,7 @@ function updateAuthUI() {
     if (mobileAuth) {
       mobileAuth.innerHTML = `
         <a href="profile.html" class="btn btn-outline">Profile</a>
+        <a href="favorites.html" class="btn btn-outline">Favorites</a>
         <a href="#" id="mobile-logout-btn" class="btn">Logout</a>
       `;
     }
@@ -189,16 +190,25 @@ function updateAuthUI() {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize preloader - fixed to always hide
-  setTimeout(() => {
+  // Only show preloader on index.html
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+    // Initialize preloader - fixed to always hide
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.classList.add('hide');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }
+    }, 1000);
+  } else {
+    // Hide preloader immediately on other pages
     const preloader = document.getElementById('preloader');
     if (preloader) {
-      preloader.classList.add('hide');
-      setTimeout(() => {
-        preloader.style.display = 'none';
-      }, 500);
+      preloader.style.display = 'none';
     }
-  }, 1000);
+  }
   
   updateAuthUI();
   
@@ -445,5 +455,100 @@ async function checkContentAccess(contentId, contentType) {
   } catch (error) {
     console.error('Error checking content access:', error);
     return { accessible: false, reason: 'error' };
+  }
+}
+
+// Favorites functionality
+async function addToFavorites(contentId, contentType) {
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: 'Not authenticated' };
+    }
+    
+    const response = await fetch(`${API_BASE}/api/favorites`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ contentId, contentType })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      return { success: true, data };
+    } else {
+      return { success: false, error: data.error };
+    }
+  } catch (error) {
+    return { success: false, error: 'Network error' };
+  }
+}
+
+async function removeFromFavorites(favoriteId) {
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: 'Not authenticated' };
+    }
+    
+    const response = await fetch(`${API_BASE}/api/favorites/${favoriteId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      return { success: true, data };
+    } else {
+      return { success: false, error: data.error };
+    }
+  } catch (error) {
+    return { success: false, error: 'Network error' };
+  }
+}
+
+async function getFavorites() {
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: 'Not authenticated' };
+    }
+    
+    const response = await fetch(`${API_BASE}/api/favorites`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      return { success: true, data: data.favorites };
+    } else {
+      return { success: false, error: data.error };
+    }
+  } catch (error) {
+    return { success: false, error: 'Network error' };
+  }
+}
+
+// Check if content is favorited
+async function isContentFavorited(contentId, contentType) {
+  try {
+    const favoritesResult = await getFavorites();
+    if (!favoritesResult.success) return false;
+    
+    return favoritesResult.data.some(fav => 
+      fav.content_id == contentId && fav.content_type === contentType
+    );
+  } catch (error) {
+    console.error('Error checking favorites:', error);
+    return false;
   }
 }
