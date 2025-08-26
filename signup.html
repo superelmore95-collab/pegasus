@@ -93,83 +93,83 @@
       padding: 12px 15px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  color: var(--text);
-  font-size: 16px;
-  transition: var(--transition);
-}
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 16px;
+      transition: var(--transition);
+    }
 
-.form-control:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(255, 0, 60, 0.2);
-}
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 0, 60, 0.2);
+    }
 
-.btn-auth {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  margin-top: 10px;
-}
+    .btn-auth {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
 
-.auth-footer {
-  text-align: center;
-  margin-top: 25px;
-  color: var(--text-secondary);
-}
+    .auth-footer {
+      text-align: center;
+      margin-top: 25px;
+      color: var(--text-secondary);
+    }
 
-.auth-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
+    .auth-footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
 
-.password-strength {
-  height: 5px;
-  background: #444;
-  border-radius: 3px;
-  margin-top: 8px;
-  overflow: hidden;
-}
+    .password-strength {
+      height: 5px;
+      background: #444;
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
 
-.password-strength-bar {
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s ease;
-}
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
 
-.password-weak .password-strength-bar {
-  width: 33%;
-  background: var(--danger);
-}
+    .password-weak .password-strength-bar {
+      width: 33%;
+      background: var(--danger);
+    }
 
-.password-medium .password-strength-bar {
-  width: 66%;
-  background: var(--warning);
-}
+    .password-medium .password-strength-bar {
+      width: 66%;
+      background: var(--warning);
+    }
 
-.password-strong .password-strength-bar {
-  width: 100%;
-  background: var(--success);
-}
+    .password-strong .password-strength-bar {
+      width: 100%;
+      background: var(--success);
+    }
 
-.form-message {
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 15px;
-  display: none;
-}
+    .form-message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 15px;
+      display: none;
+    }
 
-.form-message.error {
-  background: rgba(255, 23, 68, 0.1);
-  color: var(--danger);
-  border: 1px solid rgba(255, 23, 68, 0.3);
-}
+    .form-message.error {
+      background: rgba(255, 23, 68, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(255, 23, 68, 0.3);
+    }
 
-.form-message.success {
-  background: rgba(0, 200, 83, 0.1);
-  color: var(--success);
-  border: 1px solid rgba(0, 200, 83, 0.3);
-}
+    .form-message.success {
+      background: rgba(0, 200, 83, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(0, 200, 83, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -289,7 +289,7 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="live-streams.html">Live Streams</a></li>
+            <<li><a href="live-streams.html">Live Streams</a></li>
             <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
@@ -451,7 +451,10 @@
       setTimeout(() => {
         const preloader = document.getElementById('preloader');
         if (preloader) {
-          preloader.style.display = 'none';
+          preloader.classList.add('hide');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
         }
       }, 1000);
       
