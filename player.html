@@ -724,7 +724,91 @@
           navLinks.classList.toggle('active');
         });
       }
+
+       // Set up favorite button
+  const favoriteBtn = document.getElementById('favorite-btn');
+  let isFavorited = false;
+  let favoriteId = null;
+  
+  // Check if content is already favorited
+  if (contentType && contentId) {
+    checkIfFavorited(contentType, contentId).then(favorited => {
+      isFavorited = favorited;
+      updateFavoriteButton();
+    });
+  }
+  
+  favoriteBtn.addEventListener('click', async function(e) {
+    e.preventDefault();
+    
+    if (!isAuthenticated()) {
+      alert('Please sign in to add favorites');
+      window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+      return;
+    }
+    
+    if (isFavorited) {
+      // Remove from favorites
+      const result = await removeFromFavorites(favoriteId);
+      if (result.success) {
+        isFavorited = false;
+        favoriteId = null;
+        updateFavoriteButton();
+      } else {
+        alert('Error removing from favorites: ' + result.error);
+      }
+    } else {
+      // Add to favorites
+      const result = await addToFavorites(contentId, contentType);
+      if (result.success) {
+        isFavorited = true;
+        // In a real implementation, you would get the favorite ID from the response
+        updateFavoriteButton();
+      } else {
+        alert('Error adding to favorites: ' + result.error);
+      }
+    }
+  });
+  
+  function updateFavoriteButton() {
+    if (isFavorited) {
+      favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+      favoriteBtn.classList.add('active');
+    } else {
+      favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+      favoriteBtn.classList.remove('active');
+    }
+  }
+  
+  async function checkIfFavorited(contentType, contentId) {
+    try {
+      const token = getToken();
+      if (!token) return false;
       
+      const response = await fetch(`${API_BASE}/api/favorites`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) return false;
+      
+      const data = await response.json();
+      const favorite = data.favorites.find(fav => 
+        fav.content_type === contentType && fav.content_id == contentId
+      );
+      
+      if (favorite) {
+        favoriteId = favorite.id;
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error('Error checking favorites:', error);
+      return false;
+    }
+  }
       // Load player content
       loadPlayerContent();
       
