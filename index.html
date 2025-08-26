@@ -37,44 +37,53 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
-<header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="live-streams.html">Live</a></li>
-        <li><a href="vod.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
-        
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
-            <a href="signin.html" class="btn btn-outline">Sign In</a>
-            <a href="signup.html" class="btn">Subscribe</a>
-          </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons" id="auth-buttons">
-        <a href="signin.html" class="btn btn-outline">Sign In</a>
-        <a href="signup.html" class="btn">Subscribe</a>
-      </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS Logo" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
   </div>
-</header>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons" id="auth-buttons">
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -100,10 +109,7 @@
       </div>
       
       <!-- Slide 3 -->
-      <div class="slide">
-        <video autoplay muted loop class="slide-bg-video">
-          <source src="videos/hero-video.mp4" type="video/mp4">
-        </video>
+      <div class="slide" style="background-image: url('images/hero-banner-3.webp');">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>NBA Finals Game 7</h2>
@@ -128,7 +134,7 @@
         <a href="live-streams.html" class="view-all">View All</a>
       </div>
       
-      <div class="stream-grid">
+      <div class="stream-grid" id="live-content">
         <div class="loading-placeholder">
           <div class="loading-spinner"></div>
           <p>Loading live streams...</p>
@@ -145,7 +151,7 @@
         <a href="vod.html" class="view-all">View All</a>
       </div>
       
-      <div class="stream-grid">
+      <div class="stream-grid" id="vod-content">
         <div class="loading-placeholder">
           <div class="loading-spinner"></div>
           <p>Loading VOD content...</p>
@@ -162,7 +168,7 @@
         <a href="highlights.html" class="view-all">View All</a>
       </div>
       
-      <div class="stream-grid">
+      <div class="stream-grid" id="highlights-content">
         <div class="loading-placeholder">
           <div class="loading-spinner"></div>
           <p>Loading highlights...</p>
@@ -179,7 +185,7 @@
         <a href="channels.html" class="view-all">View All</a>
       </div>
       
-      <div class="stream-grid">
+      <div class="stream-grid" id="channels-content">
         <!-- Channel Card 1 -->
         <a href="channels.html?channel=1" class="stream-card">
           <div class="card-img">
@@ -254,6 +260,7 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
             <li><a href="live-streams.html">Live Streams</a></li>
             <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
@@ -290,5 +297,21 @@
 
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    // API base URL
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
+    
+    // Load content for homepage
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load live content
+      loadContent('live', 'live-content', 'all', 4);
+      
+      // Load VOD content
+      loadContent('vod', 'vod-content', 'all', 4);
+      
+      // Load highlights content
+      loadContent('highlight', 'highlights-content', 'all', 4);
+    });
+  </script>
 </body>
 </html>
