@@ -1,5 +1,5 @@
 // Enhanced Authentication System
-const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+const API_BASE = 'https://your-worker-url.workers.dev';
 
 // Authentication functions
 async function signIn(email, password, remember) {
@@ -32,7 +32,7 @@ async function signIn(email, password, remember) {
     updateAuthUI();
     
     // Redirect to home page or intended destination
-    const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+    const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || 'explore.html';
     window.location.href = redirectUrl;
     
   } catch (error) {
