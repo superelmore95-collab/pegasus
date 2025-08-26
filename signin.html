@@ -289,6 +289,17 @@
     
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Hide preloader
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('hide');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }
+      }, 1000);
+      
       // Initialize mobile menu
       const hamburger = document.querySelector('.hamburger');
       const navLinks = document.querySelector('.nav-links');
