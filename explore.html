@@ -988,7 +988,7 @@
       container.innerHTML = vodContent.slice(0, 4).map((item, index) => `
         <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
           <a href="player.html?type=vod&id=${item.id}">
-            <div class='card-img'>
+            <div class="card-img">
               <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
