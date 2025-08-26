@@ -6,46 +6,85 @@
   <title>Channels | PEGASUS</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <!-- Header same as index.html -->
-<header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="live-stream.html">Live</a></li>
-        <li><a href="video-on-demand.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
-        
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
-            <a href="#" class="btn btn-outline">Sign In</a>
-            <a href="#" class="btn">Subscribe</a>
-          </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons">
-        <a href="#" class="btn btn-outline">Sign In</a>
-        <a href="#" class="btn">Subscribe</a>
-      </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
   </div>
-</header>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html" class="active">Channels</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons" id="auth-buttons">
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
   <!-- Hero Banner for Channels -->
   <section class="hero" style="height: 60vh; min-height: 400px;">
     <div style="background-image: url('images/channels-banner.jpg');" class="slide active">
@@ -63,128 +102,178 @@
       <div class="section-header">
         <h2 class="section-title">All Channels</h2>
         <div class="filter">
-          <select>
-            <option>All Categories</option>
-            <option>Football</option>
-            <option>Basketball</option>
-            <option>Tennis</option>
-            <option>Racing</option>
-            <option>MMA</option>
-            <option>Classics</option>
+          <select id="category-filter">
+            <option value="all">All Categories</option>
+            <option value="Football">Football</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Tennis">Tennis</option>
+            <option value="Racing">Racing</option>
+            <option value="MMA">MMA</option>
+            <option value="Classics">Classics</option>
           </select>
         </div>
       </div>
       
-      <div class="stream-grid">
-        <!-- Channel Card 1 -->
-        <a href="channels.html?channel=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-1.jpg" alt="Premier League Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Premier League Channel</h3>
-            <div class="card-meta">
-              <span>24/7 Football</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 2 -->
-        <a href="channels.html?channel=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-2.jpg" alt="NBA TV">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">NBA TV International</h3>
-            <div class="card-meta">
-              <span>Basketball</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 3 -->
-        <a href="channels.html?channel=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-3.jpg" alt="F1 Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Formula 1 Channel</h3>
-            <div class="card-meta">
-              <span>Racing</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 4 -->
-        <a href="channels.html?channel=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-4.jpg" alt="ESPN Classics">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">PEGASUS Classics</h3>
-            <div class="card-meta">
-              <span>Historic Matches</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 5 -->
-        <a href="channels.html?channel=5" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-5.jpg" alt="Tennis Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Tennis Channel</h3>
-            <div class="card-meta">
-              <span>Grand Slams & ATP/WTA</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 6 -->
-        <a href="channels.html?channel=6" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-6.jpg" alt="UFC Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">UFC Fight Pass</h3>
-            <div class="card-meta">
-              <span>MMA & Combat Sports</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 7 -->
-        <a href="channels.html?channel=7" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-7.jpg" alt="Golf Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Golf Channel</h3>
-            <div class="card-meta">
-              <span>PGA & European Tour</span>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 8 -->
-        <a href="channels.html?channel=8" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-8.jpg" alt="Olympics Channel">
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">Olympics Channel</h3>
-            <div class="card-meta">
-              <span>Olympic Sports</span>
-            </div>
-          </div>
-        </a>
+      <div class="stream-grid" id="channels-container">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading channels...</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer same as index.html -->
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>PEGASUS</h3>
+          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="dmca.html">DMCA Policy</a></li>
+            <li><a href="cookie.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="help.html">Help Center</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
+  <script>
+    // API base URL
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    
+    // Load channels content
+    async function loadChannels(filter = 'all') {
+      try {
+        let url = `${API_BASE}/api/content?type=channel`;
+        if (filter !== 'all') {
+          url += `&category=${filter}`;
+        }
+        
+        const token = localStorage.getItem('pegasus_token');
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(url, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        const channels = content.channels || [];
+        
+        updateChannelsContainer(channels);
+        
+      } catch (error) {
+        console.error('Error loading channels:', error);
+        const container = document.getElementById('channels-container');
+        if (container) {
+          container.innerHTML = '<p class="error-message">Failed to load channels. Please try again later.</p>';
+        }
+      }
+    }
+    
+    function updateChannelsContainer(channels) {
+      const container = document.getElementById('channels-container');
+      
+      if (!container) {
+        console.warn('Channels container not found');
+        return;
+      }
+      
+      // Clear loading state
+      container.innerHTML = '';
+      
+      if (!channels || channels.length === 0) {
+        container.innerHTML = '<p class="no-content">No channels available at the moment.</p>';
+        return;
+      }
+      
+      // Add channels
+      channels.forEach(channel => {
+        const card = document.createElement('a');
+        card.href = `player.html?type=channel&id=${channel.id}`;
+        card.className = 'stream-card';
+        
+        card.innerHTML = `
+          <div class="card-img">
+            <img src="${channel.thumbnail_url}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+            ${channel.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+            ${channel.is_live ? '<div class="live-badge">LIVE</div>' : ''}
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${channel.name}</h3>
+            <div class="card-meta">
+              <span>${channel.category || 'Sports'}</span>
+              <span class="card-views">${channel.viewers_count || 0} watching</span>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      });
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load channels
+      loadChannels();
+      
+      // Set up filter
+      const categoryFilter = document.getElementById('category-filter');
+      if (categoryFilter) {
+        categoryFilter.addEventListener('change', function() {
+          loadChannels(this.value);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
