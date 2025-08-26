@@ -81,6 +81,14 @@
   </style>
 </head>
 <body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
+  </div>
+
   <!-- Login Wall -->
   <div id="login-wall" style="display: none;">
     <div class="login-wall-overlay">
@@ -95,8 +103,9 @@
     </div>
   </div>
 
-  <!-- Main Content (initially hidden) -->
-  <div id="main-content" style="display: none;">
+  <!-- Main Content -->
+  <div id="main-content">
+    <!-- Header -->
     <header>
       <div class="container">
         <nav class="navbar">
@@ -110,8 +119,9 @@
             <li><a href="vod.html" class="active">VOD</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
             
-            <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+            <!-- Mobile Auth Buttons -->
             <li class="mobile-auth-item">
               <div class="mobile-auth">
                 <a href="signin.html" class="btn btn-outline">Sign In</a>
@@ -120,8 +130,8 @@
             </li>
           </ul>
           
-          <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-          <div class="auth-buttons">
+          <!-- Desktop Auth Buttons -->
+          <div class="auth-buttons" id="auth-buttons">
             <a href="signin.html" class="btn btn-outline">Sign In</a>
             <a href="signup.html" class="btn">Subscribe</a>
           </div>
@@ -195,6 +205,7 @@
               <li><a href="vod.html">Video On Demand</a></li>
               <li><a href="highlights.html">Highlights</a></li>
               <li><a href="channels.html">Channels</a></li>
+              <li><a href="explore.html">Explore</a></li>
             </ul>
           </div>
           
@@ -228,48 +239,52 @@
 
   <script src="js/script.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/auth-wall.js"></script>
   <script>
     // VOD-specific functionality
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', function() {
       // Initialize mobile menu
-      if (typeof initMobileMenu === 'function') {
-        initMobileMenu();
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
       }
+      
+      // Set active navigation link
+      const currentPage = window.location.pathname.split('/').pop();
+      const navLinksAll = document.querySelectorAll('.nav-links a');
+      navLinksAll.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
       
       // Check auth status
-      if (typeof checkAuthStatus === 'function') {
-        checkAuthStatus();
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
       }
       
-      // Initialize auth wall
-      if (typeof AuthWall !== 'undefined') {
-        window.vodAuthWall = new AuthWall();
-        const isAuthenticated = await window.vodAuthWall.init();
-        
-        if (isAuthenticated) {
-          // Load VOD content
-          loadVODContent();
-          
-          // Set up filter
-          const sportFilter = document.getElementById('sport-filter');
-          if (sportFilter) {
-            sportFilter.addEventListener('change', function() {
-              loadVODContent(this.value);
-            });
-          }
-        }
+      // Check if user is authenticated
+      const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
+      if (!token) {
+        // Show login wall for protected content
+        document.getElementById('login-wall').style.display = 'block';
+        document.getElementById('main-content').style.display = 'none';
       } else {
-        // Fallback if AuthWall is not available
-        const isAuthenticated = localStorage.getItem('pegasus_token') !== null;
+        // Load VOD content
+        loadVODContent();
         
-        if (isAuthenticated) {
-          document.getElementById('login-wall').style.display = 'none';
-          document.getElementById('main-content').style.display = 'block';
-          loadVODContent();
-        } else {
-          document.getElementById('login-wall').style.display = 'flex';
-          document.getElementById('main-content').style.display = 'none';
+        // Set up filter
+        const sportFilter = document.getElementById('sport-filter');
+        if (sportFilter) {
+          sportFilter.addEventListener('change', function() {
+            loadVODContent(this.value);
+          });
         }
       }
     });
@@ -277,13 +292,18 @@
     async function loadVODContent(filter = 'all') {
       try {
         const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
-        const token = localStorage.getItem('pegasus_token');
+        const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
         
         if (!token) {
           throw new Error('No authentication token found');
         }
         
-        const response = await fetch(`${API_BASE}/api/content`, {
+        let url = `${API_BASE}/api/content?type=vod`;
+        if (filter !== 'all') {
+          url += `&category=${filter}`;
+        }
+        
+        const response = await fetch(url, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -292,12 +312,8 @@
         if (!response.ok) {
           if (response.status === 401) {
             // Token is invalid, show login wall
-            if (window.vodAuthWall) {
-              window.vodAuthWall.showLoginWall();
-            } else {
-              document.getElementById('login-wall').style.display = 'flex';
-              document.getElementById('main-content').style.display = 'none';
-            }
+            document.getElementById('login-wall').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
             return;
           }
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -305,11 +321,6 @@
         
         const content = await response.json();
         let vodContent = content.vod || [];
-        
-        // Apply filter if needed
-        if (filter !== 'all') {
-          vodContent = vodContent.filter(item => item.category === filter);
-        }
         
         // Update the VOD container
         updateVODContainer(vodContent);
@@ -347,6 +358,7 @@
         card.innerHTML = `
           <div class="card-img">
             <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+            ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
           </div>
           <div class="card-content">
             <h3 class="card-title">${item.title}</h3>
