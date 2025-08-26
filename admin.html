@@ -1395,60 +1395,135 @@
       });
     }
 
-    async function loadDashboardData() {
-      try {
-        const response = await fetch(`${API_BASE}/api/stats`);
-        const data = await response.json();
-        
-        // Update dashboard cards
-        document.getElementById('live-streams-count').textContent = data.live_streams_count || 0;
-        document.getElementById('live-streams-growth').textContent = data.live_streams_growth || 0;
-        document.getElementById('vod-count').textContent = data.vod_count || 0;
-        document.getElementById('vod-growth').textContent = data.vod_growth || 0;
-        document.getElementById('total-views').textContent = data.total_views ? formatNumber(data.total_views) : 0;
-        document.getElementById('views-growth').textContent = data.views_growth ? `${data.views_growth}%` : '0%';
-        document.getElementById('active-users').textContent = data.active_users ? formatNumber(data.active_users) : 0;
-        document.getElementById('online-users').textContent = data.online_users || 0;
-      } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        // Use fallback data
-        document.getElementById('live-streams-count').textContent = '12';
-        document.getElementById('live-streams-growth').textContent = '3';
-        document.getElementById('vod-count').textContent = '47';
-        document.getElementById('vod-growth').textContent = '8';
-        document.getElementById('total-views').textContent = '24.5K';
-        document.getElementById('views-growth').textContent = '12%';
-        document.getElementById('active-users').textContent = '1,842';
-        document.getElementById('online-users').textContent = '243';
+// Update the loadDashboardData function
+async function loadDashboardData() {
+  try {
+    const token = localStorage.getItem('pegasus_token');
+    const response = await fetch(`${API_BASE}/api/admin/stats`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch dashboard data');
     }
+    
+    const data = await response.json();
+    
+    // Update dashboard cards
+    document.getElementById('live-streams-count').textContent = data.live_streams || 0;
+    document.getElementById('vod-count').textContent = data.vod_content || 0;
+    document.getElementById('total-views').textContent = data.total_revenue ? formatNumber(data.total_revenue) : 0;
+    document.getElementById('active-users').textContent = data.total_users || 0;
+    
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+    // Set fallback values
+    document.getElementById('live-streams-count').textContent = '0';
+    document.getElementById('vod-count').textContent = '0';
+    document.getElementById('total-views').textContent = '0';
+    document.getElementById('active-users').textContent = '0';
+  }
+}
 
-    async function loadContentData() {
-      try {
-        const response = await fetch(`${API_BASE}/api/content`);
-        const content = await response.json();
-        
-        // Store content globally
-        currentContent = content;
-        
-        // Update live streams table
-        updateLiveStreamsTable(content.live || []);
-        
-        // Update VOD table
-        updateVodTable(content.vod || []);
-        
-        // Update highlights table
-        updateHighlightsTable(content.highlights || []);
-        
-        // Update banners table if available
-        if (content.banners) {
-          updateBannersTable(content.banners);
-        }
-      } catch (error) {
-        console.error('Error loading content data:', error);
-        // Use fallback data (already in HTML)
+// Update the loadUsers function
+async function loadUsers() {
+  try {
+    const token = localStorage.getItem('pegasus_token');
+    const response = await fetch(`${API_BASE}/api/admin/users`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch users');
     }
+    
+    const data = await response.json();
+    currentContent.users = data.users;
+    updateUsersTable(data.users);
+  } catch (error) {
+    console.error('Error loading users:', error);
+    const tableBody = document.getElementById('users-table-body');
+    tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Error loading users</td></tr>';
+  }
+}
+
+// Update the form submission handler
+contentForm.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const formData = {
+    title: document.getElementById('streamTitle').value,
+    description: document.getElementById('streamDescription').value,
+    embed_code: document.getElementById('embedCode').value,
+    category: document.getElementById('streamCategory').value,
+    status: document.getElementById('streamStatus').value,
+    is_live: document.getElementById('isLive').value === 'true',
+    start_time: document.getElementById('startTime').value,
+    end_time: document.getElementById('endTime').value,
+    thumbnail: document.getElementById('thumbnailUrl').value || await uploadThumbnail()
+  };
+  
+  try {
+    const token = localStorage.getItem('pegasus_token');
+    const response = await fetch(`${API_BASE}/api/admin/content`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        type: 'live',
+        data: formData
+      }),
+    });
+    
+    if (response.ok) {
+      alert('Live stream added successfully!');
+      addContentForm.style.display = 'none';
+      contentForm.reset();
+      thumbnailPreview.src = 'https://via.placeholder.com/300x169';
+      
+      // Reload the content
+      loadContentData();
+    } else {
+      const errorData = await response.json();
+      alert(errorData.error || 'Error adding live stream');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Error adding live stream');
+  }
+});
+
+// Update the deleteStream function
+async function deleteStream(id, type) {
+  if (confirm('Are you sure you want to delete this stream?')) {
+    try {
+      const token = localStorage.getItem('pegasus_token');
+      const response = await fetch(`${API_BASE}/api/admin/content/${type}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        alert('Stream deleted successfully!');
+        loadContentData();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Error deleting stream');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error deleting stream');
+    }
+  }
+}
 
     async function loadUsers() {
       try {
