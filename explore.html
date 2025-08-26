@@ -37,14 +37,201 @@
       animation: fadeInUp 1s ease;
     }
     
-    /* Loading states */
+    .search-bar {
+      display: flex;
+      max-width: 600px;
+      margin: 30px auto;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 15px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 16px;
+    }
+    
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .search-btn {
+      padding: 15px 25px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .search-btn:hover {
+      background: var(--accent-light);
+    }
+    
+    .content-section {
+      padding: 60px 0;
+    }
+    
+    .content-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .content-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .content-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-img {
+      height: 180px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .content-card:hover .card-img img {
+      transform: scale(1.1);
+    }
+    
+    .card-badges {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .live-badge, .premium-badge, .countdown {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .live-badge {
+      background: var(--danger);
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+    
+    .live-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .premium-badge {
+      background: var(--warning);
+      color: #000;
+    }
+    
+    .countdown {
+      background: var(--success);
+      color: #000;
+    }
+    
+    .card-content {
+      padding: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .card-views {
+      display: flex;
+      align-items: center;
+    }
+    
+    .card-views::before {
+      content: '👁️';
+      margin-right: 5px;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .action-btn:hover {
+      color: var(--accent);
+    }
+    
     .loading-placeholder {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
+      padding: 60px 20px;
       color: var(--text-secondary);
+      grid-column: 1 / -1;
     }
     
     .loading-spinner {
@@ -59,17 +246,29 @@
     
     .no-content, .error-message {
       text-align: center;
-      padding: 40px;
+      padding: 60px 20px;
       color: var(--text-secondary);
+      grid-column: 1 / -1;
     }
     
     .error-message {
       color: var(--danger);
     }
     
+    .retry-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+    }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
     }
     
     @keyframes fadeInUp {
@@ -82,10 +281,71 @@
         transform: translateY(0);
       }
     }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .content-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .search-bar {
+        flex-direction: column;
+        border-radius: 8px;
+      }
+      
+      .search-input {
+        padding: 12px 15px;
+      }
+      
+      .search-btn {
+        padding: 12px;
+        border-radius: 0 0 8px 8px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Header content would go here -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+        </ul>
+        
+        <div class="auth-buttons">
+          <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <main>
     <!-- Hero section -->
@@ -97,37 +357,125 @@
         <!-- Search bar -->
         <div class="search-bar">
           <input type="text" class="search-input" placeholder="Search for games, teams, or events...">
-          <button class="search-btn"><i class="fas fa-search"></i></button>
+          <button class="search-btn"><i class="fas fa-search"></i> Search</button>
         </div>
       </div>
     </section>
 
     <!-- Content sections -->
     <section class="content-section">
-      <h2>Live Now</h2>
-      <div id="live-now-container" class="content-grid"></div>
+      <div class="container">
+        <h2>Live Now</h2>
+        <div id="live-now-container" class="content-grid">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading live content...</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="content-section">
-      <h2>Upcoming Events</h2>
-      <div id="upcoming-container" class="content-grid"></div>
+      <div class="container">
+        <h2>Upcoming Events</h2>
+        <div id="upcoming-container" class="content-grid">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading upcoming events...</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="content-section">
-      <h2>Highlight Reels</h2>
-      <div id="highlights-container" class="content-grid"></div>
+      <div class="container">
+        <h2>Highlight Reels</h2>
+        <div id="highlights-container" class="content-grid">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading highlights...</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="content-section">
-      <h2>Channels</h2>
-      <div id="channels-container" class="content-grid"></div>
+      <div class="container">
+        <h2>Channels</h2>
+        <div id="channels-container" class="content-grid">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading channels...</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="content-section">
-      <h2>Recommended for You</h2>
-      <div id="recommended-container" class="content-grid"></div>
+      <div class="container">
+        <h2>Recommended for You</h2>
+        <div id="recommended-container" class="content-grid">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading recommendations...</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
+
+  <!-- Footer content would go here -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>PEGASUS</h3>
+          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Navigation</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="dmca.html">DMCA Policy</a></li>
+            <li><a href="cookie.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="faq.html">FAQs</a></li>
+            <li><a href="help.html">Help Center</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+      </div>
+    </div>
+  </footer>
 
   <script src="js/auth.js"></script>
   <script>
@@ -156,19 +504,6 @@
       
       // Load explore content
       loadExploreContent();
-      
-      // Category filter functionality
-      const filters = document.querySelectorAll('.category-filter');
-      if (filters) {
-        filters.forEach(filter => {
-          filter.addEventListener('click', function() {
-            filters.forEach(f => f.classList.remove('active'));
-            this.classList.add('active');
-            const category = this.getAttribute('data-category');
-            filterContent(category);
-          });
-        });
-      }
       
       // Search functionality
       const searchInput = document.querySelector('.search-input');
@@ -199,15 +534,23 @@
         showLoadingState('channels-container');
         showLoadingState('recommended-container');
         
+        // Prepare headers with authentication if available
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        const token = typeof getToken === 'function' ? getToken() : null;
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
         // Fetch content from API with timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         
         const response = await fetch(`${API_BASE}/api/explore`, {
           signal: controller.signal,
-          headers: {
-            'Authorization': isAuthenticated() ? `Bearer ${getToken()}` : ''
-          }
+          headers: headers
         });
         
         clearTimeout(timeoutId);
@@ -221,9 +564,9 @@
         const content = await response.json();
         console.log('API response received:', content);
         
-        // Populate each section
-        populateLiveNow(content.live || []);
-        populateUpcoming(content.upcoming || content.live || []);
+        // Populate each section - using more flexible property names
+        populateLiveNow(content.live || content.live_now || []);
+        populateUpcoming(content.upcoming || content.upcoming_events || []);
         populateHighlights(content.highlights || []);
         populateChannels(content.channels || []);
         populateRecommended(content.recommended || content.vod || []);
@@ -243,11 +586,11 @@
         
         containers.forEach(containerId => {
           const container = document.getElementById(containerId);
-          if (container && container.innerHTML.includes('loading-placeholder')) {
+          if (container) {
             container.innerHTML = `
               <div class="error-message">
                 <p>Failed to load content. Please check your connection and try again.</p>
-                <button onclick="loadExploreContent()" class="btn">Retry</button>
+                <button onclick="loadExploreContent()" class="btn retry-btn">Retry</button>
               </div>
             `;
           }
@@ -294,20 +637,24 @@
       }
       
       container.innerHTML = liveContent.slice(0, 8).map(item => `
-        <div class="content-card animate-card">
+        <div class="content-card">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
+              <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
               <div class="card-badges">
                 <div class="live-badge">LIVE</div>
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
               </div>
             </div>
             <div class="card-content">
-              <h3 class="card-title">${item.title}</h3>
+              <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
                 <span>${item.category || 'Sports'}</span>
-                <span class="card-views">${item.viewers_count || 0} watching</span>
+                <span class="card-views">${item.viewers_count || item.view_count || 0} watching</span>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn"><i class="far fa-heart"></i> Save</button>
+                <button class="action-btn"><i class="far fa-share-square"></i> Share</button>
               </div>
             </div>
           </a>
@@ -319,29 +666,26 @@
       const container = document.getElementById('upcoming-container');
       if (!container) return;
       
-      // Filter for upcoming events (not live yet) if needed
-      const upcomingEvents = upcomingContent.filter(item => !item.is_live).slice(0, 6);
-      
-      if (!upcomingEvents || upcomingEvents.length === 0) {
+      if (!upcomingContent || upcomingContent.length === 0) {
         container.innerHTML = '<p class="no-content">No upcoming events scheduled. Check back later!</p>';
         return;
       }
       
-      container.innerHTML = upcomingEvents.map(item => `
-        <div class="content-card animate-card">
+      container.innerHTML = upcomingContent.slice(0, 6).map(item => `
+        <div class="content-card">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
+              <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
               <div class="card-badges">
                 <div class="countdown">Starts soon</div>
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
               </div>
             </div>
             <div class="card-content">
-              <h3 class="card-title">${item.title}</h3>
+              <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
                 <span>${item.category || 'Sports'}</span>
-                <span>${formatDate(item.start_time)}</span>
+                <span>${formatDate(item.start_time || item.date)}</span>
               </div>
             </div>
           </a>
@@ -358,18 +702,18 @@
         return;
       }
       
-      container.innerHTML = highlights.slice(0, 4).map((item, index) => `
-        <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
+      container.innerHTML = highlights.slice(0, 4).map(item => `
+        <div class="content-card">
           <a href="player.html?type=highlight&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225?text=Highlight'">
+              <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Highlight'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
-              <h3 class="card-title">${item.title}</h3>
+              <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
                 <span>${item.category || 'Sports'}</span>
-                <span class="card-views">${item.view_count || 0} views</span>
+                <span class="card-views">${item.view_count || item.views_count || 0} views</span>
               </div>
             </div>
           </a>
@@ -387,18 +731,18 @@
       }
       
       container.innerHTML = channels.slice(0, 6).map(item => `
-        <div class="content-card animate-card">
+        <div class="content-card">
           <a href="channels.html?channel=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail_url}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Channel'">
+              <img src="${item.thumbnail || item.thumbnail_url || item.image}" alt="${item.name || item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Channel'">
               ${item.is_live ? '<div class="live-badge">LIVE</div>' : ''}
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
-              <h3 class="card-title">${item.name}</h3>
+              <h3 class="card-title">${item.name || item.title}</h3>
               <div class="card-meta">
                 <span>${item.category || 'Sports'}</span>
-                <span class="card-views">${item.viewers_count || 0} watching</span>
+                <span class="card-views">${item.viewers_count || item.view_count || 0} watching</span>
               </div>
             </div>
           </a>
@@ -415,18 +759,18 @@
         return;
       }
       
-      container.innerHTML = recommendedContent.slice(0, 4).map((item, index) => `
-        <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
+      container.innerHTML = recommendedContent.slice(0, 4).map(item => `
+        <div class="content-card">
           <a href="player.html?type=vod&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225?text=Recommended'">
+              <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Recommended'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
-              <h3 class="card-title">${item.title}</h3>
+              <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
                 <span>${item.category || 'Sports'}</span>
-                <span class="card-views">${item.views_count || 0} views</span>
+                <span class="card-views">${item.views_count || item.view_count || 0} views</span>
               </div>
             </div>
           </a>
@@ -446,21 +790,6 @@
       }
     }
     
-    function filterContent(category) {
-      // This would filter the content based on the selected category
-      console.log('Filtering by:', category);
-      // Show loading state
-      showLoadingState('live-now-container');
-      showLoadingState('upcoming-container');
-      showLoadingState('highlights-container');
-      showLoadingState('channels-container');
-      showLoadingState('recommended-container');
-      
-      // In a real implementation, you would make an API call to get filtered content
-      // For now, we'll just reload all content
-      loadExploreContent();
-    }
-    
     function performSearch() {
       const searchTerm = document.querySelector('.search-input').value;
       if (searchTerm.trim()) {
@@ -476,7 +805,6 @@
         
         // Simulate search results after a delay
         setTimeout(() => {
-          // This would be replaced with actual search API call
           alert('Search functionality would show results for: ' + searchTerm);
           loadExploreContent();
         }, 1000);
