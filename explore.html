@@ -728,6 +728,67 @@
     // API base URL
     const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
     
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide preloader
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('hide');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }
+      }, 1000);
+      
+      // Update authentication UI
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
+      }
+      
+      // Initialize mobile menu
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
+      }
+      
+      // Load explore content
+      loadExploreContent();
+      
+      // Category filter functionality
+      const filters = document.querySelectorAll('.category-filter');
+      filters.forEach(filter => {
+        filter.addEventListener('click', function() {
+          filters.forEach(f => f.classList.remove('active'));
+          this.classList.add('active');
+          // Implement category filtering
+          const category = this.getAttribute('data-category');
+          filterContent(category);
+        });
+      });
+      
+      // Search functionality
+      const searchInput = document.querySelector('.search-input');
+      const searchBtn = document.querySelector('.search-btn');
+      
+      if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+      }
+      
+      if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            performSearch();
+          }
+        });
+      }
+    });
+    
     // Load explore content
     async function loadExploreContent() {
       try {
@@ -927,7 +988,7 @@
       container.innerHTML = vodContent.slice(0, 4).map((item, index) => `
         <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
           <a href="player.html?type=vod&id=${item.id}">
-            <div class="card-img">
+            <div class='card-img'>
               <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
@@ -958,40 +1019,6 @@
       const date = new Date(dateString);
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     }
-    
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      // Load content
-      loadExploreContent();
-      
-      // Category filter functionality
-      const filters = document.querySelectorAll('.category-filter');
-      filters.forEach(filter => {
-        filter.addEventListener('click', function() {
-          filters.forEach(f => f.classList.remove('active'));
-          this.classList.add('active');
-          // Implement category filtering
-          const category = this.getAttribute('data-category');
-          filterContent(category);
-        });
-      });
-      
-      // Search functionality
-      const searchInput = document.querySelector('.search-input');
-      const searchBtn = document.querySelector('.search-btn');
-      
-      if (searchBtn) {
-        searchBtn.addEventListener('click', performSearch);
-      }
-      
-      if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            performSearch();
-          }
-        });
-      }
-    });
     
     function filterContent(category) {
       // This would filter the content based on the selected category
