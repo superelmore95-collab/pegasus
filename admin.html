@@ -471,9 +471,10 @@
         <li><a href="#live-streams"><i class="fas fa-broadcast-tower"></i> Live Streams</a></li>
         <li><a href="#vod-content"><i class="fas fa-video"></i> VOD Content</a></li>
         <li><a href="#highlights"><i class="fas fa-star"></i> Highlights</a></li>
+        <li><a href="#channels"><i class="fas fa-tv"></i> Channels</a></li>
         <li><a href="#banners"><i class="fas fa-images"></i> Banners & Hero</a></li>
         <li><a href="#users"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="#channels"><i class="fas fa-tv"></i> Channels</a></li>
+        <li><a href="#subscriptions"><i class="fas fa-credit-card"></i> Subscriptions</a></li>
         <li><a href="#analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
         <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
         <li><a href="#" id="admin-logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -842,6 +843,36 @@
           </table>
         </div>
       </div>
+
+      <!-- Subscriptions Management -->
+      <div class="admin-content-section" id="subscriptions-section">
+        <div class="admin-section-header">
+          <h2 class="admin-section-title">
+            <i class="fas fa-credit-card"></i> Subscriptions
+          </h2>
+          <button class="admin-btn" id="addPlanBtn">
+            <i class="fas fa-plus"></i> Add Plan
+          </button>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Plan Name</th>
+                <th>Monthly Price</th>
+                <th>Yearly Price</th>
+                <th>Active Users</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="subscriptions-table-body">
+              <!-- Content will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -856,7 +887,8 @@
       highlights: [],
       banners: [],
       users: [],
-      channels: []
+      channels: [],
+      subscriptions: []
     };
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -875,6 +907,7 @@
       loadDashboardData();
       loadContentData();
       loadUsers();
+      loadSubscriptions();
     });
 
     function initAdminPanel() {
@@ -1064,6 +1097,25 @@
       }
     }
 
+    async function loadSubscriptions() {
+      try {
+        const token = localStorage.getItem('pegasus_token');
+        const response = await fetch(`${API_BASE}/api/admin/subscriptions`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch subscriptions');
+        
+        const subscriptions = await response.json();
+        currentContent.subscriptions = subscriptions;
+        updateSubscriptionsTable(subscriptions);
+      } catch (error) {
+        console.error('Error loading subscriptions:', error);
+      }
+    }
+
     function updateLiveStreamsTable(streams) {
       const tableBody = document.getElementById('live-streams-table-body');
       tableBody.innerHTML = '';
@@ -1110,6 +1162,32 @@
           <td class="admin-action-buttons">
             <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editUser(${user.id})"><i class="fas fa-edit"></i></button>
             <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteUser(${user.id})"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function updateSubscriptionsTable(subscriptions) {
+      const tableBody = document.getElementById('subscriptions-table-body');
+      tableBody.innerHTML = '';
+      
+      if (subscriptions.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No subscription plans found</td></tr>';
+        return;
+      }
+      
+      subscriptions.forEach(plan => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${plan.name}</td>
+          <td>${plan.price_monthly ? `${plan.price_monthly} EGP` : 'N/A'}</td>
+          <td>${plan.price_yearly ? `${plan.price_yearly} EGP` : 'N/A'}</td>
+          <td>${plan.active_users || 0}</td>
+          <td><span class="admin-status-badge admin-status-${plan.is_active ? 'published' : 'draft'}">${plan.is_active ? 'ACTIVE' : 'INACTIVE'}</span></td>
+          <td class="admin-action-buttons">
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editPlan(${plan.id})"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deletePlan(${plan.id})"><i class="fas fa-trash"></i></button>
           </td>
         `;
         tableBody.appendChild(row);
@@ -1310,6 +1388,9 @@
     window.editBanner = function(id) {
       alert('Edit Banner functionality would be implemented here');
     };
+    window.editPlan = function(id) {
+      alert('Edit Plan functionality would be implemented here');
+    };
     window.deleteContent = function(id, type) {
       if (confirm('Are you sure you want to delete this content?')) {
         alert(`Delete ${type} functionality would be implemented here`);
@@ -1320,6 +1401,11 @@
         alert('Delete banner functionality would be implemented here');
       }
     };
+    window.deletePlan = function(id) {
+      if (confirm('Are you sure you want to delete this plan?')) {
+        alert('Delete plan functionality would be implemented here');
+      }
+    };
   </script>
 </body>
-</html>
+</html>F
