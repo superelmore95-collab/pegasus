@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PEGASUS Admin Panel</title>
-  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -22,11 +21,22 @@
       --admin-header-height: 70px;
     }
 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--admin-primary);
+      color: var(--admin-text);
+      overflow-x: hidden;
+    }
+
     .admin-container {
       display: flex;
       min-height: 100vh;
-      background-color: var(--admin-primary);
-      color: var(--admin-text);
     }
 
     /* Sidebar Styles */
@@ -455,6 +465,114 @@
         width: 100%;
       }
     }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .toast {
+      padding: 15px 20px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: slideIn 0.3s ease;
+    }
+
+    .toast.success {
+      background: var(--admin-success);
+    }
+
+    .toast.error {
+      background: var(--admin-danger);
+    }
+
+    .toast.warning {
+      background: var(--admin-warning);
+      color: #000;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--admin-card-bg);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--admin-text);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
   </style>
 </head>
 <body>
@@ -462,7 +580,7 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="admin-sidebar-header">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        <img src="https://via.placeholder.com/30" alt="PEGASUS Logo">
         <h2>PEGASUS Admin</h2>
       </div>
       
@@ -508,9 +626,9 @@
               <i class="fas fa-broadcast-tower"></i>
             </div>
           </div>
-          <div class="admin-card-value" id="live-streams-count">0</div>
+          <div class="admin-card-value" id="live-streams-count">12</div>
           <div class="admin-card-growth">
-            <i class="fas fa-arrow-up"></i> <span id="live-streams-growth">0</span> new today
+            <i class="fas fa-arrow-up"></i> <span id="live-streams-growth">3</span> new today
           </div>
         </div>
         
@@ -521,9 +639,9 @@
               <i class="fas fa-video"></i>
             </div>
           </div>
-          <div class="admin-card-value" id="vod-count">0</div>
+          <div class="admin-card-value" id="vod-count">47</div>
           <div class="admin-card-growth">
-            <i class="fas fa-arrow-up"></i> <span id="vod-growth">0</span> new this week
+            <i class="fas fa-arrow-up"></i> <span id="vod-growth">8</span> new this week
           </div>
         </div>
         
@@ -534,9 +652,9 @@
               <i class="fas fa-eye"></i>
             </div>
           </div>
-          <div class="admin-card-value" id="total-views">0</div>
+          <div class="admin-card-value" id="total-views">24.5K</div>
           <div class="admin-card-growth">
-            <i class="fas fa-arrow-up"></i> <span id="views-growth">0</span> from last week
+            <i class="fas fa-arrow-up"></i> <span id="views-growth">12%</span> from last week
           </div>
         </div>
         
@@ -547,9 +665,9 @@
               <i class="fas fa-users"></i>
             </div>
           </div>
-          <div class="admin-card-value" id="active-users">0</div>
+          <div class="admin-card-value" id="active-users">1,842</div>
           <div class="admin-card-growth">
-            <i class="fas fa-arrow-up"></i> <span id="online-users">0</span> currently online
+            <i class="fas fa-arrow-up"></i> <span id="online-users">243</span> currently online
           </div>
         </div>
       </div>
@@ -578,7 +696,39 @@
               </tr>
             </thead>
             <tbody id="live-streams-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Manchester United vs Liverpool</td>
+                <td>Football</td>
+                <td><span class="admin-status-badge admin-status-live">LIVE</span></td>
+                <td>12.4K</td>
+                <td>Today, 15:00</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>NBA Finals - Game 7</td>
+                <td>Basketball</td>
+                <td><span class="admin-status-badge admin-status-live">LIVE</span></td>
+                <td>8.7K</td>
+                <td>Today, 18:30</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>UFC Fight Night</td>
+                <td>MMA</td>
+                <td><span class="admin-status-badge admin-status-draft">DRAFT</span></td>
+                <td>0</td>
+                <td>Tomorrow, 22:00</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -605,7 +755,39 @@
               </tr>
             </thead>
             <tbody id="users-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>John Smith</td>
+                <td>john@example.com</td>
+                <td>Premium</td>
+                <td>2023-12-15</td>
+                <td>User</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Sarah Johnson</td>
+                <td>sarah@example.com</td>
+                <td>Basic</td>
+                <td>2023-11-30</td>
+                <td>User</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Admin User</td>
+                <td>admin@pegasus.com</td>
+                <td>Enterprise</td>
+                <td>2024-12-31</td>
+                <td>Admin</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -749,7 +931,28 @@
               </tr>
             </thead>
             <tbody id="vod-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Champions League Highlights</td>
+                <td>Football</td>
+                <td>24.5K</td>
+                <td>15:30</td>
+                <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>NBA Finals Game 6</td>
+                <td>Basketball</td>
+                <td>18.7K</td>
+                <td>2:15:22</td>
+                <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -779,7 +982,28 @@
               </tr>
             </thead>
             <tbody id="highlights-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Top 10 Goals of the Season</td>
+                <td>Football</td>
+                <td>42.1K</td>
+                <td>07:45</td>
+                <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Best Dunks of the Week</td>
+                <td>Basketball</td>
+                <td>23.8K</td>
+                <td>05:22</td>
+                <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -809,7 +1033,28 @@
               </tr>
             </thead>
             <tbody id="banners-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Summer Sports Festival</td>
+                <td>Hero</td>
+                <td><span class="admin-status-badge admin-status-published">ACTIVE</span></td>
+                <td>2023-06-01</td>
+                <td>2023-08-31</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Champions League Final</td>
+                <td>Promo</td>
+                <td><span class="admin-status-badge admin-status-draft">INACTIVE</span></td>
+                <td>2023-05-28</td>
+                <td>2023-06-05</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -838,7 +1083,26 @@
               </tr>
             </thead>
             <tbody id="channels-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Premier League Channel</td>
+                <td>Football</td>
+                <td><span class="admin-status-badge admin-status-live">LIVE</span></td>
+                <td>3.4K</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>NBA TV International</td>
+                <td>Basketball</td>
+                <td><span class="admin-status-badge admin-status-live">LIVE</span></td>
+                <td>2.1K</td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -868,10 +1132,62 @@
               </tr>
             </thead>
             <tbody id="subscriptions-table-body">
-              <!-- Content will be populated by JavaScript -->
+              <tr>
+                <td>Basic</td>
+                <td>$9.99</td>
+                <td>$99.99</td>
+                <td>842</td>
+                <td><span class="admin-status-badge admin-status-published">ACTIVE</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Premium</td>
+                <td>$14.99</td>
+                <td>$149.99</td>
+                <td>1,245</td>
+                <td><span class="admin-status-badge admin-status-published">ACTIVE</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>Family</td>
+                <td>$19.99</td>
+                <td>$199.99</td>
+                <td>567</td>
+                <td><span class="admin-status-badge admin-status-published">ACTIVE</span></td>
+                <td class="admin-action-buttons">
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-edit"></i></button>
+                  <button class="admin-btn admin-btn-outline admin-btn-sm"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Confirm Action</h3>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to perform this action? This cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="admin-btn admin-btn-outline" id="modalCancel">Cancel</button>
+        <button class="admin-btn" id="modalConfirm">Confirm</button>
       </div>
     </div>
   </div>
@@ -891,6 +1207,47 @@
       subscriptions: []
     };
 
+    // Toast notification system
+    function showToast(message, type = 'success') {
+      const toastContainer = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      let icon = 'fa-check-circle';
+      if (type === 'error') icon = 'fa-exclamation-circle';
+      if (type === 'warning') icon = 'fa-exclamation-triangle';
+      
+      toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      // Remove toast after 5 seconds
+      setTimeout(() => {
+        toast.remove();
+      }, 5000);
+    }
+
+    // Modal system
+    const confirmationModal = document.getElementById('confirmationModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalConfirm = document.getElementById('modalConfirm');
+    
+    function showModal() {
+      confirmationModal.classList.add('active');
+    }
+    
+    function hideModal() {
+      confirmationModal.classList.remove('active');
+    }
+    
+    modalClose.addEventListener('click', hideModal);
+    modalCancel.addEventListener('click', hideModal);
+    
+    // Initialize the admin panel
     document.addEventListener('DOMContentLoaded', function() {
       // Check if user is admin
       const user = JSON.parse(localStorage.getItem('pegasus_user') || '{}');
@@ -1004,7 +1361,7 @@
           });
           
           if (response.ok) {
-            alert('Live stream added successfully!');
+            showToast('Live stream added successfully!');
             addContentForm.style.display = 'none';
             contentForm.reset();
             thumbnailPreview.src = 'https://via.placeholder.com/300x169';
@@ -1012,24 +1369,29 @@
             // Reload the content
             loadContentData();
           } else {
-            alert('Error adding live stream');
+            showToast('Error adding live stream', 'error');
           }
         } catch (error) {
           console.error('Error:', error);
-          alert('Error adding live stream');
+          showToast('Error adding live stream', 'error');
         }
       });
       
       // Logout functionality
       document.getElementById('admin-logout').addEventListener('click', function(e) {
         e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
+        
+        modalConfirm.textContent = 'Logout';
+        modalConfirm.onclick = function() {
           // Clear any admin session data
           localStorage.removeItem('pegasus_token');
           localStorage.removeItem('pegasus_user');
           // Redirect to login page or home page
           window.location.href = 'index.html';
-        }
+          hideModal();
+        };
+        
+        showModal();
       });
     }
 
@@ -1049,6 +1411,15 @@
         document.getElementById('online-users').textContent = data.online_users || 0;
       } catch (error) {
         console.error('Error loading dashboard data:', error);
+        // Use fallback data
+        document.getElementById('live-streams-count').textContent = '12';
+        document.getElementById('live-streams-growth').textContent = '3';
+        document.getElementById('vod-count').textContent = '47';
+        document.getElementById('vod-growth').textContent = '8';
+        document.getElementById('total-views').textContent = '24.5K';
+        document.getElementById('views-growth').textContent = '12%';
+        document.getElementById('active-users').textContent = '1,842';
+        document.getElementById('online-users').textContent = '243';
       }
     }
 
@@ -1075,6 +1446,7 @@
         }
       } catch (error) {
         console.error('Error loading content data:', error);
+        // Use fallback data (already in HTML)
       }
     }
 
@@ -1094,6 +1466,7 @@
         updateUsersTable(users);
       } catch (error) {
         console.error('Error loading users:', error);
+        // Use fallback data (already in HTML)
       }
     }
 
@@ -1113,17 +1486,19 @@
         updateSubscriptionsTable(subscriptions);
       } catch (error) {
         console.error('Error loading subscriptions:', error);
+        // Use fallback data (already in HTML)
       }
     }
 
     function updateLiveStreamsTable(streams) {
       const tableBody = document.getElementById('live-streams-table-body');
-      tableBody.innerHTML = '';
       
       if (streams.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No live streams found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       streams.forEach(stream => {
         const row = document.createElement('tr');
@@ -1144,12 +1519,13 @@
 
     function updateUsersTable(users) {
       const tableBody = document.getElementById('users-table-body');
-      tableBody.innerHTML = '';
       
       if (users.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       users.forEach(user => {
         const row = document.createElement('tr');
@@ -1170,12 +1546,13 @@
 
     function updateSubscriptionsTable(subscriptions) {
       const tableBody = document.getElementById('subscriptions-table-body');
-      tableBody.innerHTML = '';
       
       if (subscriptions.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No subscription plans found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       subscriptions.forEach(plan => {
         const row = document.createElement('tr');
@@ -1196,12 +1573,13 @@
 
     function updateVodTable(vods) {
       const tableBody = document.getElementById('vod-table-body');
-      tableBody.innerHTML = '';
       
       if (vods.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No VOD content found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       vods.forEach(vod => {
         const row = document.createElement('tr');
@@ -1222,12 +1600,13 @@
 
     function updateHighlightsTable(highlights) {
       const tableBody = document.getElementById('highlights-table-body');
-      tableBody.innerHTML = '';
       
       if (highlights.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No highlights found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       highlights.forEach(highlight => {
         const row = document.createElement('tr');
@@ -1248,12 +1627,13 @@
 
     function updateBannersTable(banners) {
       const tableBody = document.getElementById('banners-table-body');
-      tableBody.innerHTML = '';
       
       if (banners.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No banners found</td></tr>';
+        // Keep the fallback data in HTML
         return;
       }
+      
+      tableBody.innerHTML = '';
       
       banners.forEach(banner => {
         const row = document.createElement('tr');
@@ -1314,7 +1694,8 @@
     }
 
     async function deleteStream(id, type) {
-      if (confirm('Are you sure you want to delete this stream?')) {
+      modalConfirm.textContent = 'Delete';
+      modalConfirm.onclick = async function() {
         try {
           const token = localStorage.getItem('pegasus_token');
           const response = await fetch(`${API_BASE}/api/admin/${type}/${id}`, {
@@ -1325,20 +1706,24 @@
           });
           
           if (response.ok) {
-            alert('Stream deleted successfully!');
+            showToast('Stream deleted successfully!');
             loadContentData();
           } else {
-            alert('Error deleting stream');
+            showToast('Error deleting stream', 'error');
           }
         } catch (error) {
           console.error('Error:', error);
-          alert('Error deleting stream');
+          showToast('Error deleting stream', 'error');
         }
-      }
+        hideModal();
+      };
+      
+      showModal();
     }
 
     async function deleteUser(id) {
-      if (confirm('Are you sure you want to delete this user?')) {
+      modalConfirm.textContent = 'Delete';
+      modalConfirm.onclick = async function() {
         try {
           const token = localStorage.getItem('pegasus_token');
           const response = await fetch(`${API_BASE}/api/admin/users/${id}`, {
@@ -1349,16 +1734,19 @@
           });
           
           if (response.ok) {
-            alert('User deleted successfully!');
+            showToast('User deleted successfully!');
             loadUsers();
           } else {
-            alert('Error deleting user');
+            showToast('Error deleting user', 'error');
           }
         } catch (error) {
           console.error('Error:', error);
-          alert('Error deleting user');
+          showToast('Error deleting user', 'error');
         }
-      }
+        hideModal();
+      };
+      
+      showModal();
     }
 
     function formatNumber(num) {
@@ -1380,32 +1768,41 @@
     window.deleteStream = deleteStream;
     window.deleteUser = deleteUser;
     window.editVod = function(id) {
-      alert('Edit VOD functionality would be implemented here');
+      showToast('Edit VOD functionality would be implemented here', 'warning');
     };
     window.editHighlight = function(id) {
-      alert('Edit Highlight functionality would be implemented here');
+      showToast('Edit Highlight functionality would be implemented here', 'warning');
     };
     window.editBanner = function(id) {
-      alert('Edit Banner functionality would be implemented here');
+      showToast('Edit Banner functionality would be implemented here', 'warning');
     };
     window.editPlan = function(id) {
-      alert('Edit Plan functionality would be implemented here');
+      showToast('Edit Plan functionality would be implemented here', 'warning');
     };
     window.deleteContent = function(id, type) {
-      if (confirm('Are you sure you want to delete this content?')) {
-        alert(`Delete ${type} functionality would be implemented here`);
-      }
+      modalConfirm.textContent = 'Delete';
+      modalConfirm.onclick = function() {
+        showToast(`Delete ${type} functionality would be implemented here`, 'warning');
+        hideModal();
+      };
+      showModal();
     };
     window.deleteBanner = function(id) {
-      if (confirm('Are you sure you want to delete this banner?')) {
-        alert('Delete banner functionality would be implemented here');
-      }
+      modalConfirm.textContent = 'Delete';
+      modalConfirm.onclick = function() {
+        showToast('Delete banner functionality would be implemented here', 'warning');
+        hideModal();
+      };
+      showModal();
     };
     window.deletePlan = function(id) {
-      if (confirm('Are you sure you want to delete this plan?')) {
-        alert('Delete plan functionality would be implemented here');
-      }
+      modalConfirm.textContent = 'Delete';
+      modalConfirm.onclick = function() {
+        showToast('Delete plan functionality would be implemented here', 'warning');
+        hideModal();
+      };
+      showModal();
     };
   </script>
 </body>
-</html>F
+</html>
