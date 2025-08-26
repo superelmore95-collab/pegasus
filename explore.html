@@ -8,55 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Preloader styles with animation stopping capability */
-    #preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--primary);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    
-    #preloader.hide {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    
-    .preloader-content {
-      text-align: center;
-    }
-    
-    .preloader-logo {
-      width: 150px;
-      margin-bottom: 30px;
-    }
-    
-    .loading-circle {
-      width: 60px;
-      height: 60px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top: 4px solid var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-    
-    #preloader.hide .loading-circle {
-      animation: none; /* Stop animation when hiding */
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
     /* Explore Page Specific Styles */
     .explore-hero {
       position: relative;
@@ -91,14 +42,6 @@
   </style>
 </head>
 <body>
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="preloader-content">
-      <img src="images/pegasus-logo.png" alt="PEGASUS Logo" class="preloader-logo">
-      <div class="loading-circle"></div>
-    </div>
-  </div>
-
   <!-- Header and rest of your explore page content remains the same -->
   <!-- ... -->
 
@@ -125,19 +68,8 @@
         updateAuthUI();
       }
       
-      // Set a maximum timeout to ensure preloader always disappears
-      const maxLoadTime = 8000; // 8 seconds maximum
-      const loadTimeout = setTimeout(() => {
-        hidePreloader();
-        showErrorStates();
-        console.error('Content loading timed out after', maxLoadTime, 'ms');
-      }, maxLoadTime);
-      
       // Load explore content
-      loadExploreContent().finally(() => {
-        clearTimeout(loadTimeout);
-        hidePreloader();
-      });
+      loadExploreContent();
       
       // Category filter functionality
       const filters = document.querySelectorAll('.category-filter');
@@ -167,18 +99,6 @@
       }
     });
     
-    // Improved preloader handling
-    function hidePreloader() {
-      const preloader = document.getElementById('preloader');
-      if (preloader) {
-        preloader.classList.add('hide');
-        // Remove from DOM after animation completes
-        setTimeout(() => {
-          preloader.style.display = 'none';
-        }, 500);
-      }
-    }
-    
     // Load explore content
     async function loadExploreContent() {
       try {
@@ -199,6 +119,7 @@
         
         clearTimeout(timeoutId);
         
+        // Check if response is successful using response.ok :cite[9]
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -220,8 +141,6 @@
       } catch (error) {
         console.error('Error loading explore content:', error);
         showErrorStates();
-        // Re-throw error to ensure preloader still gets hidden
-        throw error;
       }
     }
     
@@ -399,7 +318,7 @@
             <div class="card-content">
               <h3 class="card-title">${item.title}</h3>
               <div class="card-meta">
-                <span>${item.category || 'Sports'}</span>
+                <span>${item.category || 'Sports'}}</span>
                 <span class="card-views">${item.views_count || 0} views</span>
               </div>
             </div>
