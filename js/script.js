@@ -1,5 +1,5 @@
 // Global API base URL
-const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev/';
+const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
 // Authentication functions
 async function signUp(name, email, password) {
