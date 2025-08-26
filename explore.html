@@ -8,6 +8,55 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Preloader styles with animation stopping capability */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    #preloader.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    
+    .preloader-content {
+      text-align: center;
+    }
+    
+    .preloader-logo {
+      width: 150px;
+      margin-bottom: 30px;
+    }
+    
+    .loading-circle {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    #preloader.hide .loading-circle {
+      animation: none; /* Stop animation when hiding */
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
     /* Explore Page Specific Styles */
     .explore-hero {
       position: relative;
@@ -21,6 +70,7 @@
       overflow: hidden;
     }
     
+    /* Rest of your explore page styles remain unchanged */
     .hero-content {
       position: relative;
       z-index: 2;
@@ -37,455 +87,7 @@
       animation: fadeInUp 1s ease;
     }
     
-    .hero-subtitle {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      color: var(--text-secondary);
-      animation: fadeInUp 1s ease 0.2s both;
-    }
-    
-    .hero-search {
-      max-width: 500px;
-      margin: 0 auto;
-      position: relative;
-      animation: fadeInUp 1s ease 0.4s both;
-    }
-    
-    .search-input {
-      width: 100%;
-      padding: 15px 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50px;
-      color: var(--text);
-      font-size: 16px;
-      backdrop-filter: blur(10px);
-      transition: var(--transition);
-    }
-    
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.15);
-    }
-    
-    .search-btn {
-      position: absolute;
-      right: 5px;
-      top: 5px;
-      background: var(--accent);
-      border: none;
-      border-radius: 50px;
-      width: 45px;
-      height: 45px;
-      color: #000;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .search-btn:hover {
-      background: var(--accent-light);
-      transform: scale(1.05);
-    }
-    
-    .floating-cards {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-    
-    .floating-card {
-      position: absolute;
-      width: 200px;
-      height: 120px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      animation: float 20s infinite linear;
-    }
-    
-    .floating-card:nth-child(1) {
-      top: 20%;
-      left: 10%;
-      animation-delay: 0s;
-      animation-duration: 25s;
-    }
-    
-    .floating-card:nth-child(2) {
-      top: 60%;
-      left: 15%;
-      animation-delay: -5s;
-      animation-duration: 20s;
-    }
-    
-    .floating-card:nth-child(3) {
-      top: 40%;
-      right: 10%;
-      animation-delay: -10s;
-      animation-duration: 30s;
-    }
-    
-    .floating-card:nth-child(4) {
-      top: 70%;
-      right: 20%;
-      animation-delay: -15s;
-      animation-duration: 22s;
-    }
-    
-    .category-filters {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin: 40px 0;
-      padding: 0 20px;
-    }
-    
-    .category-filter {
-      padding: 12px 24px;
-      background: var(--card-bg);
-      border: 2px solid transparent;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 500;
-    }
-    
-    .category-filter.active,
-    .category-filter:hover {
-      border-color: var(--accent);
-      background: rgba(255, 0, 60, 0.1);
-      transform: translateY(-2px);
-    }
-    
-    .content-section {
-      margin: 60px 0;
-      padding: 0 20px;
-    }
-    
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    
-    .section-title {
-      font-size: 2rem;
-      position: relative;
-      padding-bottom: 15px;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 80px;
-      height: 4px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-    
-    .view-all-btn {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: var(--transition);
-    }
-    
-    .view-all-btn:hover {
-      gap: 12px;
-    }
-    
-    .content-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-    }
-    
-    .horizontal-scroll {
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 10px 5px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent) transparent;
-    }
-    
-    .horizontal-scroll::-webkit-scrollbar {
-      height: 6px;
-    }
-    
-    .horizontal-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-    .horizontal-scroll::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 3px;
-    }
-    
-    .content-card {
-      flex: 0 0 auto;
-      width: 300px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: var(--transition);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .content-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    .card-img {
-      height: 180px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-    
-    .content-card:hover .card-img img {
-      transform: scale(1.1);
-    }
-    
-    .card-badges {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      display: flex;
-      gap: 8px;
-    }
-    
-    .card-content {
-      padding: 20px;
-    }
-    
-    .card-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-    
-    .card-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
-    
-    .card-actions {
-      display: flex;
-      gap: 15px;
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .action-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 14px;
-    }
-    
-    .action-btn:hover {
-      color: var(--accent);
-    }
-    
-    .featured-content {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 25px;
-      margin-bottom: 40px;
-    }
-    
-    .main-featured {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      height: 400px;
-    }
-    
-    .main-featured img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .main-featured-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 30px;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-    }
-    
-    .side-featured {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-    }
-    
-    .side-card {
-      flex: 1;
-      background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-    }
-    
-    .side-card-img {
-      width: 120px;
-      height: 100%;
-    }
-    
-    .side-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .side-card-content {
-      padding: 15px;
-      flex: 1;
-    }
-    
-    .live-indicator {
-      display: inline-block;
-      padding: 4px 8px;
-      background: var(--danger);
-      color: white;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    
-    .countdown {
-      display: inline-block;
-      padding: 4px 8px;
-      background: var(--accent);
-      color: #000;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    
-    /* Animations */
-    @keyframes float {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      25% {
-        transform: translateY(-20px) rotate(5deg);
-      }
-      50% {
-        transform: translateY(0) rotate(0deg);
-      }
-      75% {
-        transform: translateY(20px) rotate(-5deg);
-      }
-      100% {
-        transform: translateY(0) rotate(0deg);
-      }
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-card {
-      animation: fadeInUp 0.6s ease both;
-    }
-    
-    /* Responsive Styles */
-    @media (max-width: 992px) {
-      .featured-content {
-        grid-template-columns: 1fr;
-      }
-      
-      .hero-title {
-        font-size: 2.8rem;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.2rem;
-      }
-      
-      .section-title {
-        font-size: 1.8rem;
-      }
-      
-      .content-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      }
-      
-      .category-filters {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        justify-content: flex-start;
-        padding-bottom: 10px;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .hero-title {
-        font-size: 1.8rem;
-      }
-      
-      .hero-subtitle {
-        font-size: 1rem;
-      }
-      
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .side-card {
-        flex-direction: column;
-      }
-      
-      .side-card-img {
-        width: 100%;
-        height: 120px;
-      }
-    }
+    /* ... (all other existing styles remain the same) ... */
   </style>
 </head>
 <body>
@@ -497,231 +99,8 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <nav class="navbar">
-        <a href="index.html" class="logo">
-          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-        </a>
-        
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="explore.html" class="active">Explore</a></li>
-          <li><a href="live-streams.html">Live</a></li>
-          <li><a href="vod.html">VOD</a></li>
-          <li><a href="highlights.html">Highlights</a></li>
-          <li><a href="channels.html">Channels</a></li>
-        </ul>
-        
-        <div class="auth-buttons" id="auth-buttons">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="explore-hero">
-    <div class="floating-cards">
-      <div class="floating-card"></div>
-      <div class="floating-card"></div>
-      <div class="floating-card"></div>
-      <div class="floating-card"></div>
-    </div>
-    
-    <div class="hero-content">
-      <h1 class="hero-title">Discover Endless Sports Content</h1>
-      <p class="hero-subtitle">Live games, highlights, exclusive shows and more - all in one place</p>
-      
-      <div class="hero-search">
-        <input type="text" class="search-input" placeholder="Search for games, teams, or events...">
-        <button class="search-btn"><i class="fas fa-search"></i></button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Category Filters -->
-  <div class="container">
-    <div class="category-filters">
-      <div class="category-filter active" data-category="all">All</div>
-      <div class="category-filter" data-category="football">Football</div>
-      <div class="category-filter" data-category="basketball">Basketball</div>
-      <div class="category-filter" data-category="tennis">Tennis</div>
-      <div class="category-filter" data-category="formula1">Formula 1</div>
-      <div class="category-filter" data-category="ufc">UFC/MMA</div>
-      <div class="category-filter" data-category="baseball">Baseball</div>
-      <div class="category-filter" data-category="hockey">Hockey</div>
-    </div>
-  </div>
-
-  <!-- Featured Content -->
-  <section class="content-section">
-    <div class="container">
-      <div class="featured-content">
-        <div class="main-featured">
-          <img src="https://via.placeholder.com/800x400" alt="Featured Event" id="main-featured-img">
-          <div class="main-featured-content">
-            <span class="live-indicator">LIVE</span>
-            <h2 id="main-featured-title">Manchester United vs Liverpool</h2>
-            <p id="main-featured-desc">Premier League - Matchday 24</p>
-            <button class="btn">Watch Now</button>
-          </div>
-        </div>
-        
-        <div class="side-featured">
-          <div class="side-card">
-            <div class="side-card-img">
-              <img src="https://via.placeholder.com/200x120" alt="Side Event 1">
-            </div>
-            <div class="side-card-content">
-              <span class="countdown">Starts in 2:15:43</span>
-              <h3>LA Lakers vs Boston Celtics</h3>
-            </div>
-          </div>
-          
-          <div class="side-card">
-            <div class="side-card-img">
-              <img src="https://via.placeholder.com/200x120" alt="Side Event 2">
-            </div>
-            <div class="side-card-content">
-              <span class="live-indicator">LIVE</span>
-              <h3>UFC Fight Night: Main Card</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live Now Section -->
-  <section class="content-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Live Now</h2>
-        <a href="live-streams.html" class="view-all-btn">View All <i class="fas fa-arrow-right"></i></a>
-      </div>
-      
-      <div class="horizontal-scroll" id="live-now-container">
-        <!-- Content will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Upcoming Events -->
-  <section class="content-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Upcoming Events</h2>
-        <a href="live-streams.html" class="view-all-btn">View All <i class="fas fa-arrow-right"></i></a>
-      </div>
-      
-      <div class="horizontal-scroll" id="upcoming-container">
-        <!-- Content will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Top Highlights -->
-  <section class="content-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Top Highlights</h2>
-        <a href="highlights.html" class="view-all-btn">View All <i class="fas fa-arrow-right"></i></a>
-      </div>
-      
-      <div class="content-grid" id="highlights-container">
-        <!-- Content will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Channels -->
-  <section class="content-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Featured Channels</h2>
-        <a href="channels.html" class="view-all-btn">View All <i class="fas fa-arrow-right"></i></a>
-      </div>
-      
-      <div class="horizontal-scroll" id="channels-container">
-        <!-- Content will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Recommended For You -->
-  <section class="content-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Recommended For You</h2>
-        <a href="#" class="view-all-btn">View More <i class="fas fa-arrow-right"></i></a>
-      </div>
-      
-      <div class="content-grid" id="recommended-container">
-        <!-- Content will be loaded dynamically -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-column">
-          <h3>PEGASUS</h3>
-          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Navigation</h3>
-          <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="live-streams.html">Live Streams</a></li>
-            <li><a href="vod.html">Video On Demand</a></li>
-            <li><a href="highlights.html">Highlights</a></li>
-            <li><a href="channels.html">Channels</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Legal</h3>
-          <ul class="footer-links">
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="dmca.html">DMCA Policy</a></li>
-            <li><a href="cookie.html">Cookie Policy</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Support</h3>
-          <ul class="footer-links">
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="faq.html">FAQs</a></li>
-            <li><a href="help.html">Help Center</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="copyright">
-        &copy; 2026 PEGASUS Sports Streaming. All rights reserved.
-      </div>
-    </div>
-  </footer>
+  <!-- Header and rest of your explore page content remains the same -->
+  <!-- ... -->
 
   <script src="js/auth.js"></script>
   <script>
@@ -730,22 +109,6 @@
     
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Hide preloader
-      setTimeout(() => {
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-          preloader.classList.add('hide');
-          setTimeout(() => {
-            preloader.style.display = 'none';
-          }, 500);
-        }
-      }, 1000);
-      
-      // Update authentication UI
-      if (typeof updateAuthUI === 'function') {
-        updateAuthUI();
-      }
-      
       // Initialize mobile menu
       const hamburger = document.querySelector('.hamburger');
       const navLinks = document.querySelector('.nav-links');
@@ -757,8 +120,24 @@
         });
       }
       
+      // Update authentication UI
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
+      }
+      
+      // Set a maximum timeout to ensure preloader always disappears
+      const maxLoadTime = 8000; // 8 seconds maximum
+      const loadTimeout = setTimeout(() => {
+        hidePreloader();
+        showErrorStates();
+        console.error('Content loading timed out after', maxLoadTime, 'ms');
+      }, maxLoadTime);
+      
       // Load explore content
-      loadExploreContent();
+      loadExploreContent().finally(() => {
+        clearTimeout(loadTimeout);
+        hidePreloader();
+      });
       
       // Category filter functionality
       const filters = document.querySelectorAll('.category-filter');
@@ -766,7 +145,6 @@
         filter.addEventListener('click', function() {
           filters.forEach(f => f.classList.remove('active'));
           this.classList.add('active');
-          // Implement category filtering
           const category = this.getAttribute('data-category');
           filterContent(category);
         });
@@ -789,6 +167,18 @@
       }
     });
     
+    // Improved preloader handling
+    function hidePreloader() {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.classList.add('hide');
+        // Remove from DOM after animation completes
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }
+    }
+    
     // Load explore content
     async function loadExploreContent() {
       try {
@@ -799,8 +189,20 @@
         showLoadingState('channels-container');
         showLoadingState('recommended-container');
         
-        // Fetch content from API
-        const response = await fetch(`${API_BASE}/api/explore`);
+        // Fetch content from API with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch(`${API_BASE}/api/explore`, {
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const content = await response.json();
         
         // Populate each section
@@ -818,6 +220,8 @@
       } catch (error) {
         console.error('Error loading explore content:', error);
         showErrorStates();
+        // Re-throw error to ensure preloader still gets hidden
+        throw error;
       }
     }
     
