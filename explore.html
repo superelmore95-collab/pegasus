@@ -21,7 +21,6 @@
       overflow: hidden;
     }
     
-    /* Rest of your explore page styles remain unchanged */
     .hero-content {
       position: relative;
       z-index: 2;
@@ -38,12 +37,97 @@
       animation: fadeInUp 1s ease;
     }
     
-    /* ... (all other existing styles remain the same) ... */
+    /* Loading states */
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    .no-content, .error-message {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+    
+    .error-message {
+      color: var(--danger);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Header and rest of your explore page content remains the same -->
-  <!-- ... -->
+  <!-- Header content would go here -->
+
+  <main>
+    <!-- Hero section -->
+    <section class="explore-hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Explore Sports Content</h1>
+        <p>Discover live games, highlights, and channels</p>
+        
+        <!-- Search bar -->
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search for games, teams, or events...">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content sections -->
+    <section class="content-section">
+      <h2>Live Now</h2>
+      <div id="live-now-container" class="content-grid"></div>
+    </section>
+
+    <section class="content-section">
+      <h2>Upcoming Events</h2>
+      <div id="upcoming-container" class="content-grid"></div>
+    </section>
+
+    <section class="content-section">
+      <h2>Highlight Reels</h2>
+      <div id="highlights-container" class="content-grid"></div>
+    </section>
+
+    <section class="content-section">
+      <h2>Channels</h2>
+      <div id="channels-container" class="content-grid"></div>
+    </section>
+
+    <section class="content-section">
+      <h2>Recommended for You</h2>
+      <div id="recommended-container" class="content-grid"></div>
+    </section>
+  </main>
 
   <script src="js/auth.js"></script>
   <script>
@@ -52,7 +136,9 @@
     
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize mobile menu
+      console.log('DOM loaded, initializing explore page');
+      
+      // Initialize mobile menu if elements exist
       const hamburger = document.querySelector('.hamburger');
       const navLinks = document.querySelector('.nav-links');
       
@@ -73,14 +159,16 @@
       
       // Category filter functionality
       const filters = document.querySelectorAll('.category-filter');
-      filters.forEach(filter => {
-        filter.addEventListener('click', function() {
-          filters.forEach(f => f.classList.remove('active'));
-          this.classList.add('active');
-          const category = this.getAttribute('data-category');
-          filterContent(category);
+      if (filters) {
+        filters.forEach(filter => {
+          filter.addEventListener('click', function() {
+            filters.forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            const category = this.getAttribute('data-category');
+            filterContent(category);
+          });
         });
-      });
+      }
       
       // Search functionality
       const searchInput = document.querySelector('.search-input');
@@ -101,8 +189,10 @@
     
     // Load explore content
     async function loadExploreContent() {
+      console.log('Loading explore content from backend...');
+      
       try {
-        // Show loading states
+        // Show loading states for all containers
         showLoadingState('live-now-container');
         showLoadingState('upcoming-container');
         showLoadingState('highlights-container');
@@ -111,36 +201,57 @@
         
         // Fetch content from API with timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         
         const response = await fetch(`${API_BASE}/api/explore`, {
-          signal: controller.signal
+          signal: controller.signal,
+          headers: {
+            'Authorization': isAuthenticated() ? `Bearer ${getToken()}` : ''
+          }
         });
         
         clearTimeout(timeoutId);
         
-        // Check if response is successful using response.ok :cite[9]
+        // Check if response is successful
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
         
         const content = await response.json();
+        console.log('API response received:', content);
         
         // Populate each section
         populateLiveNow(content.live || []);
-        populateUpcoming(content.live || []);
+        populateUpcoming(content.upcoming || content.live || []);
         populateHighlights(content.highlights || []);
         populateChannels(content.channels || []);
-        populateRecommended(content.vod || []);
-        
-        // Set featured content
-        if (content.live && content.live.length > 0) {
-          setFeaturedContent(content.live[0]);
-        }
+        populateRecommended(content.recommended || content.vod || []);
         
       } catch (error) {
         console.error('Error loading explore content:', error);
         showErrorStates();
+        
+        // Show specific error message
+        const containers = [
+          'live-now-container',
+          'upcoming-container',
+          'highlights-container',
+          'channels-container',
+          'recommended-container'
+        ];
+        
+        containers.forEach(containerId => {
+          const container = document.getElementById(containerId);
+          if (container && container.innerHTML.includes('loading-placeholder')) {
+            container.innerHTML = `
+              <div class="error-message">
+                <p>Failed to load content. Please check your connection and try again.</p>
+                <button onclick="loadExploreContent()" class="btn">Retry</button>
+              </div>
+            `;
+          }
+        });
       }
     }
     
@@ -178,7 +289,7 @@
       if (!container) return;
       
       if (!liveContent || liveContent.length === 0) {
-        container.innerHTML = '<p class="no-content">No live events at the moment</p>';
+        container.innerHTML = '<p class="no-content">No live events at the moment. Check back later!</p>';
         return;
       }
       
@@ -186,7 +297,7 @@
         <div class="content-card animate-card">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180'">
+              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
               <div class="card-badges">
                 <div class="live-badge">LIVE</div>
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
@@ -198,33 +309,29 @@
                 <span>${item.category || 'Sports'}</span>
                 <span class="card-views">${item.viewers_count || 0} watching</span>
               </div>
-              <div class="card-actions">
-                <button class="action-btn"><i class="far fa-heart"></i> Save</button>
-                <button class="action-btn"><i class="far fa-share-square"></i> Share</button>
-              </div>
             </div>
           </a>
         </div>
       `).join('');
     }
     
-    function populateUpcoming(liveContent) {
+    function populateUpcoming(upcomingContent) {
       const container = document.getElementById('upcoming-container');
       if (!container) return;
       
-      // Filter for upcoming events (not live yet)
-      const upcomingContent = liveContent.filter(item => !item.is_live).slice(0, 6);
+      // Filter for upcoming events (not live yet) if needed
+      const upcomingEvents = upcomingContent.filter(item => !item.is_live).slice(0, 6);
       
-      if (!upcomingContent || upcomingContent.length === 0) {
-        container.innerHTML = '<p class="no-content">No upcoming events scheduled</p>';
+      if (!upcomingEvents || upcomingEvents.length === 0) {
+        container.innerHTML = '<p class="no-content">No upcoming events scheduled. Check back later!</p>';
         return;
       }
       
-      container.innerHTML = upcomingContent.map(item => `
+      container.innerHTML = upcomingEvents.map(item => `
         <div class="content-card animate-card">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180'">
+              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
               <div class="card-badges">
                 <div class="countdown">Starts soon</div>
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
@@ -247,7 +354,7 @@
       if (!container) return;
       
       if (!highlights || highlights.length === 0) {
-        container.innerHTML = '<p class="no-content">No highlights available</p>';
+        container.innerHTML = '<p class="no-content">No highlights available yet. Check back later!</p>';
         return;
       }
       
@@ -255,7 +362,7 @@
         <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
           <a href="player.html?type=highlight&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225?text=Highlight'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
@@ -275,7 +382,7 @@
       if (!container) return;
       
       if (!channels || channels.length === 0) {
-        container.innerHTML = '<p class="no-content">No channels available</p>';
+        container.innerHTML = '<p class="no-content">No channels available yet. Check back later!</p>';
         return;
       }
       
@@ -283,7 +390,7 @@
         <div class="content-card animate-card">
           <a href="channels.html?channel=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail_url}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180'">
+              <img src="${item.thumbnail_url}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Channel'">
               ${item.is_live ? '<div class="live-badge">LIVE</div>' : ''}
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
@@ -299,26 +406,26 @@
       `).join('');
     }
     
-    function populateRecommended(vodContent) {
+    function populateRecommended(recommendedContent) {
       const container = document.getElementById('recommended-container');
       if (!container) return;
       
-      if (!vodContent || vodContent.length === 0) {
-        container.innerHTML = '<p class="no-content">No recommendations available</p>';
+      if (!recommendedContent || recommendedContent.length === 0) {
+        container.innerHTML = '<p class="no-content">No recommendations available yet. Watch more content to get recommendations!</p>';
         return;
       }
       
-      container.innerHTML = vodContent.slice(0, 4).map((item, index) => `
+      container.innerHTML = recommendedContent.slice(0, 4).map((item, index) => `
         <div class="stream-card animate-card" style="animation-delay: ${index * 0.1}s">
           <a href="player.html?type=vod&id=${item.id}">
             <div class="card-img">
-              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+              <img src="${item.thumbnail}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225?text=Recommended'">
               ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
               <h3 class="card-title">${item.title}</h3>
               <div class="card-meta">
-                <span>${item.category || 'Sports'}}</span>
+                <span>${item.category || 'Sports'}</span>
                 <span class="card-views">${item.views_count || 0} views</span>
               </div>
             </div>
@@ -327,34 +434,52 @@
       `).join('');
     }
     
-    function setFeaturedContent(featured) {
-      document.getElementById('main-featured-img').src = featured.thumbnail || 'https://via.placeholder.com/800x400';
-      document.getElementById('main-featured-title').textContent = featured.title;
-      
-      if (featured.description) {
-        document.getElementById('main-featured-desc').textContent = featured.description;
-      }
-    }
-    
     function formatDate(dateString) {
       if (!dateString) return 'TBA';
       
-      const date = new Date(dateString);
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      } catch (e) {
+        console.error('Error formatting date:', e);
+        return 'TBA';
+      }
     }
     
     function filterContent(category) {
       // This would filter the content based on the selected category
       console.log('Filtering by:', category);
+      // Show loading state
+      showLoadingState('live-now-container');
+      showLoadingState('upcoming-container');
+      showLoadingState('highlights-container');
+      showLoadingState('channels-container');
+      showLoadingState('recommended-container');
+      
       // In a real implementation, you would make an API call to get filtered content
+      // For now, we'll just reload all content
+      loadExploreContent();
     }
     
     function performSearch() {
       const searchTerm = document.querySelector('.search-input').value;
       if (searchTerm.trim()) {
-        // In a real implementation, you would redirect to search results
+        // Show loading state
+        showLoadingState('live-now-container');
+        showLoadingState('upcoming-container');
+        showLoadingState('highlights-container');
+        showLoadingState('channels-container');
+        showLoadingState('recommended-container');
+        
+        // In a real implementation, you would make an API call to search
         console.log('Searching for:', searchTerm);
-        alert('Search functionality would show results for: ' + searchTerm);
+        
+        // Simulate search results after a delay
+        setTimeout(() => {
+          // This would be replaced with actual search API call
+          alert('Search functionality would show results for: ' + searchTerm);
+          loadExploreContent();
+        }, 1000);
       }
     }
   </script>
