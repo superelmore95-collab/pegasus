@@ -132,6 +132,11 @@
       background: var(--warning);
       color: black;
     }
+    
+    .content-type-channel {
+      background: var(--success);
+      color: black;
+    }
 
     /* Player controls */
     .player-controls {
@@ -238,6 +243,14 @@
   </style>
 </head>
 <body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header>
     <div class="container">
@@ -248,24 +261,25 @@
         
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
-          <li><a href="live-stream.html">Live</a></li>
-          <li><a href="video-on-demand.html">VOD</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
           <li><a href="highlights.html">Highlights</a></li>
           <li><a href="channels.html">Channels</a></li>
+          <li><a href="explore.html">Explore</a></li>
           
           <!-- Mobile Auth Buttons (Hidden on Desktop) -->
           <li class="mobile-auth-item">
             <div class="mobile-auth">
-              <a href="#" class="btn btn-outline">Sign In</a>
-              <a href="#" class="btn">Subscribe</a>
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
             </div>
           </li>
         </ul>
         
         <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-        <div class="auth-buttons">
-          <a href="#" class="btn btn-outline">Sign In</a>
-          <a href="#" class="btn">Subscribe</a>
+        <div class="auth-buttons" id="auth-buttons">
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
         </div>
         
         <div class="hamburger">
@@ -365,10 +379,11 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
-            <li><a href="live-stream.html">Live Streams</a></li>
-            <li><a href="video-on-demand.html">Video On Demand</a></li>
+            <li><a href="live-streams.html">Live Streams</a></li>
+            <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
           </ul>
         </div>
         
@@ -399,6 +414,8 @@
     </div>
   </footer>
 
+  <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     // API base URL
     const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
@@ -417,7 +434,16 @@
         console.log('Loading player content for:', contentType, contentId);
         
         // First, try to get all content
-        const response = await fetch(`${API_BASE}/api/content`);
+        const token = localStorage.getItem('pegasus_token');
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content`, { headers });
         const allContent = await response.json();
         
         let content = null;
@@ -431,6 +457,8 @@
             contentArray = allContent.vod;
           } else if (contentType === 'highlight') {
             contentArray = allContent.highlights;
+          } else if (contentType === 'channel') {
+            contentArray = allContent.channels;
           }
           
           if (contentArray) {
@@ -462,7 +490,7 @@
       console.log('Updating player with content:', content, 'Type:', type);
       
       // Update title
-      document.getElementById('player-title').textContent = content.title;
+      document.getElementById('player-title').textContent = content.title || content.name;
       
       // Update description
       if (content.description) {
@@ -474,6 +502,8 @@
         document.getElementById('player-views').textContent = `${content.views_count.toLocaleString()} views`;
       } else if (content.viewers_count !== undefined) {
         document.getElementById('player-views').textContent = `${content.viewers_count.toLocaleString()} watching`;
+      } else if (content.view_count !== undefined) {
+        document.getElementById('player-views').textContent = `${content.view_count.toLocaleString()} views`;
       }
       
       // Update date
@@ -534,11 +564,11 @@
         });
         
         videoPlayer.appendChild(embedWrapper);
-      } else if (content.thumbnail) {
+      } else if (content.thumbnail || content.thumbnail_url) {
         // Fallback to thumbnail if no embed code
         videoPlayer.innerHTML += `
           <div class="thumbnail-fallback">
-            <img src="${content.thumbnail}" alt="${content.title}">
+            <img src="${content.thumbnail || content.thumbnail_url}" alt="${content.title || content.name}">
             <div class="play-button-overlay">
               <i class="fas fa-play-circle"></i>
             </div>
@@ -563,13 +593,22 @@
       }
       
       // Update page title
-      document.title = `${content.title} - PEGASUS`;
+      document.title = `${content.title || content.name} - PEGASUS`;
     }
     
     // Function to load related content
     async function loadRelatedContent(category, excludeId, currentType = 'all') {
       try {
-        const response = await fetch(`${API_BASE}/api/content`);
+        const token = localStorage.getItem('pegasus_token');
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content`, { headers });
         const content = await response.json();
         
         let relatedContent = [];
@@ -593,11 +632,18 @@
           );
         }
         
+        if (content.channels) {
+          relatedContent = relatedContent.concat(
+            content.channels.filter(item => item.category === category && item.id != excludeId)
+          );
+        }
+        
         // If no category-specific content, get any content
         if (relatedContent.length === 0) {
           if (content.live) relatedContent = relatedContent.concat(content.live.slice(0, 2));
           if (content.vod) relatedContent = relatedContent.concat(content.vod.slice(0, 2));
           if (content.highlights) relatedContent = relatedContent.concat(content.highlights.slice(0, 2));
+          if (content.channels) relatedContent = relatedContent.concat(content.channels.slice(0, 2));
         }
         
         // Remove the excluded item and limit to 8 items
@@ -644,15 +690,16 @@
           return `
             <a href="player.html?type=${type}&id=${item.id}" class="stream-card">
               <div class="card-img">
-                <img src="${item.thumbnail || 'https://via.placeholder.com/400x225'}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+                <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
                 ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
                 <div class="content-type-badge content-type-${type}">${type.toUpperCase()}</div>
               </div>
               <div class="card-content">
-                <h3 class="card-title">${item.title}</h3>
+                <h3 class="card-title">${item.title || item.name}</h3>
                 <div class="card-meta">
                   <span>${item.category || 'Sports'}</span>
-                  <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                  <span class="card-views">${item.views_count || item.viewers_count || item.view_count || 0} ${isLive ? 'watching' : 'views'}</span>
                 </div>
               </div>
             </a>
