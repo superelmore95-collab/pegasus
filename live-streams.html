@@ -8,6 +8,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    .login-wall-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 18, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .login-wall-content {
+      background: #1a1a2e;
+      padding: 40px;
+      border-radius: 8px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .login-wall-content h2 {
+      margin-bottom: 15px;
+      color: #ff003c;
+    }
+
+    .login-wall-content p {
+      margin-bottom: 25px;
+      color: #b3b3b3;
+    }
+
+    .login-wall-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    @media (max-width: 480px) {
+      .login-wall-buttons {
+        flex-direction: column;
+      }
+    }
+    
     .loading-placeholder {
       display: flex;
       flex-direction: column;
@@ -51,181 +95,246 @@
   </style>
 </head>
 <body>
-<header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="live-streams.html">Live</a></li>
-        <li><a href="vod.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
-        
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
+  </div>
+
+  <!-- Login Wall -->
+  <div id="login-wall" style="display: none;">
+    <div class="login-wall-overlay">
+      <div class="login-wall-content">
+        <h2>Content Restricted</h2>
+        <p>You need to be logged in to access this content</p>
+        <div class="login-wall-buttons">
+          <a href="signin.html?redirect=live-streams.html" class="btn">Sign In</a>
+          <a href="signup.html?redirect=live-streams.html" class="btn btn-outline">Create Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a href="index.html" class="logo">
+            <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+          </a>
+          
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html" class="active">Live</a></li>
+            <li><a href="vod.html">VOD</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            
+            <!-- Mobile Auth Buttons -->
+            <li class="mobile-auth-item">
+              <div class="mobile-auth">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="signup.html" class="btn">Subscribe</a>
+              </div>
+            </li>
+          </ul>
+          
+          <!-- Desktop Auth Buttons -->
+          <div class="auth-buttons" id="auth-buttons">
             <a href="signin.html" class="btn btn-outline">Sign In</a>
             <a href="signup.html" class="btn">Subscribe</a>
           </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons" id="auth-buttons">
-        <a href="signin.html" class="btn btn-outline">Sign In</a>
-        <a href="signup.html" class="btn">Subscribe</a>
+          
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </nav>
       </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </div>
-</header>
+    </header>
 
-  <!-- Hero Banner for Live Streams -->
-  <section class="hero" style="height: 60vh; min-height: 400px;">
-    <div style="background-image: url('images/live-banner.jpg');" class="slide active">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2>Live Sports Streaming</h2>
-        <p>Watch your favorite sports live as they happen</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live Streams Section -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Live & Upcoming</h2>
-        <div class="filter">
-          <select id="sport-filter">
-            <option value="all">All Sports</option>
-            <option value="Football">Football</option>
-            <option value="Basketball">Basketball</option>
-            <option value="Tennis">Tennis</option>
-            <option value="Formula 1">Formula 1</option>
-            <option value="MMA">MMA</option>
-          </select>
+    <!-- Hero Banner for Live Streams -->
+    <section class="hero" style="height: 60vh; min-height: 400px;">
+      <div style="background-image: url('images/live-banner.jpg');" class="slide active">
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <h2>Live Sports Streaming</h2>
+          <p>Watch your favorite sports live as they happen</p>
         </div>
       </div>
-      
-      <div class="stream-grid" id="live-content">
-        <div class="loading-placeholder">
-          <div class="loading-spinner"></div>
-          <p>Loading live streams...</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-column">
-          <h3>PEGASUS</h3>
-          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
+    <!-- Live Streams Section -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Live & Upcoming</h2>
+          <div class="filter">
+            <select id="sport-filter">
+              <option value="all">All Sports</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Tennis">Tennis</option>
+              <option value="Formula 1">Formula 1</option>
+              <option value="MMA">MMA</option>
+            </select>
           </div>
         </div>
         
-        <div class="footer-column">
-          <h3>Navigation</h3>
-          <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="live-streams.html">Live Streams</a></li>
-            <li><a href="vod.html">Video On Demand</a></li>
-            <li><a href="highlights.html">Highlights</a></li>
-            <li><a href="channels.html">Channels</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Legal</h3>
-          <ul class="footer-links">
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="dmca.html">DMCA Policy</a></li>
-            <li><a href="cookie.html">Cookie Policy</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Support</h3>
-          <ul class="footer-links">
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="faq.html">FAQs</a></li>
-            <li><a href="help.html">Help Center</a></li>
-          </ul>
+        <div class="stream-grid" id="live-content">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading live streams...</p>
+          </div>
         </div>
       </div>
-      
-      <div class="copyright">
-        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>PEGASUS</h3>
+            <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Navigation</h3>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="live-streams.html">Live Streams</a></li>
+              <li><a href="vod.html">Video On Demand</a></li>
+              <li><a href="highlights.html">Highlights</a></li>
+              <li><a href="channels.html">Channels</a></li>
+              <li><a href="explore.html">Explore</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Legal</h3>
+            <ul class="footer-links">
+              <li><a href="terms.html">Terms of Service</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="dmca.html">DMCA Policy</a></li>
+              <li><a href="cookie.html">Cookie Policy</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Support</h3>
+            <ul class="footer-links">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+              <li><a href="faq.html">FAQs</a></li>
+              <li><a href="help.html">Help Center</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="copyright">
+          &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <script src="js/script.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     // Live streams specific functionality
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize mobile menu
-      if (typeof initMobileMenu === 'function') {
-        initMobileMenu();
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
       }
       
       // Set active navigation link
-      if (typeof setActiveLink === 'function') {
-        setActiveLink();
-      }
+      const currentPage = window.location.pathname.split('/').pop();
+      const navLinksAll = document.querySelectorAll('.nav-links a');
+      navLinksAll.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
       
       // Check auth status
-      if (typeof checkAuthStatus === 'function') {
-        checkAuthStatus();
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
       }
       
-      // Load live streams content
-      loadLiveStreams();
-      
-      // Set up filter
-      const sportFilter = document.getElementById('sport-filter');
-      if (sportFilter) {
-        sportFilter.addEventListener('change', function() {
-          loadLiveStreams(this.value);
-        });
+      // Check if user is authenticated
+      const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
+      if (!token) {
+        // Show login wall for protected content
+        document.getElementById('login-wall').style.display = 'block';
+        document.getElementById('main-content').style.display = 'none';
+      } else {
+        // Load live streams content
+        loadLiveStreams();
+        
+        // Set up filter
+        const sportFilter = document.getElementById('sport-filter');
+        if (sportFilter) {
+          sportFilter.addEventListener('change', function() {
+            loadLiveStreams(this.value);
+          });
+        }
       }
     });
     
     async function loadLiveStreams(filter = 'all') {
       try {
-        const contentUrl = `${API_BASE}/api/content`;
-        const response = await fetch(contentUrl);
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
+        
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+        
+        let url = `${API_BASE}/api/content?type=live`;
+        if (filter !== 'all') {
+          url += `&category=${filter}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         
         if (!response.ok) {
+          if (response.status === 401) {
+            // Token is invalid, show login wall
+            document.getElementById('login-wall').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+            return;
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const content = await response.json();
         let liveStreams = content.live || [];
-        
-        // Apply filter if needed
-        if (filter !== 'all') {
-          liveStreams = liveStreams.filter(stream => stream.category === filter);
-        }
         
         // Update the content section
         updateLiveContentSection(liveStreams);
@@ -272,6 +381,7 @@
         <div class="card-img">
           <img src="${stream.thumbnail}" alt="${stream.title}" onerror="this.src='https://via.placeholder.com/400x225'">
           ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+          ${stream.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
         </div>
         <div class="card-content">
           <h3 class="card-title">${stream.title}</h3>
@@ -316,8 +426,5 @@
       updateLiveContentSection(fallbackStreams);
     }
   </script>
-  <script src="js/auth.js"></script>
 </body>
 </html>
-
-
