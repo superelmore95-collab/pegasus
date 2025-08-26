@@ -1,4 +1,4 @@
-// Global API base URL
+// Global API base URL - Replace with your actual Worker URL
 const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
 // Authentication functions
@@ -189,13 +189,16 @@ function updateAuthUI() {
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize preloader
+  // Initialize preloader - fixed to always hide
   setTimeout(() => {
     const preloader = document.getElementById('preloader');
     if (preloader) {
       preloader.classList.add('hide');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
     }
-  }, 1500);
+  }, 1000);
   
   updateAuthUI();
   
@@ -213,6 +216,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize hero slider if exists
   if (document.querySelector('.hero-slider')) {
     initHeroSlider();
+  }
+  
+  // Load channel content on index.html if channel section exists
+  if (document.getElementById('channel-content')) {
+    loadChannels();
   }
 });
 
@@ -245,6 +253,60 @@ function initHeroSlider() {
       showSlide(index);
     });
   });
+}
+
+// Load channels for index.html
+async function loadChannels() {
+  try {
+    const container = document.getElementById('channel-content');
+    if (!container) return;
+    
+    const response = await fetch(`${API_BASE}/api/content?type=channel&limit=4`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const content = await response.json();
+    const channels = content.channels || [];
+    
+    // Clear container
+    container.innerHTML = '';
+    
+    if (channels.length === 0) {
+      container.innerHTML = '<p class="no-content">No channels available</p>';
+      return;
+    }
+    
+    // Add channels to container
+    channels.forEach(channel => {
+      const card = document.createElement('a');
+      card.href = `player.html?type=channel&id=${channel.id}`;
+      card.className = 'stream-card';
+      
+      card.innerHTML = `
+        <div class="card-img">
+          <img src="${channel.thumbnail_url}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+          ${channel.is_live ? '<div class="live-badge">LIVE</div>' : ''}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${channel.name}</h3>
+          <div class="card-meta">
+            <span>${channel.category || 'Sports'}</span>
+            <span class="card-views">${channel.viewers_count || 0} watching</span>
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error('Error loading channels:', error);
+    const container = document.getElementById('channel-content');
+    if (container) {
+      container.innerHTML = '<p class="error-message">Failed to load channels. Please try again later.</p>';
+    }
+  }
 }
 
 // Content loading functions
