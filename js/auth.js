@@ -1,7 +1,8 @@
 // auth.js - Enhanced Authentication System
 class AuthManager {
   constructor() {
-    this.API_BASE = window.PEGASUS_CONFIG.API_BASE;
+    // Use fallback if config is not loaded yet
+    this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
     this.init();
   }
 
@@ -18,6 +19,16 @@ class AuthManager {
         body: JSON.stringify({ email, password })
       });
       
+      // Handle non-JSON responses
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        return { 
+          success: false, 
+          error: text || `Server error: ${response.status} ${response.statusText}` 
+        };
+      }
+      
       const data = await response.json();
       
       if (response.ok) {
@@ -33,10 +44,10 @@ class AuthManager {
         this.updateAuthUI();
         return { success: true, data };
       } else {
-        return { success: false, error: data.error };
+        return { success: false, error: data.error || 'Authentication failed' };
       }
     } catch (error) {
-      return { success: false, error: 'Network error' };
+      return { success: false, error: 'Network error: ' + error.message };
     }
   }
 
@@ -48,6 +59,16 @@ class AuthManager {
         body: JSON.stringify({ name, email, password })
       });
       
+      // Handle non-JSON responses
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        return { 
+          success: false, 
+          error: text || `Server error: ${response.status} ${response.statusText}` 
+        };
+      }
+      
       const data = await response.json();
       
       if (response.ok) {
@@ -56,10 +77,10 @@ class AuthManager {
         this.updateAuthUI();
         return { success: true, data };
       } else {
-        return { success: false, error: data.error };
+        return { success: false, error: data.error || 'Registration failed' };
       }
     } catch (error) {
-      return { success: false, error: 'Network error' };
+      return { success: false, error: 'Network error: ' + error.message };
     }
   }
 
@@ -183,9 +204,42 @@ class AuthManager {
       });
     }
   }
+
+  // Add this helper method to check authentication status
+  async checkAuthStatus() {
+    if (!this.isAuthenticated()) return false;
+    
+    try {
+      const token = this.getToken();
+      const response = await fetch(`${this.API_BASE}/api/user/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      return response.ok;
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      return false;
+    }
+  }
 }
 
-// Initialize auth manager when DOM is loaded
+// Initialize auth manager when DOM is loaded with error handling
 document.addEventListener('DOMContentLoaded', () => {
-  window.authManager = new AuthManager();
+  try {
+    // Ensure config is available
+    if (!window.PEGASUS_CONFIG) {
+      console.warn('PEGASUS_CONFIG not found, using defaults');
+      window.PEGASUS_CONFIG = {
+        API_BASE: 'https://pegasus-backend.super-elmore95.workers.dev',
+        JWT_SECRET: 'pegasus-super-secret-key-change-in-production',
+        APP_VERSION: '1.0.0'
+      };
+    }
+    
+    window.authManager = new AuthManager();
+  } catch (error) {
+    console.error('Failed to initialize AuthManager:', error);
+  }
 });
