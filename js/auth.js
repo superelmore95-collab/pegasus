@@ -1,7 +1,6 @@
 // auth.js - Enhanced Authentication System
 class AuthManager {
   constructor() {
-    // Use fallback if config is not loaded yet
     this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
     this.init();
   }
@@ -19,7 +18,6 @@ class AuthManager {
         body: JSON.stringify({ email, password })
       });
       
-      // Handle non-JSON responses
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
@@ -59,7 +57,6 @@ class AuthManager {
         body: JSON.stringify({ name, email, password })
       });
       
-      // Handle non-JSON responses
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
@@ -114,7 +111,6 @@ class AuthManager {
     if (this.isAuthenticated()) {
       const user = this.getCurrentUser();
       
-      // Update desktop auth buttons
       if (authButtons) {
         authButtons.innerHTML = `
           <div class="user-menu">
@@ -133,16 +129,15 @@ class AuthManager {
         `;
       }
       
-      // Update mobile auth buttons
       if (mobileAuth) {
         mobileAuth.innerHTML = `
           <a href="profile.html" class="btn btn-outline">Profile</a>
           <a href="favorites.html" class="btn btn-outline">Favorites</a>
+          ${user.role === 'admin' ? '<a href="admin.html" class="btn btn-outline">Admin</a>' : ''}
           <a href="#" id="mobile-logout-btn" class="btn">Logout</a>
         `;
       }
       
-      // Add logout handlers
       const logoutBtn = document.getElementById('logout-btn');
       const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
       const userMenuBtn = document.getElementById('user-menu-btn');
@@ -167,7 +162,6 @@ class AuthManager {
           userDropdown.classList.toggle('show');
         });
         
-        // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
           if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
             userDropdown.classList.remove('show');
@@ -175,7 +169,6 @@ class AuthManager {
         });
       }
     } else {
-      // User is not logged in
       if (authButtons) {
         authButtons.innerHTML = `
           <a href="signin.html" class="btn btn-outline">Sign In</a>
@@ -193,7 +186,6 @@ class AuthManager {
   }
 
   setupEventListeners() {
-    // Mobile menu toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
@@ -205,7 +197,6 @@ class AuthManager {
     }
   }
 
-  // Add this helper method to check authentication status
   async checkAuthStatus() {
     if (!this.isAuthenticated()) return false;
     
@@ -223,12 +214,102 @@ class AuthManager {
       return false;
     }
   }
+
+  async addToFavorites(contentId, contentType) {
+    try {
+      const token = this.getToken();
+      if (!token) return { success: false, error: 'Not authenticated' };
+      
+      const response = await fetch(`${this.API_BASE}/api/favorites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ contentId, contentType })
+      });
+      
+      if (response.ok) {
+        return { success: true };
+      } else {
+        const errorData = await response.json();
+        return { success: false, error: errorData.error || 'Failed to add to favorites' };
+      }
+    } catch (error) {
+      return { success: false, error: 'Network error: ' + error.message };
+    }
+  }
+
+  async removeFromFavorites(favoriteId) {
+    try {
+      const token = this.getToken();
+      if (!token) return { success: false, error: 'Not authenticated' };
+      
+      const response = await fetch(`${this.API_BASE}/api/favorites/${favoriteId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        return { success: true };
+      } else {
+        const errorData = await response.json();
+        return { success: false, error: errorData.error || 'Failed to remove from favorites' };
+      }
+    } catch (error) {
+      return { success: false, error: 'Network error: ' + error.message };
+    }
+  }
+
+  async checkFavoriteStatus(contentId, contentType) {
+    try {
+      const token = this.getToken();
+      if (!token) return { success: false, isFavorited: false };
+      
+      const response = await fetch(`${this.API_BASE}/api/favorites/check?contentId=${contentId}&contentType=${contentType}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, ...data };
+      } else {
+        return { success: false, isFavorited: false };
+      }
+    } catch (error) {
+      return { success: false, isFavorited: false };
+    }
+  }
+
+  async getFavorites() {
+    try {
+      const token = this.getToken();
+      if (!token) return { success: false, favorites: [] };
+      
+      const response = await fetch(`${this.API_BASE}/api/favorites`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, favorites: data.favorites || [] };
+      } else {
+        return { success: false, favorites: [] };
+      }
+    } catch (error) {
+      return { success: false, favorites: [] };
+    }
+  }
 }
 
-// Initialize auth manager when DOM is loaded with error handling
 document.addEventListener('DOMContentLoaded', () => {
   try {
-    // Ensure config is available
     if (!window.PEGASUS_CONFIG) {
       console.warn('PEGASUS_CONFIG not found, using defaults');
       window.PEGASUS_CONFIG = {
