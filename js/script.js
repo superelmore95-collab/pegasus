@@ -1,7 +1,7 @@
 // script.js - Main Application Script
 class PegasusApp {
   constructor() {
-    this.API_BASE = window.PEGASUS_CONFIG.API_BASE;
+    this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
     this.init();
   }
 
@@ -96,15 +96,19 @@ class PegasusApp {
       `;
       
       let url = `${this.API_BASE}/api/content`;
+      const params = new URLSearchParams();
+      
       if (type !== 'all') {
-        url += `?type=${type}`;
+        params.append('type', type);
       }
       
       if (filter !== 'all') {
-        url += `${type !== 'all' ? '&' : '?'}category=${filter}`;
+        params.append('category', filter);
       }
       
-      url += `${filter !== 'all' || type !== 'all' ? '&' : '?'}limit=${limit}`;
+      params.append('limit', limit);
+      
+      url += `?${params.toString()}`;
       
       const token = window.authManager ? window.authManager.getToken() : null;
       const headers = {
@@ -117,12 +121,28 @@ class PegasusApp {
       
       const response = await fetch(url, { headers });
       
+      // Handle non-JSON responses
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+      }
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
       }
       
       const content = await response.json();
-      const contentArray = content[type] || [];
+      
+      // Handle different response structures
+      let contentArray = [];
+      if (content[type]) {
+        contentArray = content[type];
+      } else if (Array.isArray(content)) {
+        contentArray = content;
+      } else if (content.data && Array.isArray(content.data)) {
+        contentArray = content.data;
+      }
       
       // Clear container
       container.innerHTML = '';
@@ -135,7 +155,14 @@ class PegasusApp {
       // Add content to container
       contentArray.forEach(item => {
         const card = document.createElement('a');
-        card.href = `player.html?type=${type}&id=${item.id}`;
+        
+        // Determine content type for URL
+        let itemType = 'vod';
+        if (item.is_live) itemType = 'live';
+        if (item.type === 'highlight') itemType = 'highlight';
+        if (item.type === 'channel') itemType = 'channel';
+        
+        card.href = `player.html?type=${itemType}&id=${item.id}`;
         card.className = 'stream-card';
         
         const isLive = item.is_live || false;
@@ -145,9 +172,11 @@ class PegasusApp {
         
         card.innerHTML = `
           <div class="card-img">
-            <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+            <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                 alt="${item.title || item.name}" 
+                 onerror="this.src='https://via.placeholder.com/400x225'">
             ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+            ${item.requires_premium || item.is_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
           </div>
           <div class="card-content">
             <h3 class="card-title">${item.title || item.name}</h3>
@@ -164,7 +193,11 @@ class PegasusApp {
       console.error('Error loading content:', error);
       const container = document.getElementById(containerId);
       if (container) {
-        container.innerHTML = '<p class="error-message">Failed to load content. Please try again later.</p>';
+        container.innerHTML = `
+          <p class="error-message">
+            Failed to load content. ${error.message || 'Please try again later.'}
+          </p>
+        `;
       }
     }
   }
@@ -219,7 +252,21 @@ class PegasusApp {
   }
 }
 
-// Initialize app when DOM is loaded
+// Initialize app when DOM is loaded with error handling
 document.addEventListener('DOMContentLoaded', () => {
-  window.pegasusApp = new PegasusApp();
+  try {
+    // Ensure config is available
+    if (!window.PEGASUS_CONFIG) {
+      console.warn('PEGASUS_CONFIG not found, using defaults');
+      window.PEGASUS_CONFIG = {
+        API_BASE: 'https://pegasus-backend.super-elmore95.workers.dev',
+        JWT_SECRET: 'pegasus-super-secret-key-change-in-production',
+        APP_VERSION: '1.0.0'
+      };
+    }
+    
+    window.pegasusApp = new PegasusApp();
+  } catch (error) {
+    console.error('Failed to initialize PegasusApp:', error);
+  }
 });
