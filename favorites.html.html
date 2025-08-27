@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorites | PEGASUS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .favorites-container {
+      padding: 40px 0;
+      min-height: 70vh;
+    }
+    
+    .section-header {
+      margin-bottom: 30px;
+    }
+    
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .no-favorites {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+    
+    .no-favorites i {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-content">
+      <img src="images/pegasus-logo.png" alt="PEGASUS Logo" class="preloader-logo">
+      <div class="loading-circle"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+        </ul>
+        
+        <div class="auth-buttons">
+          <!-- Will be populated by auth.js -->
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Favorites Section -->
+  <section class="favorites-container">
+    <div class="container">
+      <div class="section-header">
+        <h1>Your Favorites</h1>
+        <p>All your saved content in one place</p>
+      </div>
+      
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="live">Live Streams</button>
+        <button class="filter-btn" data-filter="vod">VOD</button>
+        <button class="filter-btn" data-filter="highlight">Highlights</button>
+        <button class="filter-btn" data-filter="channel">Channels</button>
+      </div>
+      
+      <div class="content-grid" id="favorites-grid">
+        <!-- Content will be populated by JavaScript -->
+      </div>
+      
+      <div class="no-favorites" id="no-favorites" style="display: none;">
+        <i class="far fa-star"></i>
+        <h3>No favorites yet</h3>
+        <p>Start adding content to your favorites by clicking the heart icon on any content page.</p>
+        <a href="explore.html" class="btn btn-primary">Explore Content</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <!-- ... (keep existing footer content) ... -->
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide preloader
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('hide');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }
+      }, 1000);
+      
+      // Initialize mobile menu
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
+      }
+      
+      // Check authentication
+      if (!window.authManager || !window.authManager.isAuthenticated()) {
+        window.location.href = 'signin.html';
+        return;
+      }
+      
+      // Load favorites
+      loadFavorites();
+      
+      // Filter functionality
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter');
+          
+          // Update active button
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Filter content
+          filterFavorites(filter);
+        });
+      });
+    });
+    
+    async function loadFavorites() {
+      try {
+        const token = window.authManager.getToken();
+        const response = await fetch(`${API_BASE}/api/favorites`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load favorites');
+        }
+        
+        const data = await response.json();
+        displayFavorites(data.favorites || []);
+      } catch (error) {
+        console.error('Error loading favorites:', error);
+        document.getElementById('no-favorites').style.display = 'block';
+      }
+    }
+    
+    function displayFavorites(favorites) {
+      const grid = document.getElementById('favorites-grid');
+      const noFavorites = document.getElementById('no-favorites');
+      
+      if (favorites.length === 0) {
+        grid.innerHTML = '';
+        noFavorites.style.display = 'block';
+        return;
+      }
+      
+      noFavorites.style.display = 'none';
+      grid.innerHTML = '';
+      
+      favorites.forEach(item => {
+        const isLive = item.content_type === 'live';
+        const card = document.createElement('a');
+        card.href = `player.html?type=${item.content_type}&id=${item.content_id}`;
+        card.className = 'stream-card';
+        card.dataset.type = item.content_type;
+        
+        card.innerHTML = `
+          <div class="card-img">
+            <img src="${item.thumbnail || 'https://via.placeholder.com/400x225'}" 
+                 alt="${item.title}" 
+                 onerror="this.src='https://via.placeholder.com/400x225'">
+            ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+            <button class="favorite-btn active" data-id="${item.id}" data-type="${item.content_type}" data-content-id="${item.content_id}">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+          <div class="card-content">
+            <h3 class="card-title">${item.title}</h3>
+            <div class="card-meta">
+              <span>${item.content_type}</span>
+            </div>
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      });
+      
+      // Add event listeners to favorite buttons
+      const favoriteButtons = document.querySelectorAll('.favorite-btn');
+      favoriteButtons.forEach(button => {
+        button.addEventListener('click', async function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const id = this.getAttribute('data-id');
+          const contentType = this.getAttribute('data-type');
+          const contentId = this.getAttribute('data-content-id');
+          
+          try {
+            const token = window.authManager.getToken();
+            const response = await fetch(`${API_BASE}/api/favorites/${id}`, {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            if (response.ok) {
+              // Remove from UI
+              this.closest('.stream-card').remove();
+              
+              // Check if any favorites left
+              const remaining = document.querySelectorAll('.stream-card');
+              if (remaining.length === 0) {
+                document.getElementById('no-favorites').style.display = 'block';
+              }
+            } else {
+              alert('Failed to remove from favorites');
+            }
+          } catch (error) {
+            console.error('Error removing favorite:', error);
+            alert('Error removing from favorites');
+          }
+        });
+      });
+    }
+    
+    function filterFavorites(filter) {
+      const cards = document.querySelectorAll('.stream-card');
+      
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.type === filter) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show no favorites message if no items match filter
+      const visibleCards = document.querySelectorAll('.stream-card[style="display: block"]');
+      const noFavorites = document.getElementById('no-favorites');
+      
+      if (visibleCards.length === 0 && filter !== 'all') {
+        noFavorites.querySelector('h3').textContent = `No ${filter} favorites`;
+        noFavorites.style.display = 'block';
+      } else {
+        noFavorites.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
