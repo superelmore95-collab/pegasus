@@ -323,38 +323,37 @@
     </div>
   </footer>
 
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script>
-    // API base URL
-    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
-    
     // Password strength indicator
     const passwordInput = document.getElementById('password');
     const passwordStrength = document.querySelector('.password-strength');
     
     if (passwordInput && passwordStrength) {
-      passwordInput.addEventListener('input', function() {
-        const password = this.value;
-        let strength = 0;
-        
-        // Check password strength
-        if (password.length >= 8) strength++;
-        if (password.match(/[a-z]+/)) strength++;
-        if (password.match(/[A-Z]+/)) strength++;
-        if (password.match(/[0-9]+/)) strength++;
-        if (password.match(/[!@#$%^&*(),.?":{}|<>]+/)) strength++;
-        
-        // Update strength indicator
-        passwordStrength.className = 'password-strength';
-        if (password.length > 0) {
-          if (strength < 3) {
-            passwordStrength.classList.add('password-weak');
-          } else if (strength < 5) {
-            passwordStrength.classList.add('password-medium');
-          } else {
-            passwordStrength.classList.add('password-strong');
-          }
-        }
-      });
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+            if (password.match(/[!@#$%^&*(),.?":{}|<>]+/)) strength++;
+            
+            // Update strength indicator
+            passwordStrength.className = 'password-strength';
+            if (password.length > 0) {
+                if (strength < 3) {
+                    passwordStrength.classList.add('password-weak');
+                } else if (strength < 5) {
+                    passwordStrength.classList.add('password-medium');
+                } else {
+                    passwordStrength.classList.add('password-strong');
+                }
+            }
+        });
     }
     
     // Form validation and submission
@@ -362,112 +361,84 @@
     const formMessage = document.getElementById('form-message');
     
     if (signupForm) {
-      signupForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Get form values
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
-        
-        // Basic validation
-        if (password !== confirmPassword) {
-          showMessage('Passwords do not match', 'error');
-          return;
-        }
-        
-        if (password.length < 8) {
-          showMessage('Password must be at least 8 characters long', 'error');
-          return;
-        }
-        
-        // Create user object
-        const userData = {
-          name,
-          email,
-          password,
-          newsletter: document.getElementById('newsletter').checked
-        };
-        
-        try {
-          // Show loading state
-          const submitBtn = signupForm.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
-          submitBtn.textContent = 'Creating Account...';
-          submitBtn.disabled = true;
-          
-          // Send registration request to backend
-          const response = await fetch(`${API_BASE}/api/auth/signup`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData)
-          });
-          
-          const data = await response.json();
-          
-          if (response.ok) {
-            // Registration successful
-            showMessage('Account created successfully! Redirecting to login...', 'success');
+        signupForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Clear form
-            signupForm.reset();
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
             
-            // Redirect to login page after a delay
-            setTimeout(() => {
-              window.location.href = 'signin.html';
-            }, 2000);
-          } else {
-            // Registration failed
-            showMessage(data.error || 'Registration failed. Please try again.', 'error');
-          }
-        } catch (error) {
-          showMessage('Network error. Please check your connection and try again.', 'error');
-        } finally {
-          // Restore button state
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-        }
-      });
+            // Basic validation
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                showMessage('Password must be at least 8 characters long', 'error');
+                return;
+            }
+            
+            // Use the AuthManager from auth.js
+            if (window.authManager) {
+                const result = await window.authManager.signUp(name, email, password);
+                
+                if (result.success) {
+                    showMessage('Account created successfully! Redirecting to login...', 'success');
+                    
+                    // Clear form
+                    signupForm.reset();
+                    
+                    // Redirect to login page after a delay
+                    setTimeout(() => {
+                        window.location.href = 'signin.html';
+                    }, 2000);
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } else {
+                showMessage('Authentication system not available', 'error');
+            }
+        });
     }
     
     // Helper function to show messages
     function showMessage(message, type) {
-      if (formMessage) {
-        formMessage.textContent = message;
-        formMessage.className = 'form-message ' + type;
-        formMessage.style.display = 'block';
-        
-        // Scroll to message
-        formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+        if (formMessage) {
+            formMessage.textContent = message;
+            formMessage.className = 'form-message ' + type;
+            formMessage.style.display = 'block';
+            
+            // Scroll to message
+            formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     }
     
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Hide preloader
-      setTimeout(() => {
-        const preloader = document.getElementById('preloader');
-        if (preloader) {
-          preloader.classList.add('hide');
-          setTimeout(() => {
-            preloader.style.display = 'none';
-          }, 500);
+        // Hide preloader
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.classList.add('hide');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }
+        }, 1000);
+        
+        // Initialize mobile menu
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
         }
-      }, 1000);
-      
-      // Initialize mobile menu
-      const hamburger = document.querySelector('.hamburger');
-      const navLinks = document.querySelector('.nav-links');
-      
-      if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-          hamburger.classList.toggle('active');
-          navLinks.classList.toggle('active');
-        });
-      }
     });
   </script>
 </body>
