@@ -283,10 +283,9 @@
     </div>
   </footer>
 
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script>
-    // API base URL
-    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
-    
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
       // Hide preloader
@@ -323,53 +322,30 @@
           const password = document.getElementById('password').value;
           const rememberMe = document.getElementById('remember').checked;
           
-          try {
-            // Show loading state
-            const submitBtn = signinForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Signing In...';
-            submitBtn.disabled = true;
+          // Use the AuthManager from auth.js
+          if (window.authManager) {
+            const result = await window.authManager.signIn(email, password, rememberMe);
             
-            // Send login request to backend
-            const response = await fetch(`${API_BASE}/api/auth/signin`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ email, password })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-              // Login successful
+            if (result.success) {
               showMessage('Sign in successful! Redirecting...', 'success');
               
-              // Store user data and token
-              localStorage.setItem('pegasus_user', JSON.stringify(data.user));
-              localStorage.setItem('pegasus_token', data.token);
-              
-              // Set longer expiration if "remember me" is checked
-              if (rememberMe) {
-                const expiration = new Date();
-                expiration.setDate(expiration.getDate() + 30); // 30 days
-                localStorage.setItem('pegasus_expiration', expiration.toISOString());
-              }
-              
-              // Redirect to explore page after a delay
+              // Redirect based on user role
               setTimeout(() => {
-                window.location.href = 'explore.html';
+                const user = window.authManager.getCurrentUser();
+                if (user && user.role === 'admin') {
+                  window.location.href = 'admin.html';
+                } else {
+                  // Check for redirect parameter
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const redirect = urlParams.get('redirect');
+                  window.location.href = redirect || 'explore.html';
+                }
               }, 1500);
             } else {
-              // Login failed
-              showMessage(data.error || 'Invalid email or password', 'error');
+              showMessage(result.error, 'error');
             }
-          } catch (error) {
-            showMessage('Network error. Please check your connection and try again.', 'error');
-          } finally {
-            // Restore button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
+          } else {
+            showMessage('Authentication system not available', 'error');
           }
         });
       }
