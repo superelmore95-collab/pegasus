@@ -1,5 +1,10 @@
 // Player page specific functionality
-const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+
+// Global variables to store current content info
+let currentContentId = null;
+let currentContentType = null;
+let currentFavoriteId = null;
 
 // Function to load player content based on URL parameters
 async function loadPlayerContent() {
@@ -12,6 +17,10 @@ async function loadPlayerContent() {
         if (!type || !id) {
             throw new Error('Missing type or id parameter');
         }
+        
+        // Store for favorite functionality
+        currentContentId = id;
+        currentContentType = type;
         
         // Load content from API
         const response = await fetch(`${API_BASE}/api/content`);
@@ -39,10 +48,88 @@ async function loadPlayerContent() {
         // Load related content
         loadRelatedContent(type, content);
         
+        // Check favorite status if user is logged in
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            checkFavoriteStatus();
+        }
+        
     } catch (error) {
         console.error('Error loading player content:', error);
         document.getElementById('player-title').textContent = 'Error loading content';
         document.getElementById('player-status').textContent = 'Content not available';
+    }
+}
+
+// Check if content is favorited
+async function checkFavoriteStatus() {
+    if (!currentContentId || !currentContentType) return;
+    
+    const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+    if (result.success) {
+        currentFavoriteId = result.favoriteId;
+        const favoriteBtn = document.getElementById('favorite-btn');
+        if (favoriteBtn) {
+            if (result.isFavorited) {
+                favoriteBtn.classList.add('active');
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+            } else {
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+            }
+        }
+    }
+}
+
+// Toggle favorite status
+async function toggleFavorite() {
+    if (!window.authManager || !window.authManager.isAuthenticated()) {
+        alert('Please sign in to add favorites');
+        window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
+    }
+    
+    const favoriteBtn = document.getElementById('favorite-btn');
+    if (!favoriteBtn) return;
+    
+    try {
+        // Show loading state
+        favoriteBtn.disabled = true;
+        const originalHtml = favoriteBtn.innerHTML;
+        favoriteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        if (currentFavoriteId) {
+            // Remove from favorites
+            const result = await window.authManager.removeFromFavorites(currentFavoriteId);
+            if (result.success) {
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+                currentFavoriteId = null;
+            } else {
+                alert('Error: ' + result.error);
+                favoriteBtn.innerHTML = originalHtml;
+            }
+        } else {
+            // Add to favorites
+            const result = await window.authManager.addToFavorites(currentContentId, currentContentType);
+            if (result.success) {
+                favoriteBtn.classList.add('active');
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+                // We need to get the favorite ID by checking status again
+                const statusResult = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+                if (statusResult.success) {
+                    currentFavoriteId = statusResult.favoriteId;
+                }
+            } else {
+                alert('Error: ' + result.error);
+                favoriteBtn.innerHTML = originalHtml;
+            }
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        alert('An error occurred. Please try again.');
+        favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+    } finally {
+        favoriteBtn.disabled = false;
     }
 }
 
@@ -214,12 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set up favorite button
     document.getElementById('favorite-btn').addEventListener('click', function(e) {
         e.preventDefault();
-        this.classList.toggle('active');
-        if (this.classList.contains('active')) {
-            this.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
-        } else {
-            this.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
-        }
+        toggleFavorite();
     });
     
     // Set up download button
