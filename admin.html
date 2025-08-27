@@ -877,7 +877,10 @@
   </div>
 
   <script>
-    // API base URL - replace with your actual worker URL
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    // API base URL
     const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
     
     // Global state
@@ -893,7 +896,13 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       // Check if user is admin
-      const user = JSON.parse(localStorage.getItem('pegasus_user') || '{}');
+      if (!window.authManager || !window.authManager.isAuthenticated()) {
+        alert('Please sign in to access admin panel');
+        window.location.href = 'signin.html?redirect=admin.html';
+        return;
+      }
+      
+      const user = window.authManager.getCurrentUser();
       if (user.role !== 'admin') {
         alert('Admin access required');
         window.location.href = 'index.html';
@@ -957,88 +966,93 @@
       const thumbnailPreview = document.getElementById('thumbnailPreview');
       const thumbnailUrl = document.getElementById('thumbnailUrl');
       
-      thumbnailUpload.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            thumbnailPreview.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+      if (thumbnailUpload) {
+        thumbnailUpload.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              thumbnailPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
       
-      thumbnailUrl.addEventListener('input', function() {
-        if (this.value) {
-          thumbnailPreview.src = this.value;
-        }
-      });
+      if (thumbnailUrl) {
+        thumbnailUrl.addEventListener('input', function() {
+          if (this.value) {
+            thumbnailPreview.src = this.value;
+          }
+        });
+      }
       
       // Form submission
       const contentForm = document.getElementById('content-form');
       
-      contentForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const formData = {
-          title: document.getElementById('streamTitle').value,
-          description: document.getElementById('streamDescription').value,
-          embed_code: document.getElementById('embedCode').value,
-          category: document.getElementById('streamCategory').value,
-          status: document.getElementById('streamStatus').value,
-          is_live: document.getElementById('isLive').value === 'true',
-          start_time: document.getElementById('startTime').value,
-          end_time: document.getElementById('endTime').value,
-          thumbnail: document.getElementById('thumbnailUrl').value || await uploadThumbnail()
-        };
-        
-        try {
-          const token = localStorage.getItem('pegasus_token');
-          const response = await fetch(`${API_BASE}/api/admin/content`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-              type: 'live',
-              data: formData
-            }),
-          });
+      if (contentForm) {
+        contentForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
           
-          if (response.ok) {
-            alert('Live stream added successfully!');
-            addContentForm.style.display = 'none';
-            contentForm.reset();
-            thumbnailPreview.src = 'https://via.placeholder.com/300x169';
+          const formData = {
+            title: document.getElementById('streamTitle').value,
+            description: document.getElementById('streamDescription').value,
+            embed_code: document.getElementById('embedCode').value,
+            category: document.getElementById('streamCategory').value,
+            status: document.getElementById('streamStatus').value,
+            is_live: document.getElementById('isLive').value === 'true',
+            start_time: document.getElementById('startTime').value,
+            end_time: document.getElementById('endTime').value,
+            thumbnail: document.getElementById('thumbnailUrl').value || await uploadThumbnail()
+          };
+          
+          try {
+            const token = window.authManager.getToken();
+            const response = await fetch(`${API_BASE}/api/admin/content`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                type: 'live',
+                data: formData
+              }),
+            });
             
-            // Reload the content
-            loadContentData();
-          } else {
+            if (response.ok) {
+              alert('Live stream added successfully!');
+              addContentForm.style.display = 'none';
+              contentForm.reset();
+              thumbnailPreview.src = 'https://via.placeholder.com/300x169';
+              
+              // Reload the content
+              loadContentData();
+            } else {
+              alert('Error adding live stream');
+            }
+          } catch (error) {
+            console.error('Error:', error);
             alert('Error adding live stream');
           }
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Error adding live stream');
-        }
-      });
+        });
+      }
       
       // Logout functionality
-      document.getElementById('admin-logout').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (confirm('Are you sure you want to logout?')) {
-          // Clear any admin session data
-          localStorage.removeItem('pegasus_token');
-          localStorage.removeItem('pegasus_user');
-          // Redirect to login page or home page
-          window.location.href = 'index.html';
-        }
-      });
+      const adminLogout = document.getElementById('admin-logout');
+      if (adminLogout) {
+        adminLogout.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (confirm('Are you sure you want to logout?')) {
+            window.authManager.signOut();
+          }
+        });
+      }
     }
 
     async function loadDashboardData() {
       try {
-        const token = localStorage.getItem('pegasus_token');
+        const token = window.authManager.getToken();
         const response = await fetch(`${API_BASE}/api/admin/stats`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1057,8 +1071,8 @@
         const data = await response.json();
         
         // Update dashboard cards
-        document.getElementById('live-streams-count').textContent = data.content.live || 0;
-        document.getElementById('vod-count').textContent = data.content.vod || 0;
+        document.getElementById('live-streams-count').textContent = data.content?.live || 0;
+        document.getElementById('vod-count').textContent = data.content?.vod || 0;
         document.getElementById('total-views').textContent = data.revenue ? formatNumber(data.revenue) : 0;
         document.getElementById('active-users').textContent = data.users ? formatNumber(data.users) : 0;
         document.getElementById('active-subscriptions').textContent = data.active_subscriptions || 0;
@@ -1069,7 +1083,7 @@
 
     async function loadContentData() {
       try {
-        const token = localStorage.getItem('pegasus_token');
+        const token = window.authManager.getToken();
         const response = await fetch(`${API_BASE}/api/content`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1105,7 +1119,7 @@
 
     async function loadUsers() {
       try {
-        const token = localStorage.getItem('pegasus_token');
+        const token = window.authManager.getToken();
         const response = await fetch(`${API_BASE}/api/admin/users`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1124,7 +1138,7 @@
 
     async function loadSubscriptions() {
       try {
-        const token = localStorage.getItem('pegasus_token');
+        const token = window.authManager.getToken();
         const response = await fetch(`${API_BASE}/api/admin/subscriptions`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1143,6 +1157,8 @@
 
     function updateLiveStreamsTable(streams) {
       const tableBody = document.getElementById('live-streams-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (streams.length === 0) {
@@ -1169,6 +1185,8 @@
 
     function updateUsersTable(users) {
       const tableBody = document.getElementById('users-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (users.length === 0) {
@@ -1195,6 +1213,8 @@
 
     function updateSubscriptionsTable(subscriptions) {
       const tableBody = document.getElementById('subscriptions-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (subscriptions.length === 0) {
@@ -1221,6 +1241,8 @@
 
     function updateVodTable(vods) {
       const tableBody = document.getElementById('vod-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (vods.length === 0) {
@@ -1247,6 +1269,8 @@
 
     function updateHighlightsTable(highlights) {
       const tableBody = document.getElementById('highlights-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (highlights.length === 0) {
@@ -1273,6 +1297,8 @@
 
     function updateBannersTable(banners) {
       const tableBody = document.getElementById('banners-table-body');
+      if (!tableBody) return;
+      
       tableBody.innerHTML = '';
       
       if (banners.length === 0) {
@@ -1299,7 +1325,7 @@
 
     async function uploadThumbnail() {
       const fileInput = document.getElementById('thumbnailUpload');
-      if (!fileInput.files[0]) return null;
+      if (!fileInput || !fileInput.files[0]) return null;
       
       // In a real application, you would upload the file to your server or cloud storage
       // and return the URL. For now, we'll just return a placeholder.
@@ -1341,7 +1367,7 @@
     async function deleteStream(id, type) {
       if (confirm('Are you sure you want to delete this stream?')) {
         try {
-          const token = localStorage.getItem('pegasus_token');
+          const token = window.authManager.getToken();
           const response = await fetch(`${API_BASE}/api/admin/content/${type}/${id}`, {
             method: 'DELETE',
             headers: {
@@ -1365,7 +1391,7 @@
     async function deleteUser(id) {
       if (confirm('Are you sure you want to delete this user?')) {
         try {
-          const token = localStorage.getItem('pegasus_token');
+          const token = window.authManager.getToken();
           const response = await fetch(`${API_BASE}/api/admin/users/${id}`, {
             method: 'DELETE',
             headers: {
