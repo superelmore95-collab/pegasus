@@ -208,6 +208,12 @@ class AuthManager {
         }
       });
       
+      if (response.status === 401) {
+        // Token is invalid, clear storage
+        this.signOut();
+        return false;
+      }
+      
       return response.ok;
     } catch (error) {
       console.error('Auth check failed:', error);
@@ -230,7 +236,8 @@ class AuthManager {
       });
       
       if (response.ok) {
-        return { success: true };
+        const data = await response.json();
+        return { success: true, favoriteId: data.favoriteId };
       } else {
         const errorData = await response.json();
         return { success: false, error: errorData.error || 'Failed to add to favorites' };
