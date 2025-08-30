@@ -25,6 +25,11 @@ class PegasusApp {
     if (document.getElementById('highlights-content')) {
       this.loadContent('highlight', 'highlights-content', 'all', 4);
     }
+    
+    // Add this line to load channels
+    if (document.getElementById('channels-content')) {
+      this.loadContent('channel', 'channels-content', 'all', 4);
+    }
   }
 
   hidePreloader() {
