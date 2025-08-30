@@ -876,10 +876,9 @@
     </div>
   </div>
 
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
   <script>
-<script src="js/config.js"></script>
-<script src="js/auth.js"></script>
-<script>
     // API base URL
     const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
     
@@ -894,29 +893,49 @@
       subscriptions: []
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
-      // Check if user is admin
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Check if user is authenticated
       if (!window.authManager || !window.authManager.isAuthenticated()) {
         alert('Please sign in to access admin panel');
         window.location.href = 'signin.html?redirect=admin.html';
         return;
       }
       
-      const user = window.authManager.getCurrentUser();
-      if (user.role !== 'admin') {
-        alert('Admin access required');
+      // Verify the user is an admin
+      try {
+        const token = window.authManager.getToken();
+        const response = await fetch(`${API_BASE}/api/user/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          alert('Authentication failed');
+          window.location.href = 'signin.html?redirect=admin.html';
+          return;
+        }
+        
+        const data = await response.json();
+        if (data.user.role !== 'admin') {
+          alert('Admin access required');
+          window.location.href = 'index.html';
+          return;
+        }
+        
+        // Initialize the admin panel
+        initAdminPanel();
+        
+        // Load initial data
+        loadDashboardData();
+        loadContentData();
+        loadUsers();
+        loadSubscriptions();
+      } catch (error) {
+        console.error('Error verifying admin access:', error);
+        alert('Error verifying admin access');
         window.location.href = 'index.html';
-        return;
       }
-      
-      // Initialize the admin panel
-      initAdminPanel();
-      
-      // Load initial data
-      loadDashboardData();
-      loadContentData();
-      loadUsers();
-      loadSubscriptions();
     });
 
     function initAdminPanel() {
@@ -1031,7 +1050,7 @@
             } else {
               alert('Error adding live stream');
             }
-          } catch (error) {
+            } catch (error) {
             console.error('Error:', error);
             alert('Error adding live stream');
           }
