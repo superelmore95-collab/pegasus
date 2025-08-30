@@ -193,19 +193,13 @@
     
     async function loadFavorites() {
       try {
-        const token = window.authManager.getToken();
-        const response = await fetch(`${API_BASE}/api/favorites`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const result = await window.authManager.getFavorites();
         
-        if (!response.ok) {
+        if (result.success) {
+          displayFavorites(result.favorites);
+        } else {
           throw new Error('Failed to load favorites');
         }
-        
-        const data = await response.json();
-        displayFavorites(data.favorites || []);
       } catch (error) {
         console.error('Error loading favorites:', error);
         document.getElementById('no-favorites').style.display = 'block';
@@ -265,15 +259,9 @@
           const contentId = this.getAttribute('data-content-id');
           
           try {
-            const token = window.authManager.getToken();
-            const response = await fetch(`${API_BASE}/api/favorites/${id}`, {
-              method: 'DELETE',
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            });
+            const result = await window.authManager.removeFromFavorites(id);
             
-            if (response.ok) {
+            if (result.success) {
               // Remove from UI
               this.closest('.stream-card').remove();
               
@@ -283,7 +271,7 @@
                 document.getElementById('no-favorites').style.display = 'block';
               }
             } else {
-              alert('Failed to remove from favorites');
+              alert('Failed to remove from favorites: ' + result.error);
             }
           } catch (error) {
             console.error('Error removing favorite:', error);
@@ -315,6 +303,6 @@
         noFavorites.style.display = 'none';
       }
     }
-  </script>
+</script>
 </body>
 </html>
