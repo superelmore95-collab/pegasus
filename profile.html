@@ -573,35 +573,24 @@
   <script src="js/auth.js"></script>
   <script>
     // API base URL
-    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
     
-    // Check if user is authenticated
-    if (!window.authManager || !window.authManager.isAuthenticated()) {
-        window.location.href = 'signin.html?redirect=profile.html';
-    }
-    
-    // Tab functionality
-    const tabs = document.querySelectorAll('.profile-tab');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const tabName = this.getAttribute('data-tab');
-            
-            // Deactivate all tabs
-            tabs.forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.profile-tab-content').forEach(t => t.classList.remove('active'));
-            
-            // Activate current tab
-            this.classList.add('active');
-            document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
-        });
-    });
-    
-    // Load user data
+    // Wait for authManager to initialize
     document.addEventListener('DOMContentLoaded', function() {
-        const user = window.authManager.getCurrentUser();
-        
-        if (user) {
+      const checkAuth = setInterval(() => {
+        if (window.authManager) {
+          clearInterval(checkAuth);
+          
+          // Check if user is authenticated
+          if (!window.authManager.isAuthenticated()) {
+            window.location.href = 'signin.html?redirect=profile.html';
+            return;
+          }
+          
+          // Load user data
+          const user = window.authManager.getCurrentUser();
+          
+          if (user) {
             // Populate profile with user data
             document.getElementById('profile-name').textContent = user.name;
             document.getElementById('profile-avatar').textContent = user.name.charAt(0).toUpperCase();
@@ -616,147 +605,166 @@
             
             // Set member since date
             if (user.created_at) {
-                const joinDate = new Date(user.created_at);
-                document.getElementById('member-since').textContent = joinDate.toLocaleDateString();
+              const joinDate = new Date(user.created_at);
+              document.getElementById('member-since').textContent = joinDate.toLocaleDateString();
             }
             
             // Set subscription info if available
             if (user.subscription_status) {
-                document.getElementById('subscription-plan').textContent = user.subscription_status;
-                document.getElementById('subscription-status').textContent = 'Active';
-                
-                if (user.subscription_expiry) {
-                    const expiryDate = new Date(user.subscription_expiry);
-                    document.getElementById('subscription-renewal').textContent = expiryDate.toLocaleDateString();
-                }
+              document.getElementById('subscription-plan').textContent = user.subscription_status;
+              document.getElementById('subscription-status').textContent = 'Active';
+              
+              if (user.subscription_expiry) {
+                const expiryDate = new Date(user.subscription_expiry);
+                document.getElementById('subscription-renewal').textContent = expiryDate.toLocaleDateString();
+              }
             }
+          }
+          
+          // Load additional user data from API
+          loadUserProfile();
         }
-        
-        // Load additional user data from API
-        loadUserProfile();
+      }, 100);
+      
+      // Tab functionality
+      const tabs = document.querySelectorAll('.profile-tab');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabName = this.getAttribute('data-tab');
+          
+          // Deactivate all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.profile-tab-content').forEach(t => t.classList.remove('active'));
+          
+          // Activate current tab
+          this.classList.add('active');
+          document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
+        });
+      });
     });
     
     // Load user profile from API
     async function loadUserProfile() {
-        try {
-            const token = window.authManager.getToken();
-            const response = await fetch(`${API_BASE}/api/user/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                // Update UI with additional user data if needed
-                if (data.user) {
-                    document.getElementById('info-role').textContent = data.user.role || 'user';
-                }
-            }
-        } catch (error) {
-            console.error('Error loading user profile:', error);
+      try {
+        const token = window.authManager.getToken();
+        const response = await fetch(`${API_BASE}/api/user/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          // Update UI with additional user data if needed
+          if (data.user) {
+            document.getElementById('info-role').textContent = data.user.role || 'user';
+          }
         }
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      }
     }
     
     // Update profile form
     const updateProfileForm = document.getElementById('update-profile-form');
     
     if (updateProfileForm) {
-        updateProfileForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+      updateProfileForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('update-name').value;
+        const email = document.getElementById('update-email').value;
+        const token = window.authManager.getToken();
+        
+        try {
+          const response = await fetch(`${API_BASE}/api/user/profile`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, email })
+          });
+          
+          if (response.ok) {
+            alert('Profile updated successfully!');
             
-            const name = document.getElementById('update-name').value;
-            const email = document.getElementById('update-email').value;
-            const token = window.authManager.getToken();
+            // Update stored user data
+            const user = window.authManager.getCurrentUser();
+            user.name = name;
+            user.email = email;
+            localStorage.setItem('pegasus_user', JSON.stringify(user));
             
-            try {
-                const response = await fetch(`${API_BASE}/api/user/profile`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ name, email })
-                });
-                
-                if (response.ok) {
-                    alert('Profile updated successfully!');
-                    
-                    // Update stored user data
-                    const user = window.authManager.getCurrentUser();
-                    user.name = name;
-                    user.email = email;
-                    localStorage.setItem('pegasus_user', JSON.stringify(user));
-                    
-                    // Update UI
-                    window.authManager.updateAuthUI();
-                } else {
-                    const errorData = await response.json();
-                    alert(errorData.error || 'Error updating profile');
-                }
-            } catch (error) {
-                alert('Error updating profile. Please try again.');
-            }
-        });
+            // Update UI
+            window.authManager.updateAuthUI();
+          } else {
+            const errorData = await response.json();
+            alert(errorData.error || 'Error updating profile');
+          }
+        } catch (error) {
+          alert('Error updating profile. Please try again.');
+        }
+      });
     }
     
     // Change password form
     const changePasswordForm = document.getElementById('change-password-form');
     
     if (changePasswordForm) {
-        changePasswordForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const currentPassword = document.getElementById('current-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('New passwords do not match');
-                return;
-            }
-            
-            // In a real implementation, you would make an API call to change the password
-            alert('Password change functionality would be implemented here');
-            
-            // Clear form
-            changePasswordForm.reset();
-        });
+      changePasswordForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        
+        if (newPassword !== confirmPassword) {
+          alert('New passwords do not match');
+          return;
+        }
+        
+        // In a real implementation, you would make an API call to change the password
+        alert('Password change functionality would be implemented here');
+        
+        // Clear form
+        changePasswordForm.reset();
+      });
     }
     
     // Delete account
     const deleteAccountBtn = document.getElementById('delete-account-btn');
     
     if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                deleteAccount();
-            }
-        });
+      deleteAccountBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+          deleteAccount();
+        }
+      });
     }
     
     async function deleteAccount() {
-        try {
-            const token = window.authManager.getToken();
-            
-            const response = await fetch(`${API_BASE}/api/user/account`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (response.ok) {
-                // Clear local storage and redirect
-                window.authManager.signOut();
-                alert('Your account has been deleted successfully.');
-            } else {
-                alert('Error deleting account. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error deleting account. Please try again.');
+      try {
+        const token = window.authManager.getToken();
+        
+        const response = await fetch(`${API_BASE}/api/user/account`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (response.ok) {
+          // Clear local storage and redirect
+          window.authManager.signOut();
+          alert('Your account has been deleted successfully.');
+        } else {
+          alert('Error deleting account. Please try again.');
         }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error deleting account. Please try again.');
+      }
     }
   </script>
 </body>
