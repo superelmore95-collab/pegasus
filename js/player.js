@@ -23,7 +23,16 @@ async function loadPlayerContent() {
         currentContentType = type;
         
         // Load content from API
-        const response = await fetch(`${API_BASE}/api/content`);
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content`, { headers });
         const content = await response.json();
         
         // Find the specific content
@@ -64,19 +73,23 @@ async function loadPlayerContent() {
 async function checkFavoriteStatus() {
     if (!currentContentId || !currentContentType) return;
     
-    const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
-    if (result.success) {
-        currentFavoriteId = result.favoriteId;
-        const favoriteBtn = document.getElementById('favorite-btn');
-        if (favoriteBtn) {
-            if (result.isFavorited) {
-                favoriteBtn.classList.add('active');
-                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
-            } else {
-                favoriteBtn.classList.remove('active');
-                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+    try {
+        const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+        if (result.success) {
+            currentFavoriteId = result.favoriteId;
+            const favoriteBtn = document.getElementById('favorite-btn');
+            if (favoriteBtn) {
+                if (result.isFavorited) {
+                    favoriteBtn.classList.add('active');
+                    favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+                } else {
+                    favoriteBtn.classList.remove('active');
+                    favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+                }
             }
         }
+    } catch (error) {
+        console.error('Error checking favorite status:', error);
     }
 }
 
@@ -114,11 +127,7 @@ async function toggleFavorite() {
             if (result.success) {
                 favoriteBtn.classList.add('active');
                 favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
-                // We need to get the favorite ID by checking status again
-                const statusResult = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
-                if (statusResult.success) {
-                    currentFavoriteId = statusResult.favoriteId;
-                }
+                currentFavoriteId = result.favoriteId;
             } else {
                 alert('Error: ' + result.error);
                 favoriteBtn.innerHTML = originalHtml;
