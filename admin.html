@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PEGASUS Admin Panel</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --admin-primary: #0a0a12;
@@ -455,6 +453,15 @@
         width: 100%;
       }
     }
+
+    /* Content type forms */
+    .content-type-form {
+      display: none;
+    }
+    
+    .content-type-form.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -554,13 +561,355 @@
         </div>
       </div>
 
+      <!-- Content Type Selection -->
+      <div class="admin-content-section">
+        <div class="admin-section-header">
+          <h2 class="admin-section-title">
+            <i class="fas fa-plus-circle"></i> Add New Content
+          </h2>
+        </div>
+
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-content-type="live">Live Stream</button>
+          <button class="admin-tab" data-content-type="vod">VOD</button>
+          <button class="admin-tab" data-content-type="highlight">Highlight</button>
+          <button class="admin-tab" data-content-type="channel">Channel</button>
+          <button class="admin-tab" data-content-type="banner">Banner</button>
+        </div>
+
+        <!-- Live Stream Form -->
+        <form id="live-form" class="content-type-form active">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="live-title">Title *</label>
+              <input type="text" id="live-title" class="admin-form-control" required>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="live-category">Category *</label>
+              <select id="live-category" class="admin-form-control" required>
+                <option value="">Select Category</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Formula 1">Formula 1</option>
+                <option value="MMA">MMA</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="live-description">Description</label>
+            <textarea id="live-description" class="admin-form-control"></textarea>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="live-embed">Embed Code *</label>
+            <textarea id="live-embed" class="admin-form-control" required></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="live-thumbnail">Thumbnail URL</label>
+              <input type="url" id="live-thumbnail" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="live-premium">Premium Content</label>
+              <select id="live-premium" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="live-status">Status</label>
+              <select id="live-status" class="admin-form-control">
+                <option value="draft">Draft</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="live">Live</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="live-is-live">Is Currently Live?</label>
+              <select id="live-is-live" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="live-start">Start Time</label>
+              <input type="datetime-local" id="live-start" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="live-end">End Time</label>
+              <input type="datetime-local" id="live-end" class="admin-form-control">
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-outline" onclick="hideAllForms()">Cancel</button>
+            <button type="submit" class="admin-btn">Save Live Stream</button>
+          </div>
+        </form>
+
+        <!-- VOD Form -->
+        <form id="vod-form" class="content-type-form">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="vod-title">Title *</label>
+              <input type="text" id="vod-title" class="admin-form-control" required>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="vod-category">Category *</label>
+              <select id="vod-category" class="admin-form-control" required>
+                <option value="">Select Category</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Formula 1">Formula 1</option>
+                <option value="MMA">MMA</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="vod-description">Description</label>
+            <textarea id="vod-description" class="admin-form-control"></textarea>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="vod-embed">Embed Code *</label>
+            <textarea id="vod-embed" class="admin-form-control" required></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="vod-thumbnail">Thumbnail URL</label>
+              <input type="url" id="vod-thumbnail" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="vod-duration">Duration (HH:MM:SS)</label>
+              <input type="text" id="vod-duration" class="admin-form-control" placeholder="01:30:00">
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="vod-premium">Premium Content</label>
+              <select id="vod-premium" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-outline" onclick="hideAllForms()">Cancel</button>
+            <button type="submit" class="admin-btn">Save VOD</button>
+          </div>
+        </form>
+
+        <!-- Highlight Form -->
+        <form id="highlight-form" class="content-type-form">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="highlight-title">Title *</label>
+              <input type="text" id="highlight-title" class="admin-form-control" required>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="highlight-category">Category *</label>
+              <select id="highlight-category" class="admin-form-control" required>
+                <option value="">Select Category</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Formula 1">Formula 1</option>
+                <option value="MMA">MMA</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="highlight-description">Description</label>
+            <textarea id="highlight-description" class="admin-form-control"></textarea>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="highlight-embed">Embed Code *</label>
+            <textarea id="highlight-embed" class="admin-form-control" required></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="highlight-thumbnail">Thumbnail URL</label>
+              <input type="url" id="highlight-thumbnail" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="highlight-duration">Duration (HH:MM:SS)</label>
+              <input type="text" id="highlight-duration" class="admin-form-control" placeholder="00:10:00">
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="highlight-premium">Premium Content</label>
+              <select id="highlight-premium" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-outline" onclick="hideAllForms()">Cancel</button>
+            <button type="submit" class="admin-btn">Save Highlight</button>
+          </div>
+        </form>
+
+        <!-- Channel Form -->
+        <form id="channel-form" class="content-type-form">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="channel-name">Name *</label>
+              <input type="text" id="channel-name" class="admin-form-control" required>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="channel-category">Category *</label>
+              <select id="channel-category" class="admin-form-control" required>
+                <option value="">Select Category</option>
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Formula 1">Formula 1</option>
+                <option value="MMA">MMA</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="channel-description">Description</label>
+            <textarea id="channel-description" class="admin-form-control"></textarea>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="channel-embed">Embed Code *</label>
+            <textarea id="channel-embed" class="admin-form-control" required></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="channel-thumbnail">Thumbnail URL</label>
+              <input type="url" id="channel-thumbnail" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="channel-live">Is Live?</label>
+              <select id="channel-live" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="channel-premium">Premium Content</label>
+              <select id="channel-premium" class="admin-form-control">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="channel-viewers">Viewers Count</label>
+              <input type="number" id="channel-viewers" class="admin-form-control" value="0">
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-outline" onclick="hideAllForms()">Cancel</button>
+            <button type="submit" class="admin-btn">Save Channel</button>
+          </div>
+        </form>
+
+        <!-- Banner Form -->
+        <form id="banner-form" class="content-type-form">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="banner-title">Title *</label>
+              <input type="text" id="banner-title" class="admin-form-control" required>
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="banner-image">Image URL *</label>
+              <input type="url" id="banner-image" class="admin-form-control" required>
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label for="banner-description">Description</label>
+            <textarea id="banner-description" class="admin-form-control"></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="banner-target">Target URL</label>
+              <input type="url" id="banner-target" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="banner-active">Active</label>
+              <select id="banner-active" class="admin-form-control">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label for="banner-start">Start Date</label>
+              <input type="datetime-local" id="banner-start" class="admin-form-control">
+            </div>
+            
+            <div class="admin-form-group">
+              <label for="banner-end">End Date</label>
+              <input type="datetime-local" id="banner-end" class="admin-form-control">
+            </div>
+          </div>
+
+          <div class="admin-form-actions">
+            <button type="button" class="admin-btn admin-btn-outline" onclick="hideAllForms()">Cancel</button>
+            <button type="submit" class="admin-btn">Save Banner</button>
+          </div>
+        </form>
+      </div>
+
       <!-- Live Streams Management -->
       <div class="admin-content-section" id="live-streams-section">
         <div class="admin-section-header">
           <h2 class="admin-section-title">
             <i class="fas fa-broadcast-tower"></i> Live Streams
           </h2>
-          <button class="admin-btn" id="addLiveStreamBtn">
+          <button class="admin-btn" onclick="showForm('live')">
             <i class="fas fa-plus"></i> Add New Stream
           </button>
         </div>
@@ -584,154 +933,13 @@
         </div>
       </div>
 
-      <!-- Users Management -->
-      <div class="admin-content-section" id="users-section">
-        <div class="admin-section-header">
-          <h2 class="admin-section-title">
-            <i class="fas fa-users"></i> Users Management
-          </h2>
-        </div>
-
-        <div class="admin-table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Subscription</th>
-                <th>Expiry Date</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="users-table-body">
-              <!-- Content will be populated by JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Add New Content Form (Initially Hidden) -->
-      <div class="admin-content-section" id="add-content-form" style="display: none;">
-        <div class="admin-section-header">
-          <h2 class="admin-section-title">
-            <i class="fas fa-plus-circle"></i> Add New Live Stream
-          </h2>
-        </div>
-
-        <div class="admin-tabs">
-          <button class="admin-tab active" data-tab="basic">Basic Info</button>
-          <button class="admin-tab" data-tab="embed">Embed Code</button>
-          <button class="admin-tab" data-tab="thumbnail">Thumbnail</button>
-          <button class="admin-tab" data-tab="schedule">Schedule</button>
-        </div>
-
-        <form id="content-form">
-          <div class="admin-tab-content active" data-tab-content="basic">
-            <div class="admin-form-grid">
-              <div class="admin-form-group">
-                <label for="streamTitle">Title *</label>
-                <input type="text" id="streamTitle" class="admin-form-control" placeholder="Enter stream title" required>
-              </div>
-              
-              <div class="admin-form-group">
-                <label for="streamCategory">Category *</label>
-                <select id="streamCategory" class="admin-form-control" required>
-                  <option value="">Select Category</option>
-                  <option value="football">Football</option>
-                  <option value="basketball">Basketball</option>
-                  <option value="tennis">Tennis</option>
-                  <option value="formula1">Formula 1</option>
-                  <option value="ufc">UFC/MMA</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="admin-form-group">
-              <label for="streamDescription">Description</label>
-              <textarea id="streamDescription" class="admin-form-control" placeholder="Enter stream description"></textarea>
-            </div>
-          </div>
-
-          <div class="admin-tab-content" data-tab-content="embed">
-            <div class="admin-form-group">
-              <label for="embedCode">Embed Code *</label>
-              <textarea id="embedCode" class="admin-form-control" placeholder="Paste your embed code here" required></textarea>
-              <small>Paste the full iframe or script code provided by your streaming service</small>
-            </div>
-          </div>
-
-          <div class="admin-tab-content" data-tab-content="thumbnail">
-            <div class="admin-form-grid">
-              <div class="admin-form-group">
-                <label for="thumbnailUpload">Thumbnail Image</label>
-                <input type="file" id="thumbnailUpload" class="admin-form-control" accept="image/*">
-                <small>Recommended size: 400x225 pixels</small>
-              </div>
-              
-              <div class="admin-form-group">
-                <label for="thumbnailUrl">Or enter image URL</label>
-                <input type="url" id="thumbnailUrl" class="admin-form-control" placeholder="https://example.com/image.jpg">
-              </div>
-            </div>
-
-            <div class="admin-preview-box">
-              <div class="admin-preview-title">Thumbnail Preview</div>
-              <div class="admin-thumbnail-preview">
-              <img src="https://via.placeholder.com/300x169" alt="Thumbnail preview" id="thumbnailPreview">
-              </div>
-            </div>
-          </div>
-
-          <div class="admin-tab-content" data-tab-content="schedule">
-            <div class="admin-form-grid">
-              <div class="admin-form-group">
-                <label for="streamStatus">Status</label>
-                <select id="streamStatus" class="admin-form-control">
-                  <option value="draft">Draft</option>
-                  <option value="scheduled">Scheduled</option>
-                  <option value="live">Live</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-              
-              <div class="admin-form-group">
-                <label for="isLive">Is Currently Live?</label>
-                <select id="isLive" class="admin-form-control">
-                  <option value="false">No</option>
-                  <option value="true">Yes</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="admin-form-grid">
-              <div class="admin-form-group">
-                <label for="startTime">Start Time</label>
-                <input type="datetime-local" id="startTime" class="admin-form-control">
-              </div>
-              
-              <div class="admin-form-group">
-                <label for="endTime">End Time</label>
-                <input type="datetime-local" id="endTime" class="admin-form-control">
-              </div>
-            </div>
-          </div>
-
-          <div class="admin-form-actions">
-            <button type="button" class="admin-btn admin-btn-outline" id="cancel-form">Cancel</button>
-            <button type="submit" class="admin-btn">Save Stream</button>
-          </div>
-        </form>
-      </div>
-
       <!-- VOD Content Management -->
       <div class="admin-content-section" id="vod-section">
         <div class="admin-section-header">
           <h2 class="admin-section-title">
             <i class="fas fa-video"></i> VOD Content
           </h2>
-          <button class="admin-btn" id="addVodBtn">
+          <button class="admin-btn" onclick="showForm('vod')">
             <i class="fas fa-plus"></i> Add VOD
           </button>
         </div>
@@ -761,7 +969,7 @@
           <h2 class="admin-section-title">
             <i class="fas fa-star"></i> Highlights
           </h2>
-          <button class="admin-btn" id="addHighlightBtn">
+          <button class="admin-btn" onclick="showForm('highlight')">
             <i class="fas fa-plus"></i> Add Highlight
           </button>
         </div>
@@ -785,43 +993,13 @@
         </div>
       </div>
 
-      <!-- Hero Banners Management -->
-      <div class="admin-content-section" id="banners-section">
-        <div class="admin-section-header">
-          <h2 class="admin-section-title">
-            <i class="fas fa-images"></i> Hero Banners
-          </h2>
-          <button class="admin-btn" id="addBannerBtn">
-            <i class="fas fa-plus"></i> Add Banner
-          </button>
-        </div>
-
-        <div class="admin-table-responsive">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="banners-table-body">
-              <!-- Content will be populated by JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       <!-- Channels Management -->
       <div class="admin-content-section" id="channels-section">
         <div class="admin-section-header">
           <h2 class="admin-section-title">
             <i class="fas fa-tv"></i> Channels
           </h2>
-          <button class="admin-btn" id="addChannelBtn">
+          <button class="admin-btn" onclick="showForm('channel')">
             <i class="fas fa-plus"></i> Add Channel
           </button>
         </div>
@@ -844,14 +1022,14 @@
         </div>
       </div>
 
-      <!-- Subscriptions Management -->
-      <div class="admin-content-section" id="subscriptions-section">
+      <!-- Hero Banners Management -->
+      <div class="admin-content-section" id="banners-section">
         <div class="admin-section-header">
           <h2 class="admin-section-title">
-            <i class="fas fa-credit-card"></i> Subscriptions
+            <i class="fas fa-images"></i> Hero Banners
           </h2>
-          <button class="admin-btn" id="addPlanBtn">
-            <i class="fas fa-plus"></i> Add Plan
+          <button class="admin-btn" onclick="showForm('banner')">
+            <i class="fas fa-plus"></i> Add Banner
           </button>
         </div>
 
@@ -859,15 +1037,14 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Plan Name</th>
-                <th>Monthly Price</th>
-                <th>Yearly Price</th>
-                <th>Active Users</th>
+                <th>Title</th>
                 <th>Status</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="subscriptions-table-body">
+            <tbody id="banners-table-body">
               <!-- Content will be populated by JavaScript -->
             </tbody>
           </table>
@@ -876,8 +1053,6 @@
     </div>
   </div>
 
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
   <script>
     // API base URL
     const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
@@ -888,8 +1063,8 @@
       vod: [],
       highlights: [],
       banners: [],
-      users: [],
       channels: [],
+      users: [],
       subscriptions: []
     };
 
@@ -947,115 +1122,48 @@
         sidebar.classList.toggle('active');
       });
       
-      // Show/hide add content form
-      const addLiveStreamBtn = document.getElementById('addLiveStreamBtn');
-      const addContentForm = document.getElementById('add-content-form');
-      const cancelFormBtn = document.getElementById('cancel-form');
+      // Content type tabs
+      const contentTabs = document.querySelectorAll('.admin-tab[data-content-type]');
       
-      addLiveStreamBtn.addEventListener('click', function() {
-        addContentForm.style.display = 'block';
-        // Scroll to form
-        addContentForm.scrollIntoView({ behavior: 'smooth' });
-      });
-      
-      cancelFormBtn.addEventListener('click', function() {
-        addContentForm.style.display = 'none';
-        document.getElementById('content-form').reset();
-      });
-      
-      // Tab functionality
-      const tabs = document.querySelectorAll('.admin-tab');
-      
-      tabs.forEach(tab => {
+      contentTabs.forEach(tab => {
         tab.addEventListener('click', function() {
-          const tabName = this.getAttribute('data-tab');
+          const contentType = this.getAttribute('data-content-type');
           
           // Deactivate all tabs
-          tabs.forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+          contentTabs.forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.content-type-form').forEach(f => f.classList.remove('active'));
           
           // Activate current tab
           this.classList.add('active');
-          document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
+          document.getElementById(`${contentType}-form`).classList.add('active');
         });
       });
       
-      // Thumbnail preview
-      const thumbnailUpload = document.getElementById('thumbnailUpload');
-      const thumbnailPreview = document.getElementById('thumbnailPreview');
-      const thumbnailUrl = document.getElementById('thumbnailUrl');
+      // Form submissions
+      document.getElementById('live-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit('live');
+      });
       
-      if (thumbnailUpload) {
-        thumbnailUpload.addEventListener('change', function(e) {
-          const file = e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              thumbnailPreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
+      document.getElementById('vod-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit('vod');
+      });
       
-      if (thumbnailUrl) {
-        thumbnailUrl.addEventListener('input', function() {
-          if (this.value) {
-            thumbnailPreview.src = this.value;
-          }
-        });
-      }
+      document.getElementById('highlight-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit('highlight');
+      });
       
-      // Form submission
-      const contentForm = document.getElementById('content-form');
+      document.getElementById('channel-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit('channel');
+      });
       
-      if (contentForm) {
-        contentForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          const formData = {
-            title: document.getElementById('streamTitle').value,
-            description: document.getElementById('streamDescription').value,
-            embed_code: document.getElementById('embedCode').value,
-            category: document.getElementById('streamCategory').value,
-            status: document.getElementById('streamStatus').value,
-            is_live: document.getElementById('isLive').value === 'true',
-            start_time: document.getElementById('startTime').value,
-            end_time: document.getElementById('endTime').value,
-            thumbnail: document.getElementById('thumbnailUrl').value || await uploadThumbnail()
-          };
-          
-          try {
-            const token = window.authManager.getToken();
-            const response = await fetch(`${API_BASE}/api/admin/content`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({
-                type: 'live',
-                data: formData
-              }),
-            });
-            
-            if (response.ok) {
-              alert('Live stream added successfully!');
-              addContentForm.style.display = 'none';
-              contentForm.reset();
-              thumbnailPreview.src = 'https://via.placeholder.com/300x169';
-              
-              // Reload the content
-              loadContentData();
-            } else {
-              alert('Error adding live stream');
-            }
-            } catch (error) {
-            console.error('Error:', error);
-            alert('Error adding live stream');
-          }
-        });
-      }
+      document.getElementById('banner-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit('banner');
+      });
       
       // Logout functionality
       const adminLogout = document.getElementById('admin-logout');
@@ -1118,59 +1226,14 @@
         // Store content globally
         currentContent = content;
         
-        // Update live streams table
+        // Update all tables
         updateLiveStreamsTable(content.live || []);
-        
-        // Update VOD table
         updateVodTable(content.vod || []);
-        
-        // Update highlights table
         updateHighlightsTable(content.highlights || []);
-        
-        // Update banners table if available
-        if (content.banners) {
-          updateBannersTable(content.banners);
-        }
+        updateChannelsTable(content.channels || []);
+        updateBannersTable(content.banners || []);
       } catch (error) {
         console.error('Error loading content data:', error);
-      }
-    }
-
-    async function loadUsers() {
-      try {
-        const token = window.authManager.getToken();
-        const response = await fetch(`${API_BASE}/api/admin/users`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) throw new Error('Failed to fetch users');
-        
-        const users = await response.json();
-        currentContent.users = users.users || [];
-        updateUsersTable(currentContent.users);
-      } catch (error) {
-        console.error('Error loading users:', error);
-      }
-    }
-
-    async function loadSubscriptions() {
-      try {
-        const token = window.authManager.getToken();
-        const response = await fetch(`${API_BASE}/api/admin/subscriptions`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) throw new Error('Failed to fetch subscriptions');
-        
-        const data = await response.json();
-        currentContent.subscriptions = data.subscriptions || [];
-        updateSubscriptionsTable(currentContent.subscriptions);
-      } catch (error) {
-        console.error('Error loading subscriptions:', error);
       }
     }
 
@@ -1194,64 +1257,8 @@
           <td>${stream.viewers_count ? formatNumber(stream.viewers_count) : 0}</td>
           <td>${stream.start_time ? formatDate(stream.start_time) : 'N/A'}</td>
           <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editStream(${stream.id})"><i class="fas fa-edit"></i></button>
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteStream(${stream.id}, 'live')"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    function updateUsersTable(users) {
-      const tableBody = document.getElementById('users-table-body');
-      if (!tableBody) return;
-      
-      tableBody.innerHTML = '';
-      
-      if (users.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
-        return;
-      }
-      
-      users.forEach(user => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>${user.plan_name || 'Free'}</td>
-          <td>${user.end_date ? formatDate(user.end_date) : 'N/A'}</td>
-          <td>${user.role || 'user'}</td>
-          <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editUser(${user.id})"><i class="fas fa-edit"></i></button>
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteUser(${user.id})"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    function updateSubscriptionsTable(subscriptions) {
-      const tableBody = document.getElementById('subscriptions-table-body');
-      if (!tableBody) return;
-      
-      tableBody.innerHTML = '';
-      
-      if (subscriptions.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No subscription plans found</td></tr>';
-        return;
-      }
-      
-      subscriptions.forEach(plan => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${plan.name}</td>
-          <td>${plan.price_monthly ? `${plan.price_monthly} USD` : 'N/A'}</td>
-          <td>${plan.price_yearly ? `${plan.price_yearly} USD` : 'N/A'}</td>
-          <td>${plan.active_users || 0}</td>
-          <td><span class="admin-status-badge admin-status-${plan.is_active ? 'published' : 'draft'}">${plan.is_active ? 'ACTIVE' : 'INACTIVE'}</span></td>
-          <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editPlan(${plan.id})"><i class="fas fa-edit"></i></button>
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deletePlan(${plan.id})"><i class="fas fa-trash"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editContent(${stream.id}, 'live')"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteContent(${stream.id}, 'live')"><i class="fas fa-trash"></i></button>
           </td>
         `;
         tableBody.appendChild(row);
@@ -1278,7 +1285,7 @@
           <td>${vod.duration || 'N/A'}</td>
           <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
           <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editVod(${vod.id})"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editContent(${vod.id}, 'vod')"><i class="fas fa-edit"></i></button>
             <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteContent(${vod.id}, 'vod')"><i class="fas fa-trash"></i></button>
           </td>
         `;
@@ -1306,8 +1313,35 @@
           <td>${highlight.duration || 'N/A'}</td>
           <td><span class="admin-status-badge admin-status-published">PUBLISHED</span></td>
           <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editHighlight(${highlight.id})"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editContent(${highlight.id}, 'highlight')"><i class="fas fa-edit"></i></button>
             <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteContent(${highlight.id}, 'highlight')"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function updateChannelsTable(channels) {
+      const tableBody = document.getElementById('channels-table-body');
+      if (!tableBody) return;
+      
+      tableBody.innerHTML = '';
+      
+      if (channels.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No channels found</td></tr>';
+        return;
+      }
+      
+      channels.forEach(channel => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${channel.name}</td>
+          <td>${channel.category || 'N/A'}</td>
+          <td><span class="admin-status-badge admin-status-${channel.is_live ? 'live' : 'draft'}">${channel.is_live ? 'LIVE' : 'OFFLINE'}</span></td>
+          <td>${channel.viewers_count || 0}</td>
+          <td class="admin-action-buttons">
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editContent(${channel.id}, 'channel')"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteContent(${channel.id}, 'channel')"><i class="fas fa-trash"></i></button>
           </td>
         `;
         tableBody.appendChild(row);
@@ -1321,7 +1355,7 @@
       tableBody.innerHTML = '';
       
       if (banners.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No banners found</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No banners found</td></tr>';
         return;
       }
       
@@ -1329,65 +1363,240 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${banner.title}</td>
-          <td>${banner.type || 'N/A'}</td>
           <td><span class="admin-status-badge admin-status-${banner.is_active ? 'published' : 'draft'}">${banner.is_active ? 'ACTIVE' : 'INACTIVE'}</span></td>
           <td>${banner.start_date ? formatDate(banner.start_date) : 'N/A'}</td>
           <td>${banner.end_date ? formatDate(banner.end_date) : 'N/A'}</td>
           <td class="admin-action-buttons">
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editBanner(${banner.id})"><i class="fas fa-edit"></i></button>
-            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteBanner(${banner.id})"><i class="fas fa-trash"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="editContent(${banner.id}, 'banner')"><i class="fas fa-edit"></i></button>
+            <button class="admin-btn admin-btn-outline admin-btn-sm" onclick="deleteContent(${banner.id}, 'banner')"><i class="fas fa-trash"></i></button>
           </td>
         `;
         tableBody.appendChild(row);
       });
     }
 
-    async function uploadThumbnail() {
-      const fileInput = document.getElementById('thumbnailUpload');
-      if (!fileInput || !fileInput.files[0]) return null;
+    function showForm(contentType) {
+      // Hide all forms first
+      hideAllForms();
       
-      // In a real application, you would upload the file to your server or cloud storage
-      // and return the URL. For now, we'll just return a placeholder.
-      return 'https://via.placeholder.com/400x225';
+      // Show the selected form
+      document.getElementById(`${contentType}-form`).style.display = 'block';
+      
+      // Scroll to form
+      document.getElementById(`${contentType}-form`).scrollIntoView({ behavior: 'smooth' });
+      
+      // Activate the corresponding tab
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.getAttribute('data-content-type') === contentType) {
+          tab.classList.add('active');
+        }
+      });
     }
 
-    function editStream(id) {
-      const stream = currentContent.live.find(s => s.id === id);
-      if (stream) {
-        // Populate form with stream data
-        document.getElementById('streamTitle').value = stream.title;
-        document.getElementById('streamDescription').value = stream.description || '';
-        document.getElementById('embedCode').value = stream.embed_code;
-        document.getElementById('streamCategory').value = stream.category || '';
-        document.getElementById('streamStatus').value = stream.status || 'draft';
-        document.getElementById('isLive').value = stream.is_live ? 'true' : 'false';
-        document.getElementById('startTime').value = stream.start_time || '';
-        document.getElementById('endTime').value = stream.end_time || '';
-        document.getElementById('thumbnailUrl').value = stream.thumbnail || '';
+    function hideAllForms() {
+      document.querySelectorAll('.content-type-form').forEach(form => {
+        form.style.display = 'none';
+        form.reset();
+      });
+    }
+
+    async function handleFormSubmit(contentType) {
+      try {
+        const token = window.authManager.getToken();
         
-        if (stream.thumbnail) {
-          document.getElementById('thumbnailPreview').src = stream.thumbnail;
+        // Get form data based on content type
+        let formData = {};
+        
+        switch (contentType) {
+          case 'live':
+            formData = {
+              title: document.getElementById('live-title').value,
+              description: document.getElementById('live-description').value,
+              embed_code: document.getElementById('live-embed').value,
+              category: document.getElementById('live-category').value,
+              status: document.getElementById('live-status').value,
+              is_live: document.getElementById('live-is-live').value,
+              start_time: document.getElementById('live-start').value,
+              end_time: document.getElementById('live-end').value,
+              thumbnail: document.getElementById('live-thumbnail').value,
+              requires_premium: document.getElementById('live-premium').value
+            };
+            break;
+            
+          case 'vod':
+            formData = {
+              title: document.getElementById('vod-title').value,
+              description: document.getElementById('vod-description').value,
+              embed_code: document.getElementById('vod-embed').value,
+              category: document.getElementById('vod-category').value,
+              thumbnail: document.getElementById('vod-thumbnail').value,
+              duration: document.getElementById('vod-duration').value,
+              requires_premium: document.getElementById('vod-premium').value
+            };
+            break;
+            
+          case 'highlight':
+            formData = {
+              title: document.getElementById('highlight-title').value,
+              description: document.getElementById('highlight-description').value,
+              embed_code: document.getElementById('highlight-embed').value,
+              category: document.getElementById('highlight-category').value,
+              thumbnail: document.getElementById('highlight-thumbnail').value,
+              duration: document.getElementById('highlight-duration').value,
+              requires_premium: document.getElementById('highlight-premium').value
+            };
+            break;
+            
+          case 'channel':
+            formData = {
+              name: document.getElementById('channel-name').value,
+              description: document.getElementById('channel-description').value,
+              embed_code: document.getElementById('channel-embed').value,
+              category: document.getElementById('channel-category').value,
+              thumbnail_url: document.getElementById('channel-thumbnail').value,
+              is_live: document.getElementById('channel-live').value,
+              requires_premium: document.getElementById('channel-premium').value,
+              viewers_count: document.getElementById('channel-viewers').value
+            };
+            break;
+            
+          case 'banner':
+            formData = {
+              title: document.getElementById('banner-title').value,
+              description: document.getElementById('banner-description').value,
+              image_url: document.getElementById('banner-image').value,
+              target_url: document.getElementById('banner-target').value,
+              is_active: document.getElementById('banner-active').value,
+              start_date: document.getElementById('banner-start').value,
+              end_date: document.getElementById('banner-end').value
+            };
+            break;
         }
         
-        // Show the form
-        document.getElementById('add-content-form').style.display = 'block';
-        document.getElementById('add-content-form').scrollIntoView({ behavior: 'smooth' });
+        // Remove empty fields
+        Object.keys(formData).forEach(key => {
+          if (formData[key] === '' || formData[key] === undefined) {
+            delete formData[key];
+          }
+        });
+        
+        const response = await fetch(`${API_BASE}/api/admin/content`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            type: contentType,
+            data: formData
+          }),
+        });
+        
+        if (response.ok) {
+          alert(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} added successfully!`);
+          hideAllForms();
+          loadContentData();
+        } else {
+          alert(`Error adding ${contentType}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`Error adding ${contentType}`);
+      }
+    }
+
+    async function editContent(id, contentType) {
+      try {
+        const token = window.authManager.getToken();
+        const response = await fetch(`${API_BASE}/api/content/${contentType}/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch content');
+        
+        const content = await response.json();
+        
+        // Show the form for this content type
+        showForm(contentType);
+        
+        // Populate form fields based on content type
+        switch (contentType) {
+          case 'live':
+            document.getElementById('live-title').value = content.title || '';
+            document.getElementById('live-description').value = content.description || '';
+            document.getElementById('live-embed').value = content.embed_code || '';
+            document.getElementById('live-category').value = content.category || '';
+            document.getElementById('live-thumbnail').value = content.thumbnail || '';
+            document.getElementById('live-premium').value = content.requires_premium || '0';
+            document.getElementById('live-status').value = content.status || 'draft';
+            document.getElementById('live-is-live').value = content.is_live ? '1' : '0';
+            document.getElementById('live-start').value = content.start_time || '';
+            document.getElementById('live-end').value = content.end_time || '';
+            break;
+            
+          case 'vod':
+            document.getElementById('vod-title').value = content.title || '';
+            document.getElementById('vod-description').value = content.description || '';
+            document.getElementById('vod-embed').value = content.embed_code || '';
+            document.getElementById('vod-category').value = content.category || '';
+            document.getElementById('vod-thumbnail').value = content.thumbnail || '';
+            document.getElementById('vod-duration').value = content.duration || '';
+            document.getElementById('vod-premium').value = content.requires_premium || '0';
+            break;
+            
+          case 'highlight':
+            document.getElementById('highlight-title').value = content.title || '';
+            document.getElementById('highlight-description').value = content.description || '';
+            document.getElementById('highlight-embed').value = content.embed_code || '';
+            document.getElementById('highlight-category').value = content.category || '';
+            document.getElementById('highlight-thumbnail').value = content.thumbnail || '';
+            document.getElementById('highlight-duration').value = content.duration || '';
+            document.getElementById('highlight-premium').value = content.requires_premium || '0';
+            break;
+            
+          case 'channel':
+            document.getElementById('channel-name').value = content.name || '';
+            document.getElementById('channel-description').value = content.description || '';
+            document.getElementById('channel-embed').value = content.embed_code || '';
+            document.getElementById('channel-category').value = content.category || '';
+            document.getElementById('channel-thumbnail').value = content.thumbnail_url || '';
+            document.getElementById('channel-live').value = content.is_live ? '1' : '0';
+            document.getElementById('channel-premium').value = content.requires_premium || '0';
+            document.getElementById('channel-viewers').value = content.viewers_count || 0;
+            break;
+            
+          case 'banner':
+            document.getElementById('banner-title').value = content.title || '';
+            document.getElementById('banner-description').value = content.description || '';
+            document.getElementById('banner-image').value = content.image_url || '';
+            document.getElementById('banner-target').value = content.target_url || '';
+            document.getElementById('banner-active').value = content.is_active ? '1' : '0';
+            document.getElementById('banner-start').value = content.start_date || '';
+            document.getElementById('banner-end').value = content.end_date || '';
+            break;
+        }
         
         // Change form to edit mode
-        const form = document.getElementById('content-form');
+        const form = document.getElementById(`${contentType}-form`);
         form.setAttribute('data-edit-mode', 'true');
         form.setAttribute('data-edit-id', id);
         
         // Change submit button text
-        form.querySelector('button[type="submit"]').textContent = 'Update Stream';
+        form.querySelector('button[type="submit"]').textContent = `Update ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`;
+      } catch (error) {
+        console.error('Error fetching content for edit:', error);
+        alert('Error loading content for editing');
       }
     }
 
-    async function deleteStream(id, type) {
-      if (confirm('Are you sure you want to delete this stream?')) {
+    async function deleteContent(id, contentType) {
+      if (confirm(`Are you sure you want to delete this ${contentType}?`)) {
         try {
           const token = window.authManager.getToken();
-          const response = await fetch(`${API_BASE}/api/admin/content/${type}/${id}`, {
+          const response = await fetch(`${API_BASE}/api/admin/content/${contentType}/${id}`, {
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -1395,38 +1604,14 @@
           });
           
           if (response.ok) {
-            alert('Stream deleted successfully!');
+            alert(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} deleted successfully!`);
             loadContentData();
           } else {
-            alert('Error deleting stream');
+            alert(`Error deleting ${contentType}`);
           }
         } catch (error) {
           console.error('Error:', error);
-          alert('Error deleting stream');
-        }
-      }
-    }
-
-    async function deleteUser(id) {
-      if (confirm('Are you sure you want to delete this user?')) {
-        try {
-          const token = window.authManager.getToken();
-          const response = await fetch(`${API_BASE}/api/admin/users/${id}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          
-          if (response.ok) {
-            alert('User deleted successfully!');
-            loadUsers();
-          } else {
-            alert('Error deleting user');
-          }
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Error deleting user');
+          alert(`Error deleting ${contentType}`);
         }
       }
     }
@@ -1445,37 +1630,11 @@
       return new Date(dateString).toLocaleDateString(undefined, options);
     }
 
-    // Make functions available globally for onclick attributes
-    window.editStream = editStream;
-    window.deleteStream = deleteStream;
-    window.deleteUser = deleteUser;
-    window.editVod = function(id) {
-      alert('Edit VOD functionality would be implemented here');
-    };
-    window.editHighlight = function(id) {
-      alert('Edit Highlight functionality would be implemented here');
-    };
-    window.editBanner = function(id) {
-      alert('Edit Banner functionality would be implemented here');
-    };
-    window.editPlan = function(id) {
-      alert('Edit Plan functionality would be implemented here');
-    };
-    window.deleteContent = function(id, type) {
-      if (confirm('Are you sure you want to delete this content?')) {
-        deleteStream(id, type);
-      }
-    };
-    window.deleteBanner = function(id) {
-      if (confirm('Are you sure you want to delete this banner?')) {
-        deleteStream(id, 'banner');
-      }
-    };
-    window.deletePlan = function(id) {
-      if (confirm('Are you sure you want to delete this plan?')) {
-        alert('Delete plan functionality would be implemented here');
-      }
-    };
+    // Make functions available globally
+    window.showForm = showForm;
+    window.hideAllForms = hideAllForms;
+    window.editContent = editContent;
+    window.deleteContent = deleteContent;
   </script>
 </body>
 </html>
