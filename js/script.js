@@ -59,46 +59,159 @@ class PegasusApp {
   }
 
   setupEventListeners() {
-    // Mobile menu toggle
+    // Mobile menu toggle - fixed implementation
+    this.setupMobileMenu();
+  }
+
+  setupMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
+      // Remove any existing event listeners to avoid duplicates
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+      
+      // Add new event listener
+      newHamburger.addEventListener('click', () => {
+        newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
+        
+        // Toggle body scroll when menu is open
+        if (navLinks.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      });
+      
+      // Close menu when clicking on links
+      const navItems = navLinks.querySelectorAll('a');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        }
       });
     }
   }
 
   initHeroSlider() {
     const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.slider-dot');
+    const arrows = document.querySelectorAll('.arrow');
+    const progressBar = document.querySelector('.progress-bar');
     let currentSlide = 0;
+    let slideInterval;
+    let progressInterval;
     
     if (slides.length === 0) return;
     
     function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
+      // Clear any existing intervals
+      clearInterval(slideInterval);
+      clearInterval(progressInterval);
       
+      // Hide all slides
+      slides.forEach(slide => slide.classList.remove('active'));
+      
+      // Handle wrap-around for slide index
       currentSlide = (n + slides.length) % slides.length;
       
+      // Show the current slide
       slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
+      
+      // Reset and start progress bar
+      if (progressBar) {
+        progressBar.style.width = '0%';
+        startProgressBar();
+      }
+      
+      // Restart auto-advance
+      startSlideShow();
     }
     
-    // Auto advance slides
-    setInterval(() => {
-      showSlide(currentSlide + 1);
-    }, 5000);
+    function startProgressBar() {
+      let width = 0;
+      progressInterval = setInterval(() => {
+        if (width >= 100) {
+          clearInterval(progressInterval);
+          showSlide(currentSlide + 1);
+        } else {
+          width += 0.5; // Adjust speed as needed
+          progressBar.style.width = width + '%';
+        }
+      }, 50);
+    }
     
-    // Add click events to dots
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        showSlide(index);
+    function startSlideShow() {
+      slideInterval = setInterval(() => {
+        showSlide(currentSlide + 1);
+      }, 10000); // Change slide every 10 seconds
+    }
+    
+    // Set up arrow click events
+    if (arrows.length > 0) {
+      arrows[0].addEventListener('click', () => {
+        showSlide(currentSlide - 1);
       });
-    });
+      
+      arrows[1].addEventListener('click', () => {
+        showSlide(currentSlide + 1);
+      });
+    }
+    
+    // Start the slideshow
+    startSlideShow();
+    if (progressBar) startProgressBar();
+    
+    // Pause slideshow on hover
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      hero.addEventListener('mouseenter', () => {
+        clearInterval(slideInterval);
+        clearInterval(progressInterval);
+      });
+      
+      hero.addEventListener('mouseleave', () => {
+        startSlideShow();
+        if (progressBar) startProgressBar();
+      });
+    }
+    
+    // Touch swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    hero.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    hero.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+      if (touchEndX < touchStartX - 50) {
+        // Swipe left - next slide
+        showSlide(currentSlide + 1);
+      }
+      
+      if (touchEndX > touchStartX + 50) {
+        // Swipe right - previous slide
+        showSlide(currentSlide - 1);
+      }
+    }
   }
 
   async loadContent(type, containerId, filter = 'all', limit = 8) {
