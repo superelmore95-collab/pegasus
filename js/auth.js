@@ -9,6 +9,7 @@ class AuthManager {
     this.updateAuthUI();
     this.setupEventListeners();
     this.setupScrollHeader();
+    this.updateNavigationBasedOnAuth();
   }
 
   setupScrollHeader() {
@@ -22,6 +23,31 @@ class AuthManager {
         header.classList.remove('scrolled');
       }
     });
+  }
+
+  // New method to update navigation based on authentication status
+  updateNavigationBasedOnAuth() {
+    const navLinks = document.querySelector('.nav-links');
+    if (!navLinks) return;
+    
+    const isAuthenticated = this.isAuthenticated();
+    
+    // Get all navigation items except the mobile auth item
+    const navItems = Array.from(navLinks.querySelectorAll('li:not(.mobile-auth-item)'));
+    
+    if (!isAuthenticated) {
+      // Hide navigation items for logged out users
+      navItems.forEach(item => {
+        if (!item.querySelector('a[href="index.html"]')) {
+          item.style.display = 'none';
+        }
+      });
+    } else {
+      // Show all navigation items for logged in users
+      navItems.forEach(item => {
+        item.style.display = 'list-item';
+      });
+    }
   }
 
   async signIn(email, password, remember) {
@@ -54,6 +80,7 @@ class AuthManager {
         }
         
         this.updateAuthUI();
+        this.updateNavigationBasedOnAuth();
         return { success: true, data };
       } else {
         return { success: false, error: data.error || 'Authentication failed' };
@@ -86,6 +113,7 @@ class AuthManager {
         localStorage.setItem('pegasus_user', JSON.stringify(data.user));
         localStorage.setItem('pegasus_token', data.token);
         this.updateAuthUI();
+        this.updateNavigationBasedOnAuth();
         return { success: true, data };
       } else {
         return { success: false, error: data.error || 'Registration failed' };
@@ -115,6 +143,7 @@ class AuthManager {
     localStorage.removeItem('pegasus_token');
     localStorage.removeItem('pegasus_expiration');
     this.updateAuthUI();
+    this.updateNavigationBasedOnAuth();
     window.location.href = 'index.html';
   }
 
