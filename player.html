@@ -3,294 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player - PEGASUS Sports Streaming</title>
-    <link rel="stylesheet" href="style.css">
+    <title>PEGASUS Sports Streaming - Player</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
-        /* Additional styles specific to player page */
+        /* Player-specific styles */
         :root {
-            --player-height: 70vh;
+            --player-height: 56.25vw; /* 16:9 aspect ratio */
+            --max-player-height: 80vh;
         }
         
-        body {
+        .player-main {
+            margin-top: 0;
             padding-top: 0;
         }
         
-        .player-sticky {
+        .player-container {
             position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: var(--primary);
+            top: 70px;
+            z-index: 90;
+            background: #000;
+            margin-bottom: 0;
         }
         
-        .player-container {
-            width: 100%;
-            background: #000;
-            height: var(--player-height);
-            position: relative;
+        .player-wrapper {
+            border-radius: 0;
+            box-shadow: none;
+            margin-bottom: 0;
         }
         
         .video-player {
-            width: 100%;
-            height: 100%;
+            padding-bottom: var(--player-height);
+            max-height: var(--max-player-height);
             position: relative;
             background: #000;
         }
         
-        .player-controls {
+        .video-player iframe,
+        .video-player video {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .player-container:hover .player-controls {
-            opacity: 1;
-        }
-        
-        .player-left-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .player-btn {
-            background: rgba(255,255,255,0.2);
+            height: 100%;
             border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        }
+        
+        .player-controls {
+            padding: 15px 20px;
+            background: rgba(10, 10, 18, 0.95);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .player-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.1);
+        .player-title-section {
+            flex: 1;
+            min-width: 0;
         }
         
-        .play-pause-btn {
-            width: 50px;
-            height: 50px;
-            background: var(--accent);
+        .player-title {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
-        .player-right-controls {
+        .player-meta {
             display: flex;
-            align-items: center;
-            gap: 15px;
+            color: var(--text-secondary);
+            font-size: 14px;
         }
         
-        .volume-control {
+        .player-actions {
             display: flex;
-            align-items: center;
             gap: 10px;
         }
         
-        .volume-slider {
-            width: 80px;
-        }
-        
-        .time-display {
-            color: white;
+        .player-actions .btn {
+            padding: 8px 16px;
             font-size: 14px;
-            margin: 0 10px;
         }
         
-        .player-info-section {
+        .content-details {
             padding: 30px 0;
             background: var(--primary);
         }
         
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        
-        .content-title {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .content-meta {
-            display: flex;
-            gap: 15px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
         .content-description {
             max-width: 800px;
+            margin-bottom: 30px;
             line-height: 1.6;
-            margin-bottom: 30px;
         }
         
-        .action-buttons {
+        .content-tabs {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 25px;
         }
         
-        .related-content {
-            padding: 40px 0;
-            background: var(--secondary);
-        }
-        
-        .related-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        
-        .related-tabs {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .related-tab {
-            padding: 8px 16px;
-            background: var(--card-bg);
-            border-radius: 20px;
+        .content-tab {
+            padding: 12px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
         }
         
-        .related-tab.active {
-            background: var(--accent);
-            color: #000;
+        .content-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .premium-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--warning);
         }
         
         .content-type-badge {
             position: absolute;
             top: 15px;
-            left: 15px;
+            right: 15px;
+            background: var(--accent);
+            color: #000;
             padding: 5px 10px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 600;
-            z-index: 10;
+            z-index: 5;
         }
         
-        .content-type-live {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .content-type-vod {
-            background: var(--accent);
-            color: #000;
-        }
-        
-        .content-type-highlight {
-            background: var(--warning);
-            color: #000;
-        }
-        
-        .content-type-channel {
-            background: var(--success);
-            color: #000;
-        }
-        
-        .loading-placeholder {
+        .thumbnail-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            height: 300px;
-            color: var(--text-secondary);
+            align-items: center;
+            background: #000;
         }
         
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+        .thumbnail-fallback img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .play-button-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            color: white;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            z-index: 5;
         }
         
         /* Responsive styles */
         @media (max-width: 992px) {
-            :root {
-                --player-height: 50vh;
+            .player-container {
+                top: 60px;
             }
             
-            .content-title {
-                font-size: 1.8rem;
+            .player-title {
+                font-size: 1.2rem;
+            }
+            
+            .player-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
+            .player-actions .btn {
+                margin-bottom: 5px;
             }
         }
         
         @media (max-width: 768px) {
             :root {
-                --player-height: 40vh;
-            }
-            
-            .content-header {
-                flex-direction: column;
-            }
-            
-            .action-buttons {
-                flex-wrap: wrap;
+                --player-height: 56.25vw;
             }
             
             .player-controls {
-                padding: 10px;
+                flex-direction: column;
+                align-items: flex-start;
             }
             
-            .player-btn {
-                width: 35px;
-                height: 35px;
+            .player-title-section {
+                margin-bottom: 15px;
+                width: 100%;
             }
             
-            .play-pause-btn {
-                width: 40px;
-                height: 40px;
+            .player-actions {
+                width: 100%;
+                justify-content: space-between;
             }
             
-            .volume-slider {
-                width: 60px;
+            .content-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            .content-tab {
+                padding: 10px 15px;
             }
         }
         
         @media (max-width: 576px) {
-            :root {
-                --player-height: 35vh;
+            .player-title {
+                font-size: 1.1rem;
             }
             
-            .content-title {
-                font-size: 1.5rem;
+            .player-meta {
+                flex-direction: column;
             }
             
-            .related-tabs {
-                flex-wrap: wrap;
+            .player-actions .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .play-button-overlay {
+                font-size: 3.5rem;
             }
         }
     </style>
@@ -300,152 +269,119 @@
     <div id="preloader">
         <div class="preloader-content">
             <div class="loading-circle"></div>
-            <p>Loading Player...</p>
         </div>
     </div>
 
     <!-- Header -->
     <header>
-        <nav class="navbar container">
-            <a href="index.html" class="logo">
-                <img src="https://pegasus.free.nf/logo.png" alt="PEGASUS Logo" onerror="this.src='https://via.placeholder.com/150x50?text=PEGASUS'">
-            </a>
-            
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="live.html">Live</a></li>
-                <li><a href="vod.html">VOD</a></li>
-                <li><a href="highlights.html">Highlights</a></li>
-                <li><a href="channels.html">Channels</a></li>
-                <li><a href="explore.html">Explore</a></li>
-            </ul>
-            
-            <div class="auth-buttons">
-                <!-- Dynamically filled by auth.js -->
-            </div>
-            
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <img src="https://i.ibb.co/0jQ2X8k/pegasus-logo.png" alt="PEGASUS Sports Streaming">
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="live.html">Live</a></li>
+                    <li><a href="vod.html">VOD</a></li>
+                    <li><a href="highlights.html">Highlights</a></li>
+                    <li><a href="channels.html">Channels</a></li>
+                    <li><a href="explore.html">Explore</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <!-- Auth buttons will be populated by auth.js -->
+                </div>
+                
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
         
         <div class="mobile-auth">
-            <!-- Dynamically filled by auth.js -->
+            <!-- Mobile auth buttons will be populated by auth.js -->
         </div>
     </header>
 
-    <!-- Main Player Content -->
-    <main>
-        <div class="player-sticky">
-            <div class="player-container">
+    <!-- Main Content -->
+    <main class="player-main">
+        <!-- Player Section -->
+        <div class="player-container">
+            <div class="player-wrapper">
                 <div class="video-player" id="video-player">
+                    <!-- Player content will be loaded by player.js -->
                     <div class="loading-placeholder">
                         <div class="loading-spinner"></div>
-                        <p>Loading content...</p>
+                        <p>Loading player...</p>
                     </div>
                 </div>
                 
                 <div class="player-controls">
-                    <div class="player-left-controls">
-                        <button class="player-btn play-pause-btn" id="play-pause-btn">
-                            <i class="fas fa-pause"></i>
-                        </button>
-                        <div class="time-display" id="current-time">00:00</div>
-                        <div>/</div>
-                        <div class="time-display" id="total-time">00:00</div>
-                    </div>
-                    
-                    <div class="player-right-controls">
-                        <div class="volume-control">
-                            <button class="player-btn" id="mute-btn">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100">
-                        </div>
-                        <button class="player-btn" id="fullscreen-btn">
-                            <i class="fas fa-expand"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="container">
-            <section class="player-info-section">
-                <div class="content-header">
-                    <div>
-                        <h1 class="content-title" id="player-title">Loading...</h1>
-                        <div class="content-meta">
-                            <div class="meta-item" id="player-status">
-                                <i class="fas fa-circle"></i>
-                                <span>Loading...</span>
-                            </div>
-                            <div class="meta-item" id="player-viewers">
-                                <i class="fas fa-eye"></i>
-                                <span>0 viewers</span>
-                            </div>
-                            <div class="meta-item" id="content-duration">
-                                <i class="fas fa-clock"></i>
-                                <span>00:00:00</span>
-                            </div>
-                            <div class="meta-item" id="content-category">
-                                <i class="fas fa-tag"></i>
-                                <span>Sports</span>
-                            </div>
+                    <div class="player-title-section">
+                        <h1 class="player-title" id="player-title">Loading content...</h1>
+                        <div class="player-meta">
+                            <span id="player-status">Loading...</span>
+                            <span id="player-viewers" style="margin-left: 15px;">0 viewers</span>
                         </div>
                     </div>
                     
-                    <div class="action-buttons">
-                        <button class="btn btn-outline" id="favorite-btn">
+                    <div class="player-actions">
+                        <button id="favorite-btn" class="btn btn-outline">
                             <i class="far fa-heart"></i> Add to Favorites
                         </button>
-                        <button class="btn btn-outline" id="share-btn">
-                            <i class="fas fa-share"></i> Share
+                        <button id="share-btn" class="btn btn-outline">
+                            <i class="fas fa-share-alt"></i> Share
                         </button>
-                        <button class="btn btn-outline" id="download-btn" style="display: none;">
+                        <button id="download-btn" class="btn btn-outline" style="display: none;">
                             <i class="fas fa-download"></i> Download
                         </button>
                     </div>
                 </div>
-                
-                <p class="content-description" id="content-description">
-                    Description will be loaded here...
-                </p>
-            </section>
+            </div>
         </div>
         
-        <section class="related-content">
-            <div class="container">
-                <div class="related-header">
-                    <h2 class="section-title">Related Content</h2>
-                    
-                    <div class="related-tabs">
-                        <div class="related-tab active" data-type="all">All</div>
-                        <div class="related-tab" data-type="live">Live</div>
-                        <div class="related-tab" data-type="vod">VOD</div>
-                        <div class="related-tab" data-type="highlight">Highlights</div>
-                    </div>
-                </div>
+        <!-- Content Details -->
+        <div class="container content-details">
+            <div class="content-tabs">
+                <div class="content-tab active" data-tab="details">Details</div>
+                <div class="content-tab" data-tab="related">Related Content</div>
+            </div>
+            
+            <div id="details-tab" class="tab-content active">
+                <p class="content-description" id="content-description">
+                    Content description will be loaded here...
+                </p>
                 
-                <div class="stream-grid" id="related-content">
-                    <div class="loading-placeholder">
-                        <div class="loading-spinner"></div>
-                        <p>Loading related content...</p>
+                <div class="content-info">
+                    <div class="info-item">
+                        <strong>Category:</strong> <span id="content-category">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Duration:</strong> <span id="content-duration">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Date:</strong> <span id="content-date">Loading...</span>
                     </div>
                 </div>
             </div>
-        </section>
+            
+            <div id="related-tab" class="tab-content">
+                <h3>More content you might like</h3>
+                <div class="stream-grid" id="related-content">
+                    <!-- Related content will be loaded by player.js -->
+                </div>
+            </div>
+        </div>
         
-        <!-- Ad Container -->
+        <!-- Ad Container (optional) -->
         <div class="container">
             <div class="ad-container">
-                <h3>Premium Subscription</h3>
-                <p>Upgrade to premium for ad-free experience and exclusive content</p>
-                <div class="ad-placeholder">
-                    Advertisement
-                </div>
+                <h3>Upgrade to Premium</h3>
+                <p>Enjoy ad-free streaming, exclusive content, and premium features</p>
+                <a href="subscribe.html" class="btn">Subscribe Now</a>
             </div>
         </div>
     </main>
@@ -455,21 +391,19 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>PEGASUS</h3>
-                    <p>The ultimate sports streaming platform with live games, highlights, and exclusive content.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
+                    <h3>PEGASUS Sports</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
                 </div>
                 
                 <div class="footer-column">
-                    <h3>Quick Links</h3>
+                    <h3>Content</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="live.html">Live Streaming</a></li>
+                        <li><a href="live.html">Live Streams</a></li>
                         <li><a href="vod.html">Video on Demand</a></li>
                         <li><a href="highlights.html">Highlights</a></li>
                         <li><a href="channels.html">Channels</a></li>
@@ -481,22 +415,25 @@
                     <ul class="footer-links">
                         <li><a href="help.html">Help Center</a></li>
                         <li><a href="faq.html">FAQ</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="devices.html">Supported Devices</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-column">
-                    <h3>Download Apps</h3>
-                    <p>Watch on your favorite devices.</p>
-                    <div class="app-downloads">
-                        <a href="#" class="btn btn-outline" style="margin-bottom: 10px; display: block; text-align: center;">
-                            <i class="fab fa-apple"></i> App Store
-                        </a>
-                        <a href="#" class="btn btn-outline" style="display: block; text-align: center;">
-                            <i class="fab fa-google-play"></i> Google Play
-                        </a>
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
+                        <li><a href="compliance.html">Compliance</a></li>
+                    </ul>
+                    
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
@@ -515,89 +452,74 @@
     <script>
         // Additional player functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Play/Pause button functionality
-            const playPauseBtn = document.getElementById('play-pause-btn');
-            if (playPauseBtn) {
-                playPauseBtn.addEventListener('click', function() {
-                    const icon = this.querySelector('i');
-                    if (icon.classList.contains('fa-play')) {
-                        icon.classList.remove('fa-play');
-                        icon.classList.add('fa-pause');
-                        // Here you would trigger play on the video element
-                    } else {
-                        icon.classList.remove('fa-pause');
-                        icon.classList.add('fa-play');
-                        // Here you would trigger pause on the video element
-                    }
+            // Tab switching
+            const tabs = document.querySelectorAll('.content-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
                 });
-            }
-            
-            // Fullscreen button functionality
-            const fullscreenBtn = document.getElementById('fullscreen-btn');
-            if (fullscreenBtn) {
-                fullscreenBtn.addEventListener('click', function() {
-                    const playerContainer = document.querySelector('.player-container');
-                    if (!document.fullscreenElement) {
-                        if (playerContainer.requestFullscreen) {
-                            playerContainer.requestFullscreen();
-                        } else if (playerContainer.webkitRequestFullscreen) {
-                            playerContainer.webkitRequestFullscreen();
-                        } else if (playerContainer.msRequestFullscreen) {
-                            playerContainer.msRequestFullscreen();
-                        }
-                    } else {
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    }
-                });
-            }
-            
-            // Volume control functionality
-            const volumeSlider = document.getElementById('volume-slider');
-            const muteBtn = document.getElementById('mute-btn');
-            
-            if (volumeSlider && muteBtn) {
-                volumeSlider.addEventListener('input', function() {
-                    // Here you would set the volume on the video element
-                    if (this.value === '0') {
-                        muteBtn.querySelector('i').classList.remove('fa-volume-up');
-                        muteBtn.querySelector('i').classList.add('fa-volume-mute');
-                    } else {
-                        muteBtn.querySelector('i').classList.remove('fa-volume-mute');
-                        muteBtn.querySelector('i').classList.add('fa-volume-up');
-                    }
-                });
-                
-                muteBtn.addEventListener('click', function() {
-                    if (volumeSlider.value !== '0') {
-                        volumeSlider.value = '0';
-                        muteBtn.querySelector('i').classList.remove('fa-volume-up');
-                        muteBtn.querySelector('i').classList.add('fa-volume-mute');
-                    } else {
-                        volumeSlider.value = '100';
-                        muteBtn.querySelector('i').classList.remove('fa-volume-mute');
-                        muteBtn.querySelector('i').classList.add('fa-volume-up');
-                    }
-                });
-            }
-            
-            // Hide preloader when content is loaded
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    const preloader = document.getElementById('preloader');
-                    if (preloader) {
-                        preloader.classList.add('hide');
-                        setTimeout(function() {
-                            preloader.style.display = 'none';
-                        }, 500);
-                    }
-                }, 1000);
             });
+            
+            // Handle play button click for thumbnail fallback
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.play-button-overlay')) {
+                    const videoPlayer = document.getElementById('video-player');
+                    const embedCode = videoPlayer.getAttribute('data-embed');
+                    
+                    if (embedCode) {
+                        videoPlayer.innerHTML = embedCode;
+                        
+                        // Make all embedded content responsive
+                        const iframes = videoPlayer.querySelectorAll('iframe');
+                        iframes.forEach(iframe => {
+                            iframe.style.position = 'absolute';
+                            iframe.style.top = '0';
+                            iframe.style.left = '0';
+                            iframe.style.width = '100%';
+                            iframe.style.height = '100%';
+                            iframe.style.border = 'none';
+                        });
+                    }
+                }
+            });
+            
+            // Handle window resize for player aspect ratio
+            function adjustPlayerHeight() {
+                const player = document.querySelector('.video-player');
+                const maxHeight = window.innerHeight * 0.8; // 80% of viewport height
+                
+                if (player) {
+                    const width = player.offsetWidth;
+                    const calculatedHeight = width * 0.5625; // 16:9 aspect ratio
+                    
+                    if (calculatedHeight > maxHeight) {
+                        player.style.maxHeight = maxHeight + 'px';
+                        player.style.paddingBottom = '0';
+                    } else {
+                        player.style.maxHeight = 'none';
+                        player.style.paddingBottom = '56.25%';
+                    }
+                }
+            }
+            
+            // Initial adjustment
+            adjustPlayerHeight();
+            
+            // Adjust on window resize
+            window.addEventListener('resize', adjustPlayerHeight);
         });
     </script>
 </body>
