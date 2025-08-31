@@ -8,6 +8,7 @@ class PegasusApp {
   init() {
     this.hidePreloader();
     this.setupEventListeners();
+    this.setupScrollHeader();
     
     // Initialize components based on page
     if (document.querySelector('.hero-slider')) {
@@ -30,6 +31,19 @@ class PegasusApp {
     if (document.getElementById('channels-content')) {
       this.loadContent('channel', 'channels-content', 'all', 4);
     }
+  }
+
+  setupScrollHeader() {
+    const header = document.querySelector('header');
+    if (!header) return;
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
   }
 
   hidePreloader() {
