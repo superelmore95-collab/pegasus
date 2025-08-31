@@ -39,11 +39,11 @@ body {
   background: var(--accent);
   color: #000;
   font-weight: 600;
-  padding: 12px 28px;
+  padding: 8px 16px;
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-size: 14px;
+  font-size: 12px;
   border: none;
   cursor: pointer;
   transition: var(--transition);
@@ -92,16 +92,16 @@ body {
 }
 
 .preloader-logo {
-  width: 150px;
-  margin-bottom: 30px;
+  width: 100px;
+  margin-bottom: 20px;
   animation: pulse 1.5s infinite;
 }
 
 .loading-circle {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top: 4px solid var(--accent);
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto;
@@ -120,10 +120,17 @@ body {
 
 /* ===== HEADER & NAVIGATION ===== */
 header {
-  background-color: rgba(10, 10, 18, 0.95);
-  position: sticky;
+  background-color: transparent;
+  position: fixed;
   top: 0;
+  width: 100%;
   z-index: 1000;
+  transition: var(--transition);
+  padding: 10px 0;
+}
+
+header.scrolled {
+  background-color: rgba(10, 10, 18, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -132,13 +139,14 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
+  padding: 0;
+  height: 40px;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 800;
   text-decoration: none;
   color: var(--text);
@@ -146,8 +154,8 @@ header {
 }
 
 .logo img {
-  height: 130px;
-  margin-right: 9px;
+  height: 30px;
+  margin-right: 8px;
 }
 
 .nav-links {
@@ -156,14 +164,14 @@ header {
 }
 
 .nav-links li {
-  margin: 0 12px;
+  margin: 0 8px;
 }
 
 .nav-links a {
   color: var(--text);
   text-decoration: none;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 12px;
   transition: var(--transition);
   position: relative;
   padding: 5px 0;
@@ -192,7 +200,7 @@ header {
 
 .auth-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   z-index: 1001;
 }
 
@@ -215,14 +223,15 @@ header {
 .user-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: transparent;
   border: 2px solid var(--accent);
   color: var(--accent);
-  padding: 8px 16px;
+  padding: 4px 10px;
   border-radius: 4px;
   cursor: pointer;
   transition: var(--transition);
+  font-size: 12px;
 }
 
 .user-btn:hover {
@@ -231,21 +240,28 @@ header {
 }
 
 .user-avatar {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
 }
 
 .user-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  width: 200px;
+  width: 180px;
   background: var(--card-bg);
   border-radius: 4px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  padding: 10px 0;
+  padding: 8px 0;
   z-index: 1000;
   display: none;
 }
@@ -257,11 +273,12 @@ header {
 .user-dropdown a {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
+  gap: 8px;
+  padding: 8px 12px;
   color: var(--text);
   text-decoration: none;
   transition: var(--transition);
+  font-size: 12px;
 }
 
 .user-dropdown a:hover {
@@ -270,17 +287,18 @@ header {
 }
 
 .user-dropdown a i {
-  width: 16px;
+  width: 14px;
   text-align: center;
 }
 
 /* ===== HERO SECTION ===== */
 .hero {
-  height: 80vh;
-  min-height: 600px;
+  height: 70vh;
+  min-height: 500px;
   position: relative;
   overflow: hidden;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
+  margin-top: 40px;
 }
 
 .hero-slider {
@@ -309,21 +327,21 @@ header {
 
 .slide-content {
   position: absolute;
-  bottom: 100px;
-  left: 50px;
+  bottom: 70px;
+  left: 40px;
   max-width: 600px;
   z-index: 10;
 }
 
 .slide-content h2 {
-  font-size: 3.5rem;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .slide-content p {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
+  font-size: 1rem;
+  margin-bottom: 20px;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -338,17 +356,17 @@ header {
 
 .slider-nav {
   position: absolute;
-  bottom: 30px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 8px;
   z-index: 10;
 }
 
 .slider-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
@@ -362,20 +380,20 @@ header {
 
 /* ===== CONTENT SECTIONS ===== */
 .section {
-  padding: 60px 0;
+  padding: 40px 0;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 .section-title::after {
@@ -383,8 +401,8 @@ header {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 80px;
-  height: 4px;
+  width: 60px;
+  height: 3px;
   background: var(--accent);
   border-radius: 2px;
 }
@@ -394,6 +412,7 @@ header {
   text-decoration: none;
   font-weight: 500;
   transition: var(--transition);
+  font-size: 12px;
 }
 
 .view-all:hover {
@@ -403,13 +422,13 @@ header {
 /* ===== STREAM CARDS ===== */
 .stream-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .stream-card {
   background: var(--card-bg);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   transition: var(--transition);
   position: relative;
@@ -417,12 +436,12 @@ header {
 }
 
 .stream-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
 .card-img {
-  height: 160px;
+  height: 140px;
   width: 100%;
   position: relative;
   overflow: hidden;
@@ -441,13 +460,13 @@ header {
 
 .live-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   background: var(--danger);
   color: white;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -455,23 +474,23 @@ header {
 
 .live-badge::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: white;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: 4px;
   animation: pulse 1.5s infinite;
 }
 
 .premium-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   background: var(--warning);
   color: #000;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -482,19 +501,19 @@ header {
 }
 
 .card-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 .card-title {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  margin-bottom: 8px;
   font-weight: 600;
 }
 
 .card-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 
@@ -505,26 +524,34 @@ header {
 
 .card-views::before {
   content: '👁️';
-  margin-right: 5px;
+  margin-right: 4px;
+  font-size: 10px;
 }
 
 /* ===== VIDEO PLAYER PAGE ===== */
 .player-container {
-  padding: 40px 0;
+  padding: 0;
+  margin-top: 0;
 }
 
 .player-wrapper {
   background: var(--secondary);
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  margin-bottom: 30px;
+  box-shadow: none;
+  margin-bottom: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 56.25vw; /* 16:9 aspect ratio */
+  max-height: 70vh;
+  z-index: 999;
 }
 
 .video-player {
   width: 100%;
-  height: 0;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 100%;
   position: relative;
 }
 
@@ -538,74 +565,89 @@ header {
 }
 
 .player-info {
-  padding: 20px;
+  padding: 15px;
+  margin-top: 56.25vw;
+  max-height: 30vh;
+  overflow-y: auto;
 }
 
 .player-title {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
 
 .player-meta {
   display: flex;
   justify-content: space-between;
   color: var(--text-secondary);
-  margin-bottom: 20px;
-  font-size: 14px;
+  margin-bottom: 15px;
+  font-size: 12px;
 }
 
 .player-actions {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.player-actions .btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 11px;
 }
 
 .ad-container {
   background: var(--card-bg);
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 6px;
+  padding: 15px;
   text-align: center;
-  margin: 30px 0;
+  margin: 20px 0;
 }
 
 .ad-container h3 {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   color: var(--accent);
+  font-size: 16px;
 }
 
 .ad-placeholder {
-  height: 250px;
+  height: 200px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  font-size: 18px;
+  font-size: 14px;
 }
 
 /* ===== EXPLORE PAGE STYLES ===== */
 .explore-hero {
   background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  padding: 80px 0;
+  padding: 70px 0;
   text-align: center;
+  margin-top: 40px;
 }
 
 .category-filters {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
-  margin: 30px 0;
+  gap: 10px;
+  margin: 20px 0;
 }
 
 .category-filter {
-  padding: 12px 24px;
+  padding: 8px 16px;
   background: var(--card-bg);
   border: 2px solid transparent;
   border-radius: 30px;
   cursor: pointer;
   transition: var(--transition);
+  font-size: 12px;
 }
 
 .category-filter.active,
@@ -616,40 +658,41 @@ header {
 
 .content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin: 40px 0;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
 }
 
 .content-section {
-  margin: 60px 0;
+  margin: 40px 0;
 }
 
 .view-all-btn {
   color: var(--accent);
   text-decoration: none;
   font-weight: 600;
+  font-size: 12px;
 }
 
 /* ===== FOOTER ===== */
 footer {
   background: var(--secondary);
-  padding: 60px 0 30px;
-  margin-top: 60px;
+  padding: 40px 0 20px;
+  margin-top: 40px;
 }
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
 .footer-column h3 {
-  font-size: 18px;
-  margin-bottom: 20px;
+  font-size: 16px;
+  margin-bottom: 15px;
   position: relative;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
 }
 
 .footer-column h3::after {
@@ -657,8 +700,8 @@ footer {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 40px;
-  height: 3px;
+  width: 30px;
+  height: 2px;
   background: var(--accent);
 }
 
@@ -667,13 +710,14 @@ footer {
 }
 
 .footer-links li {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .footer-links a {
   color: var(--text-secondary);
   text-decoration: none;
   transition: var(--transition);
+  font-size: 12px;
 }
 
 .footer-links a:hover {
@@ -683,16 +727,16 @@ footer {
 
 .social-links {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .social-links a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   transition: var(--transition);
@@ -705,20 +749,95 @@ footer {
 
 .copyright {
   text-align: center;
-  padding-top: 30px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 12px;
+}
+
+/* ===== COMMENTS SECTION ===== */
+.comments-section {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--card-bg);
+  border-radius: 6px;
+}
+
+.comments-section h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: var(--accent);
+}
+
+.comment-form {
+  margin-bottom: 15px;
+}
+
+.comment-input {
+  width: 100%;
+  background: var(--secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px;
+  color: var(--text);
+  margin-bottom: 10px;
+  font-size: 12px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.comment-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-author {
+  font-weight: 600;
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.comment-time {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.comment-text {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 15px;
+  background: var(--secondary);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.login-prompt a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.login-prompt a:hover {
+  text-decoration: underline;
 }
 
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 992px) {
   .slide-content h2 {
-    font-size: 2.8rem;
+    font-size: 2rem;
   }
   
   .slide-content {
-    left: 30px;
+    left: 25px;
     max-width: 500px;
   }
 }
@@ -726,13 +845,13 @@ footer {
 @media (max-width: 768px) {
   .nav-links {
     position: fixed;
-    top: 70px;
+    top: 40px;
     left: -100%;
     background: var(--primary);
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 40px);
     flex-direction: column;
-    padding: 30px 0;
+    padding: 20px 0;
     transition: var(--transition);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
@@ -744,21 +863,21 @@ footer {
   }
   
   .nav-links li {
-    margin: 15px 0;
+    margin: 10px 0;
     text-align: center;
     width: 100%;
   }
   
   .nav-links a {
     display: block;
-    padding: 12px 0;
-    font-size: 18px;
+    padding: 10px 0;
+    font-size: 16px;
   }
   
   .hamburger {
     display: block;
-    width: 30px;
-    height: 24px;
+    width: 24px;
+    height: 20px;
     position: relative;
     z-index: 1000;
   }
@@ -766,7 +885,7 @@ footer {
   .hamburger span {
     display: block;
     position: absolute;
-    height: 3px;
+    height: 2px;
     width: 100%;
     background: white;
     border-radius: 3px;
@@ -781,15 +900,15 @@ footer {
   }
 
   .hamburger span:nth-child(2) {
-    top: 10px;
+    top: 8px;
   }
 
   .hamburger span:nth-child(3) {
-    top: 20px;
+    top: 16px;
   }
 
   .hamburger.active span:nth-child(1) {
-    top: 10px;
+    top: 8px;
     transform: rotate(135deg);
   }
 
@@ -799,21 +918,21 @@ footer {
   }
 
   .hamburger.active span:nth-child(3) {
-    top: 10px;
+    top: 8px;
     transform: rotate(-135deg);
   }
   
   .slide-content {
-    left: 20px;
-    bottom: 70px;
+    left: 15px;
+    bottom: 60px;
   }
   
   .slide-content h2 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
   }
   
   .section-title {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
 
   /* Hide desktop auth buttons on mobile */
@@ -825,24 +944,34 @@ footer {
   .mobile-auth {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-    padding: 0 20px;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 0 15px;
     width: 100%;
   }
   
   .mobile-auth .btn {
     flex: 1;
-    padding: 12px;
-    font-size: 14px;
+    padding: 10px;
+    font-size: 12px;
     text-align: center;
+  }
+  
+  .player-wrapper {
+    height: 56.25vw;
+    max-height: 40vh;
+  }
+  
+  .player-info {
+    margin-top: 56.25vw;
+    max-height: 60vh;
   }
 }
 
 @media (max-width: 576px) {
   .hero {
-    height: 70vh;
-    min-height: 500px;
+    height: 60vh;
+    min-height: 400px;
   }
   
   .slide-content {
@@ -850,25 +979,25 @@ footer {
   }
   
   .slide-content h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   
   .slide-content p {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .btn {
-    padding: 10px 20px;
-    font-size: 13px;
+    padding: 8px 14px;
+    font-size: 11px;
   }
   
   .section {
-    padding: 40px 0;
+    padding: 30px 0;
   }
   
   .mobile-auth {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   
   .category-filters {
@@ -877,6 +1006,10 @@ footer {
   }
   
   .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stream-grid {
     grid-template-columns: 1fr;
   }
 }
