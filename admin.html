@@ -626,16 +626,6 @@
 
           <div class="admin-form-grid">
             <div class="admin-form-group">
-              <label for="live-status">Status</label>
-              <select id="live-status" class="admin-form-control">
-                <option value="draft">Draft</option>
-                <option value="scheduled">Scheduled</option>
-                <option value="live">Live</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
-            
-            <div class="admin-form-group">
               <label for="live-is-live">Is Currently Live?</label>
               <select id="live-is-live" class="admin-form-control">
                 <option value="0">No</option>
@@ -1068,9 +1058,27 @@
       subscriptions: []
     };
 
+    // Check if user is authenticated
+    function isAuthenticated() {
+      const user = localStorage.getItem('pegasus_user');
+      const token = localStorage.getItem('pegasus_token');
+      return !!(user && token);
+    }
+
+    // Get current user
+    function getCurrentUser() {
+      const userStr = localStorage.getItem('pegasus_user');
+      return userStr ? JSON.parse(userStr) : null;
+    }
+
+    // Get token
+    function getToken() {
+      return localStorage.getItem('pegasus_token');
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
       // Check if user is authenticated
-      if (!window.authManager || !window.authManager.isAuthenticated()) {
+      if (!isAuthenticated()) {
         alert('Please sign in to access admin panel');
         window.location.href = 'signin.html?redirect=admin.html';
         return;
@@ -1078,34 +1086,21 @@
       
       // Verify the user is an admin
       try {
-        const token = window.authManager.getToken();
-        const response = await fetch(`${API_BASE}/api/user/profile`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const token = getToken();
+        const user = getCurrentUser();
         
-        if (!response.ok) {
-          alert('Authentication failed');
-          window.location.href = 'signin.html?redirect=admin.html';
-          return;
-        }
-        
-        const data = await response.json();
-        if (data.user.role !== 'admin') {
+        // Check if user is admin
+        if (user && user.role === 'admin') {
+          // Initialize the admin panel
+          initAdminPanel();
+          
+          // Load initial data
+          loadDashboardData();
+          loadContentData();
+        } else {
           alert('Admin access required');
           window.location.href = 'index.html';
-          return;
         }
-        
-        // Initialize the admin panel
-        initAdminPanel();
-        
-        // Load initial data
-        loadDashboardData();
-        loadContentData();
-        loadUsers();
-        loadSubscriptions();
       } catch (error) {
         console.error('Error verifying admin access:', error);
         alert('Error verifying admin access');
@@ -1118,9 +1113,11 @@
       const menuToggle = document.getElementById('adminMenuToggle');
       const sidebar = document.querySelector('.admin-sidebar');
       
-      menuToggle.addEventListener('click', function() {
-        sidebar.classList.toggle('active');
-      });
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('active');
+        });
+      }
       
       // Content type tabs
       const contentTabs = document.querySelectorAll('.admin-tab[data-content-type]');
@@ -1171,7 +1168,9 @@
         adminLogout.addEventListener('click', function(e) {
           e.preventDefault();
           if (confirm('Are you sure you want to logout?')) {
-            window.authManager.signOut();
+            localStorage.removeItem('pegasus_user');
+            localStorage.removeItem('pegasus_token');
+            window.location.href = 'index.html';
           }
         });
       }
@@ -1179,7 +1178,7 @@
 
     async function loadDashboardData() {
       try {
-        const token = window.authManager.getToken();
+        const token = getToken();
         const response = await fetch(`${API_BASE}/api/admin/stats`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1202,7 +1201,7 @@
         document.getElementById('vod-count').textContent = data.content?.vod || 0;
         document.getElementById('total-views').textContent = data.revenue ? formatNumber(data.revenue) : 0;
         document.getElementById('active-users').textContent = data.users ? formatNumber(data.users) : 0;
-        document.getElementById('active-subscriptions').textContent = data.active_subscriptions || 0;
+        document.getElementById('online-users').textContent = data.active_subscriptions || 0;
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       }
@@ -1210,7 +1209,7 @@
 
     async function loadContentData() {
       try {
-        const token = window.authManager.getToken();
+        const token = getToken();
         const response = await fetch(`${API_BASE}/api/content`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1403,7 +1402,7 @@
 
     async function handleFormSubmit(contentType) {
       try {
-        const token = window.authManager.getToken();
+        const token = getToken();
         
         // Get form data based on content type
         let formData = {};
@@ -1415,12 +1414,11 @@
               description: document.getElementById('live-description').value,
               embed_code: document.getElementById('live-embed').value,
               category: document.getElementById('live-category').value,
-              status: document.getElementById('live-status').value,
-              is_live: document.getElementById('live-is-live').value,
+              is_live: parseInt(document.getElementById('live-is-live').value),
               start_time: document.getElementById('live-start').value,
               end_time: document.getElementById('live-end').value,
               thumbnail: document.getElementById('live-thumbnail').value,
-              requires_premium: document.getElementById('live-premium').value
+              requires_premium: parseInt(document.getElementById('live-premium').value)
             };
             break;
             
@@ -1432,7 +1430,7 @@
               category: document.getElementById('vod-category').value,
               thumbnail: document.getElementById('vod-thumbnail').value,
               duration: document.getElementById('vod-duration').value,
-              requires_premium: document.getElementById('vod-premium').value
+              requires_premium: parseInt(document.getElementById('vod-premium').value)
             };
             break;
             
@@ -1444,7 +1442,7 @@
               category: document.getElementById('highlight-category').value,
               thumbnail: document.getElementById('highlight-thumbnail').value,
               duration: document.getElementById('highlight-duration').value,
-              requires_premium: document.getElementById('highlight-premium').value
+              requires_premium: parseInt(document.getElementById('highlight-premium').value)
             };
             break;
             
@@ -1455,9 +1453,9 @@
               embed_code: document.getElementById('channel-embed').value,
               category: document.getElementById('channel-category').value,
               thumbnail_url: document.getElementById('channel-thumbnail').value,
-              is_live: document.getElementById('channel-live').value,
-              requires_premium: document.getElementById('channel-premium').value,
-              viewers_count: document.getElementById('channel-viewers').value
+              is_live: parseInt(document.getElementById('channel-live').value),
+              requires_premium: parseInt(document.getElementById('channel-premium').value),
+              viewers_count: parseInt(document.getElementById('channel-viewers').value) || 0
             };
             break;
             
@@ -1467,7 +1465,7 @@
               description: document.getElementById('banner-description').value,
               image_url: document.getElementById('banner-image').value,
               target_url: document.getElementById('banner-target').value,
-              is_active: document.getElementById('banner-active').value,
+              is_active: parseInt(document.getElementById('banner-active').value),
               start_date: document.getElementById('banner-start').value,
               end_date: document.getElementById('banner-end').value
             };
@@ -1498,17 +1496,18 @@
           hideAllForms();
           loadContentData();
         } else {
-          alert(`Error adding ${contentType}`);
+          const errorText = await response.text();
+          alert(`Error adding ${contentType}: ${errorText}`);
         }
       } catch (error) {
         console.error('Error:', error);
-        alert(`Error adding ${contentType}`);
+        alert(`Error adding ${contentType}: ${error.message}`);
       }
     }
 
     async function editContent(id, contentType) {
       try {
-        const token = window.authManager.getToken();
+        const token = getToken();
         const response = await fetch(`${API_BASE}/api/content/${contentType}/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -1531,7 +1530,6 @@
             document.getElementById('live-category').value = content.category || '';
             document.getElementById('live-thumbnail').value = content.thumbnail || '';
             document.getElementById('live-premium').value = content.requires_premium || '0';
-            document.getElementById('live-status').value = content.status || 'draft';
             document.getElementById('live-is-live').value = content.is_live ? '1' : '0';
             document.getElementById('live-start').value = content.start_time || '';
             document.getElementById('live-end').value = content.end_time || '';
@@ -1595,7 +1593,7 @@
     async function deleteContent(id, contentType) {
       if (confirm(`Are you sure you want to delete this ${contentType}?`)) {
         try {
-          const token = window.authManager.getToken();
+          const token = getToken();
           const response = await fetch(`${API_BASE}/api/admin/content/${contentType}/${id}`, {
             method: 'DELETE',
             headers: {
