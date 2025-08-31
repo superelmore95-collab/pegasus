@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Explore Page Specific Styles */
+    /* Enhanced Explore Page Styles */
     .explore-hero {
       position: relative;
       height: 70vh;
@@ -19,6 +19,7 @@
       justify-content: center;
       text-align: center;
       overflow: hidden;
+      margin-top: 40px;
     }
     
     .hero-content {
@@ -76,6 +77,14 @@
     
     .content-section {
       padding: 60px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .content-section.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     
     .content-section h2 {
@@ -108,6 +117,13 @@
       overflow: hidden;
       transition: var(--transition);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .content-card.animate {
+      opacity: 1;
+      transform: translateY(0);
     }
     
     .content-card:hover {
@@ -260,6 +276,34 @@
       padding: 10px 20px;
     }
     
+    /* Category Filters */
+    .category-filters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 30px 0;
+    }
+    
+    .category-filter {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border: 2px solid transparent;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .category-filter.active,
+    .category-filter:hover {
+      border-color: var(--accent);
+      background: rgba(255, 0, 60, 0.1);
+      color: var(--accent);
+    }
+    
+    /* Animations */
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -268,7 +312,54 @@
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.4; }
-      /* ... rest of the CSS ... */
+      100% { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .search-bar {
+        flex-direction: column;
+        border-radius: 8px;
+      }
+      
+      .search-input {
+        padding: 12px 15px;
+      }
+      
+      .search-btn {
+        padding: 12px 15px;
+        border-radius: 0 0 8px 8px;
+      }
+      
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-filters {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .category-filter {
+        width: 100%;
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -286,6 +377,7 @@
           <li><a href="vod.html">VOD</a></li>
           <li><a href="highlights.html">Highlights</a></li>
           <li><a href="channels.html">Channels</a></li>
+          <li><a href="explore.html" class="active">Explore</a></li>
         </ul>
         
         <div class="auth-buttons">
@@ -306,7 +398,7 @@
     <section class="explore-hero">
       <div class="hero-content">
         <h1 class="hero-title">Explore Sports Content</h1>
-        <p>Discover live games, highlights, and channels</p>
+        <p>Discover live games, highlights, and channels across all categories</p>
         
         <!-- Search bar -->
         <div class="search-bar">
@@ -315,6 +407,19 @@
         </div>
       </div>
     </section>
+
+    <!-- Category Filters -->
+    <div class="container">
+      <div class="category-filters">
+        <div class="category-filter active" data-category="all">All Sports</div>
+        <div class="category-filter" data-category="Football">Football</div>
+        <div class="category-filter" data-category="Basketball">Basketball</div>
+        <div class="category-filter" data-category="Formula 1">Formula 1</div>
+        <div class="category-filter" data-category="MMA">MMA</div>
+        <div class="category-filter" data-category="Wrestling">Wrestling</div>
+        <div class="category-filter" data-category="Tennis">Tennis</div>
+      </div>
+    </div>
 
     <!-- Content sections -->
     <section class="content-section">
@@ -401,6 +506,7 @@
             <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
           </ul>
         </div>
         
@@ -477,7 +583,66 @@
           }
         });
       }
+      
+      // Category filter functionality
+      const categoryFilters = document.querySelectorAll('.category-filter');
+      categoryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+          // Remove active class from all filters
+          categoryFilters.forEach(f => f.classList.remove('active'));
+          
+          // Add active class to clicked filter
+          this.classList.add('active');
+          
+          // Filter content by category
+          const category = this.getAttribute('data-category');
+          filterContentByCategory(category);
+        });
+      });
+      
+      // Set up scroll animations
+      setupScrollAnimations();
     });
+    
+    // Set up scroll animations
+    function setupScrollAnimations() {
+      const contentSections = document.querySelectorAll('.content-section');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            
+            // Animate cards with delay
+            const cards = entry.target.querySelectorAll('.content-card');
+            cards.forEach((card, index) => {
+              setTimeout(() => {
+                card.classList.add('animate');
+              }, index * 100);
+            });
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      contentSections.forEach(section => {
+        observer.observe(section);
+      });
+    }
+    
+    // Filter content by category
+    function filterContentByCategory(category) {
+      const contentCards = document.querySelectorAll('.content-card');
+      
+      contentCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category') || '';
+        
+        if (category === 'all' || cardCategory.toLowerCase().includes(category.toLowerCase())) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
     
     // Load explore content
     async function loadExploreContent() {
@@ -527,6 +692,9 @@
         populateHighlights(content.highlights || []);
         populateChannels(content.channels || []);
         populateRecommended(content.recommended || content.vod || []);
+        
+        // Trigger scroll animations after content is loaded
+        setTimeout(setupScrollAnimations, 100);
         
       } catch (error) {
         console.error('Error loading explore content:', error);
@@ -594,7 +762,7 @@
       }
       
       container.innerHTML = liveContent.slice(0, 8).map(item => `
-        <div class="content-card">
+        <div class="content-card" data-category="${item.category || 'Sports'}">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
               <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
@@ -629,7 +797,7 @@
       }
       
       container.innerHTML = upcomingContent.slice(0, 6).map(item => `
-        <div class="content-card">
+        <div class="content-card" data-category="${item.category || 'Sports'}">
           <a href="player.html?type=live&id=${item.id}">
             <div class="card-img">
               <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Event+Image'">
@@ -660,7 +828,7 @@
       }
       
       container.innerHTML = highlights.slice(0, 4).map(item => `
-        <div class="content-card">
+        <div class="content-card" data-category="${item.category || 'Sports'}">
           <a href="player.html?type=highlight&id=${item.id}">
             <div class="card-img">
               <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Highlight'">
@@ -688,12 +856,12 @@
       }
       
       container.innerHTML = channels.slice(0, 6).map(item => `
-        <div class="content-card">
+        <div class="content-card" data-category="${item.category || 'Sports'}">
           <a href="channels.html?channel=${item.id}">
             <div class="card-img">
               <img src="${item.thumbnail || item.thumbnail_url || item.image}" alt="${item.name || item.title}" onerror="this.src='https://via.placeholder.com/300x180?text=Channel'">
               ${item.is_live ? '<div class="live-badge">LIVE</div>' : ''}
-              ${item.requires_premium ? '<div class="premium-badge">PREmium</div>' : ''}
+              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             </div>
             <div class="card-content">
               <h3 class="card-title">${item.name || item.title}</h3>
@@ -717,7 +885,7 @@
       }
       
       container.innerHTML = recommendedContent.slice(0, 4).map(item => `
-        <div class="content-card">
+        <div class="content-card" data-category="${item.category || 'Sports'}">
           <a href="player.html?type=vod&id=${item.id}">
             <div class="card-img">
               <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Recommended'">
