@@ -7,196 +7,8 @@
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Player-specific styles */
-    .player-page {
-      padding-top: 80px; /* Account for fixed header */
-    }
-    
-    .player-container.sticky {
-      position: fixed;
-      top: 70px;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-      background: var(--primary);
-      padding: 20px 0;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .player-wrapper.sticky {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .sticky-spacer {
-      height: 0;
-      transition: height 0.3s ease;
-    }
-    
-    .sticky-spacer.active {
-      height: 380px; /* Height of the sticky player */
-    }
-    
-    .content-type-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: var(--accent);
-      color: #000;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 600;
-      z-index: 5;
-    }
-    
-    .thumbnail-fallback {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .thumbnail-fallback img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.7;
-    }
-    
-    .play-button-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 4rem;
-      opacity: 0.8;
-      transition: var(--transition);
-      z-index: 6;
-    }
-    
-    .play-button-overlay:hover {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.1);
-    }
-    
-    .loading-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 200px;
-      background: var(--card-bg);
-      color: var(--text-secondary);
-      border-radius: 8px;
-      padding: 20px;
-    }
-    
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top: 4px solid var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .related-tabs {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 15px;
-    }
-    
-    .related-tab {
-      padding: 8px 16px;
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-radius: 4px;
-      transition: var(--transition);
-      font-weight: 500;
-    }
-    
-    .related-tab.active,
-    .related-tab:hover {
-      background: var(--accent);
-      color: #000;
-    }
-    
-    .player-actions {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-    
-    .player-actions .btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    /* Responsive adjustments for player */
-    @media (max-width: 992px) {
-      .player-container.sticky {
-        top: 60px;
-      }
-      
-      .sticky-spacer.active {
-        height: 320px;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .player-container.sticky {
-        top: 70px;
-        padding: 10px 0;
-      }
-      
-      .sticky-spacer.active {
-        height: 280px;
-      }
-      
-      .player-actions {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .player-actions .btn {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .sticky-spacer.active {
-        height: 250px;
-      }
-      
-      .player-title {
-        font-size: 1.2rem;
-      }
-    }
-  </style>
 </head>
-<body>
+<body class="player-page">
   <!-- Preloader -->
   <div id="preloader">
     <div class="preloader-content">
@@ -205,85 +17,51 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <nav class="navbar">
-        <a href="index.html" class="logo">
-          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-        </a>
-        
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="explore.html">Explore</a></li>
-          <li><a href="live-streams.html">Live</a></li>
-          <li><a href="vod.html">VOD</a></li>
-          <li><a href="highlights.html">Highlights</a></li>
-          <li><a href="channels.html">Channels</a></li>
-          
-          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-          <li class="mobile-auth-item">
-            <div class="mobile-auth">
-              <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn">Subscribe</a>
-            </div>
-          </li>
-        </ul>
-        
-        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-        <div class="auth-buttons" id="auth-buttons">
-          <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn">Subscribe</a>
+  <!-- Player Container -->
+  <div class="player-container" id="player-container">
+    <div class="player-wrapper">
+      <div class="video-player" id="video-player">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading content...</p>
         </div>
-        
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
+      </div>
+      
+      <div class="player-controls">
+        <h1 class="player-title" id="player-title">Content Title</h1>
+        <div class="player-meta">
+          <span id="player-status">Loading...</span>
+          <span id="player-viewers">0 viewers</span>
         </div>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="player-page">
-    <!-- Player Container -->
-    <div class="player-container" id="player-container">
-      <div class="container">
-        <div class="player-wrapper">
-          <div class="video-player" id="video-player">
-            <div class="loading-placeholder">
-              <div class="loading-spinner"></div>
-              <p>Loading content...</p>
-            </div>
-          </div>
-          
-          <div class="player-info">
-            <h1 class="player-title" id="player-title">Content Title</h1>
-            <div class="player-meta">
-              <span id="player-status">Loading...</span>
-              <span id="player-viewers">0 viewers</span>
-            </div>
-            <p class="player-description" id="player-description">Content description will appear here.</p>
-            
-            <div class="player-actions">
-              <button class="btn" id="favorite-btn">
-                <i class="far fa-heart"></i> Add to Favorites
-              </button>
-              <button class="btn btn-outline" id="share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
-              <button class="btn btn-outline" id="download-btn" style="display: none;">
-                <i class="fas fa-download"></i> Download
-              </button>
-            </div>
-          </div>
+        <div class="player-actions">
+          <button class="btn" id="favorite-btn">
+            <i class="far fa-heart"></i> Favorite
+          </button>
+          <button class="btn btn-outline" id="share-btn">
+            <i class="fas fa-share-alt"></i> Share
+          </button>
+          <button class="btn btn-outline" id="download-btn" style="display: none;">
+            <i class="fas fa-download"></i> Download
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Player Info and Related Content -->
+  <div class="player-info">
+    <p class="player-description" id="player-description">Content description will appear here.</p>
     
-    <!-- Spacer for sticky player -->
-    <div class="sticky-spacer" id="sticky-spacer"></div>
+    <!-- Comments Section (only for VOD and highlights) -->
+    <div class="comments-section" id="comments-section" style="display: none;">
+      <h3>Comments</h3>
+      <div id="comment-form-container">
+        <!-- Will be populated by JavaScript based on auth status -->
+      </div>
+      <div class="comment-list" id="comment-list">
+        <!-- Comments will be loaded here -->
+      </div>
+    </div>
     
     <!-- Related Content -->
     <section class="section">
@@ -318,61 +96,7 @@
         </div>
       </div>
     </div>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-column">
-          <h3>PEGASUS</h3>
-          <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Navigation</h3>
-          <ul class="footer-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="explore.html">Explore</a></li>
-            <li><a href="live-streams.html">Live Streams</a></li>
-            <li><a href="vod.html">Video On Demand</a></li>
-            <li><a href="highlights.html">Highlights</a></li>
-            <li><a href="channels.html">Channels</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Legal</h3>
-          <ul class="footer-links">
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="dmca.html">DMCA Policy</a></li>
-            <li><a href="cookie.html">Cookie Policy</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-column">
-          <h3>Support</h3>
-          <ul class="footer-links">
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="faq.html">FAQs</a></li>
-            <li><a href="help.html">Help Center</a></li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="copyright">
-        &copy; 2026 PEGASUS Network. All rights reserved.
-      </div>
-    </div>
-  </footer>
+  </div>
 
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
@@ -403,27 +127,12 @@
       // Load player content
       loadPlayerContent(type, id);
       
-      // Make player sticky on scroll
-      const playerContainer = document.getElementById('player-container');
-      const playerWrapper = document.querySelector('.player-wrapper');
-      const stickySpacer = document.getElementById('sticky-spacer');
-      const headerHeight = document.querySelector('header').offsetHeight;
-      
-      function handleScroll() {
-        const scrollPosition = window.scrollY;
-        
-        if (scrollPosition > 200) {
-          playerContainer.classList.add('sticky');
-          playerWrapper.classList.add('sticky');
-          stickySpacer.classList.add('active');
-        } else {
-          playerContainer.classList.remove('sticky');
-          playerWrapper.classList.remove('sticky');
-          stickySpacer.classList.remove('active');
-        }
+      // Check if comments should be shown (for VOD and highlights only)
+      if (type === 'vod' || type === 'highlight') {
+        document.getElementById('comments-section').style.display = 'block';
+        loadComments();
+        setupCommentForm();
       }
-      
-      window.addEventListener('scroll', handleScroll);
       
       // Set up event listeners
       document.getElementById('share-btn').addEventListener('click', handleShare);
@@ -785,6 +494,88 @@
     // Handle download button click
     function handleDownload() {
       alert('Download feature would be implemented here. This would vary based on your backend capabilities.');
+    }
+    
+    // Load comments
+    async function loadComments() {
+      try {
+        const result = await window.authManager.getComments(window.currentContentId, window.currentContentType);
+        
+        if (result.success) {
+          displayComments(result.comments);
+        } else {
+          document.getElementById('comment-list').innerHTML = '<p>Failed to load comments</p>';
+        }
+      } catch (error) {
+        console.error('Error loading comments:', error);
+        document.getElementById('comment-list').innerHTML = '<p>Error loading comments</p>';
+      }
+    }
+    
+    // Display comments
+    function displayComments(comments) {
+      const commentList = document.getElementById('comment-list');
+      
+      if (!comments || comments.length === 0) {
+        commentList.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+        return;
+      }
+      
+      commentList.innerHTML = comments.map(comment => `
+        <div class="comment-item">
+          <div>
+            <span class="comment-author">${comment.user_name}</span>
+            <span class="comment-time">${new Date(comment.created_at).toLocaleDateString()}</span>
+          </div>
+          <div class="comment-text">${comment.comment}</div>
+        </div>
+      `).join('');
+    }
+    
+    // Setup comment form based on auth status
+    function setupCommentForm() {
+      const formContainer = document.getElementById('comment-form-container');
+      
+      if (window.authManager && window.authManager.isAuthenticated()) {
+        formContainer.innerHTML = `
+          <div class="comment-form">
+            <textarea class="comment-input" id="comment-text" placeholder="Add a comment..." rows="3"></textarea>
+            <button class="btn" id="submit-comment">Post Comment</button>
+          </div>
+        `;
+        
+        document.getElementById('submit-comment').addEventListener('click', submitComment);
+      } else {
+        formContainer.innerHTML = `
+          <div class="login-prompt">
+            <p>Please <a href="signin.html">sign in</a> to leave a comment</p>
+          </div>
+        `;
+      }
+    }
+    
+    // Submit comment
+    async function submitComment() {
+      try {
+        const commentText = document.getElementById('comment-text').value.trim();
+        if (!commentText) return;
+        
+        const result = await window.authManager.addComment(
+          window.currentContentId, 
+          window.currentContentType, 
+          commentText
+        );
+        
+        if (result.success) {
+          document.getElementById('comment-text').value = '';
+          loadComments(); // Reload comments
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        console.error('Error submitting comment:', error);
+        alert('An error occurred. Please try again.');
+      }
     }
     
     // Show error message
