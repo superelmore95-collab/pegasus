@@ -240,6 +240,16 @@
       background: var(--accent);
       color: black;
     }
+    
+    /* Error message styling */
+    .error-message {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin: 20px 0;
+      color: var(--danger);
+    }
   </style>
 </head>
 <body>
@@ -307,17 +317,13 @@
           <h1 id="player-title">Loading content...</h1>
           
           <div class="content-metadata">
+            <div class="metadata-item" id="player-status-container">
+              <i class="fas fa-circle" style="color: var(--danger);"></i>
+              <span id="player-status">Loading...</span>
+            </div>
             <div class="metadata-item">
               <i class="far fa-eye"></i>
               <span id="player-views">0 views</span>
-            </div>
-            <div class="metadata-item">
-              <i class="far fa-calendar"></i>
-              <span id="player-date"></span>
-            </div>
-            <div class="metadata-item">
-              <i class="far fa-clock"></i>
-              <span id="player-duration"></span>
             </div>
             <div class="metadata-item">
               <i class="fas fa-tag"></i>
@@ -330,7 +336,7 @@
           <div class="player-actions">
             <button class="btn" id="share-btn"><i class="fas fa-share"></i> Share</button>
             <button class="btn btn-outline" id="favorite-btn"><i class="far fa-heart"></i> Add to Favorites</button>
-            <button class="btn btn-outline" id="download-btn"><i class="fas fa-download"></i> Download</button>
+            <button class="btn btn-outline" id="download-btn" style="display: none;"><i class="fas fa-download"></i> Download</button>
           </div>
         </div>
       </div>
@@ -414,7 +420,7 @@
     </div>
   </footer>
 
-  <script src="js/script.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script>
     // API base URL
@@ -451,9 +457,21 @@
                 headers['Authorization'] = `Bearer ${token}`;
             }
             
+            // Use the correct endpoint based on your worker
             const response = await fetch(`${API_BASE}/api/content/${type}/${id}`, { headers });
             
             if (!response.ok) {
+                // Handle authentication or premium content errors
+                if (response.status === 401) {
+                    // Redirect to login
+                    window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+                    return;
+                } else if (response.status === 403) {
+                    // Premium content - redirect to subscription
+                    alert('This content requires a premium subscription');
+                    window.location.href = 'signup.html';
+                    return;
+                }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             
@@ -467,7 +485,7 @@
             updatePlayerContent(contentItem, type);
             
             // Load related content
-            loadRelatedContent(type, contentItem);
+            await loadRelatedContent(type, contentItem);
             
             // Check favorite status if user is logged in
             if (window.authManager && window.authManager.isAuthenticated()) {
@@ -478,6 +496,16 @@
             console.error('Error loading player content:', error);
             document.getElementById('player-title').textContent = 'Error loading content';
             document.getElementById('player-status').textContent = 'Content not available';
+            
+            // Show error message
+            const videoPlayer = document.getElementById('video-player');
+            videoPlayer.innerHTML = `
+                <div class="loading-placeholder">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px; color: var(--danger);"></i>
+                    <p>${error.message || 'Failed to load content'}</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Please check your connection and try again</p>
+                </div>
+            `;
         }
     }
 
@@ -563,12 +591,26 @@
         document.getElementById('player-title').textContent = content.title || content.name;
         
         // Update player metadata
-        if (type === 'live' || (type === 'channel' && content.is_live)) {
-            document.getElementById('player-status').textContent = 'Live';
-            document.getElementById('player-viewers').textContent = `${content.viewers_count || 0} watching`;
+        const isLive = content.is_live || (type === 'live');
+        const statusElement = document.getElementById('player-status');
+        const statusContainer = document.getElementById('player-status-container');
+        
+        if (isLive) {
+            statusElement.textContent = 'Live';
+            statusContainer.querySelector('i').style.color = 'var(--danger)';
+            document.getElementById('player-views').textContent = `${content.viewers_count || content.view_count || 0} watching`;
         } else {
-            document.getElementById('player-status').textContent = 'On Demand';
-            document.getElementById('player-viewers').textContent = `${content.views_count || content.view_count || 0} views`;
+            statusElement.textContent = 'On Demand';
+            statusContainer.querySelector('i').style.color = 'var(--success)';
+            document.getElementById('player-views').textContent = `${content.views_count || content.view_count || 0} views`;
+        }
+        
+        // Update category
+        document.getElementById('player-category').textContent = content.category || 'Sports';
+        
+        // Update description if available
+        if (content.description) {
+            document.getElementById('player-description').textContent = content.description;
         }
         
         // Update video player
@@ -612,24 +654,27 @@
             });
             
             videoPlayer.appendChild(embedWrapper);
-        } else if (content.thumbnail || content.thumbnail_url) {
-            // Fallback to thumbnail if no embed code
-            videoPlayer.innerHTML += `
-                <div class="thumbnail-fallback">
-                    <img src="${content.thumbnail || content.thumbnail_url}" alt="${content.title || content.name}">
-                    <div class="play-button-overlay">
-                        <i class="fas fa-play-circle"></i>
-                    </div>
-                </div>
-            `;
         } else {
-            // Show error if no content available
-            videoPlayer.innerHTML += `
-                <div class="loading-placeholder">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                    <p>Content unavailable</p>
-                </div>
-            `;
+            // Use thumbnail if no embed code
+            const thumbnailUrl = content.thumbnail || content.thumbnail_url;
+            if (thumbnailUrl) {
+                videoPlayer.innerHTML += `
+                    <div class="thumbnail-fallback">
+                        <img src="${thumbnailUrl}" alt="${content.title || content.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+                        <div class="play-button-overlay">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Show error if no content available
+                videoPlayer.innerHTML += `
+                    <div class="loading-placeholder">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <p>No content available</p>
+                    </div>
+                `;
+            }
         }
         
         // Show/hide download button based on content type
@@ -655,7 +700,8 @@
                 headers['Authorization'] = `Bearer ${token}`;
             }
             
-            const response = await fetch(`${API_BASE}/api/content?category=${content.category || 'sports'}`, { headers });
+            // Fetch all content to find related items
+            const response = await fetch(`${API_BASE}/api/content`, { headers });
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -711,7 +757,7 @@
             
         } catch (error) {
             console.error('Error loading related content:', error);
-            relatedContainer.innerHTML = '<p>Error loading related content.</p>';
+            relatedContainer.innerHTML = '<p class="error-message">Error loading related content.</p>';
         }
     }
 
@@ -740,7 +786,12 @@
                     url: window.location.href
                 }).catch(console.error);
             } else {
-                alert('Share feature not available in your browser. Copy this URL: ' + window.location.href);
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Link copied to clipboard: ' + window.location.href);
+                }).catch(() => {
+                    alert('Share feature not available. Copy this URL: ' + window.location.href);
+                });
             }
         });
         
@@ -776,7 +827,7 @@
         const relatedContainer = document.getElementById('related-content');
         
         if (!window.allRelatedContent || window.allRelatedContent.length === 0) {
-            relatedContainer.innerHTML = '<p>No related content found.</p>';
+            relatedContainer.innerHTML = '<p class="error-message">No related content found.</p>';
             return;
         }
         
@@ -795,10 +846,12 @@
             relatedContainer.innerHTML = filteredContent.map(item => {
                 const isLive = item.is_live || false;
                 const itemType = isLive ? 'live' : (item.type || 'vod');
+                const thumbnail = item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225';
+                
                 return `
                     <a href="player.html?type=${itemType}&id=${item.id}" class="stream-card">
                         <div class="card-img">
-                            <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+                            <img src="${thumbnail}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
                             ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
                             ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
                             <div class="content-type-badge content-type-${itemType}">${itemType.toUpperCase()}</div>
@@ -814,7 +867,7 @@
                 `;
             }).join('');
         } else {
-            relatedContainer.innerHTML = '<p>No related content found for this category.</p>';
+            relatedContainer.innerHTML = '<p class="error-message">No related content found for this category.</p>';
         }
     }
   </script>
