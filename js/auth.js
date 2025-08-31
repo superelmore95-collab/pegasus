@@ -8,6 +8,20 @@ class AuthManager {
   init() {
     this.updateAuthUI();
     this.setupEventListeners();
+    this.setupScrollHeader();
+  }
+
+  setupScrollHeader() {
+    const header = document.querySelector('header');
+    if (!header) return;
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
   }
 
   async signIn(email, password, remember) {
@@ -311,6 +325,48 @@ class AuthManager {
       }
     } catch (error) {
       return { success: false, favorites: [] };
+    }
+  }
+
+  // Comment system methods
+  async getComments(contentId, contentType) {
+    try {
+      const response = await fetch(`${this.API_BASE}/api/comments?contentId=${contentId}&contentType=${contentType}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, comments: data };
+      } else {
+        return { success: false, comments: [] };
+      }
+    } catch (error) {
+      return { success: false, comments: [] };
+    }
+  }
+
+  async addComment(contentId, contentType, comment) {
+    try {
+      const token = this.getToken();
+      if (!token) return { success: false, error: 'Not authenticated' };
+      
+      const response = await fetch(`${this.API_BASE}/api/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ contentId, contentType, comment })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return { success: true, comment: data };
+      } else {
+        const errorData = await response.json();
+        return { success: false, error: errorData.error || 'Failed to add comment' };
+      }
+    } catch (error) {
+      return { success: false, error: 'Network error: ' + error.message };
     }
   }
 }
