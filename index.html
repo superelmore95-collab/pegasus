@@ -4,20 +4,334 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PEGASUS - Premium Sports Streaming</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Enhanced Hero Section Styles */
+    /* ===== BASE STYLES ===== */
+    :root {
+      --primary: #0d0d17;
+      --secondary: #19192b;
+      --accent: #ff003c;
+      --accent-light: #ff2d5f;
+      --text: #ffffff;
+      --text-secondary: #b3b3b3;
+      --card-bg: #1e1e3a;
+      --success: #00c853;
+      --warning: #ffab00;
+      --danger: #ff1744;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    body {
+      background-color: var(--primary);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ===== PRELOADER ===== */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #preloader.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .preloader-content {
+      text-align: center;
+    }
+
+    .preloader-logo {
+      width: 100px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .loading-circle {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+
+    /* ===== HEADER & NAVIGATION ===== */
+    header {
+      background-color: rgba(13, 13, 23, 0.95);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: var(--transition);
+      padding: 10px 0;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0;
+      height: 50px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--text);
+      z-index: 1001;
+    }
+
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin: 0 12px;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: var(--transition);
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      z-index: 1001;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      z-index: 1001;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background-color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+
+    .mobile-auth {
+      display: none;
+    }
+
+    /* User menu styles */
+    .user-menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 180px;
+      background: var(--card-bg);
+      border-radius: 4px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      padding: 8px 0;
+      z-index: 1000;
+      display: none;
+    }
+
+    .user-dropdown.show {
+      display: block;
+    }
+
+    .user-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      color: var(--text);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .user-dropdown a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--accent);
+    }
+
+    .user-dropdown a i {
+      width: 14px;
+      text-align: center;
+    }
+
+    /* ===== HERO SECTION ===== */
     .hero {
       height: 80vh;
       min-height: 600px;
       position: relative;
       overflow: hidden;
       margin-bottom: 40px;
-      margin-top: 40px;
+      margin-top: 50px;
     }
-    
+
     .hero-slider {
       position: absolute;
       top: 0;
@@ -25,7 +339,7 @@
       width: 100%;
       height: 100%;
     }
-    
+
     .slide {
       position: absolute;
       top: 0;
@@ -38,11 +352,11 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-    
+
     .slide.active {
       opacity: 1;
     }
-    
+
     .slide-content {
       position: absolute;
       bottom: 100px;
@@ -52,30 +366,30 @@
       z-index: 10;
       padding: 0 20px;
     }
-    
+
     .slide-content h2 {
-      font-size: 3rem;
+      font-size: 3.5rem;
       margin-bottom: 15px;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-      animation: fadeInUp 1s ease;
+      font-weight: 800;
     }
-    
+
     .slide-content p {
       font-size: 1.2rem;
       margin-bottom: 25px;
       text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
-      animation: fadeInUp 1.2s ease;
+      font-weight: 500;
     }
-    
+
     .slide-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+      background: linear-gradient(to top, rgba(13, 13, 23, 0.9) 0%, rgba(13, 13, 23, 0.4) 50%, rgba(13, 13, 23, 0.1) 100%);
     }
-    
+
     /* DAZN-style navigation arrows */
     .slider-arrows {
       position: absolute;
@@ -87,7 +401,7 @@
       z-index: 10;
       transform: translateY(-50%);
     }
-    
+
     .arrow {
       width: 50px;
       height: 50px;
@@ -100,12 +414,12 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(5px);
     }
-    
+
     .arrow:hover {
       background: var(--accent);
       transform: scale(1.1);
     }
-    
+
     /* Progress bar for slides */
     .slide-progress {
       position: absolute;
@@ -116,31 +430,333 @@
       background: rgba(255, 255, 255, 0.2);
       z-index: 10;
     }
-    
+
     .progress-bar {
       height: 100%;
       width: 0%;
       background: var(--accent);
       transition: width 0.1s linear;
     }
-    
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-      .hero {
-        height: 60vh;
-        min-height: 400px;
+
+    /* ===== CONTENT SECTIONS ===== */
+    .section {
+      padding: 60px 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .view-all {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .view-all:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== STREAM CARDS ===== */
+    .stream-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .stream-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: var(--transition);
+      position: relative;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .stream-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-img {
+      height: 160px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .stream-card:hover .card-img img {
+      transform: scale(1.1);
+    }
+
+    .live-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--danger);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .live-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .premium-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--warning);
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .card-views {
+      display: flex;
+      align-items: center;
+    }
+
+    .card-views::before {
+      content: '👁️';
+      margin-right: 5px;
+      font-size: 12px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--secondary);
+      padding: 60px 0 20px;
+      margin-top: 40px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-column h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 14px;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+      padding-left: 5px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* ===== RESPONSIVE STYLES ===== */
+    @media (max-width: 992px) {
+      .slide-content h2 {
+        font-size: 2.5rem;
       }
       
       .slide-content {
-        bottom: 70px;
+        left: 25px;
+        max-width: 500px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        background: var(--primary);
+        width: 100%;
+        height: calc(100vh - 60px);
+        flex-direction: column;
+        padding: 40px 0;
+        transition: var(--transition);
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        z-index: 999;
+      }
+      
+      .nav-links.active {
+        left: 0;
+      }
+      
+      .nav-links li {
+        margin: 15px 0;
+        text-align: center;
+        width: 100%;
+      }
+      
+      .nav-links a {
+        display: block;
+        padding: 15px 0;
+        font-size: 18px;
+      }
+      
+      .hamburger {
+        display: flex;
+      }
+
+      /* Hide desktop auth buttons on mobile */
+      .auth-buttons {
+        display: none;
+      }
+      
+      /* Show mobile auth buttons */
+      .mobile-auth {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding: 0 20px;
+        width: 100%;
+      }
+      
+      .mobile-auth .btn {
+        flex: 1;
+        padding: 12px;
+        font-size: 14px;
+        text-align: center;
+      }
+      
+      .slide-content {
+        left: 15px;
+        bottom: 80px;
       }
       
       .slide-content h2 {
         font-size: 2rem;
       }
       
-      .slide-content p {
-        font-size: 1rem;
+      .section-title {
+        font-size: 1.5rem;
+      }
+      
+      .hero {
+        height: 70vh;
+        min-height: 500px;
       }
       
       .arrow {
@@ -152,19 +768,49 @@
         padding: 0 15px;
       }
     }
-    
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
+
+    @media (max-width: 576px) {
+      .hero {
+        height: 60vh;
+        min-height: 450px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      
+      .slide-content {
+        max-width: 90%;
+      }
+      
+      .slide-content h2 {
+        font-size: 1.8rem;
+      }
+      
+      .slide-content p {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+      
+      .section {
+        padding: 40px 0;
+      }
+      
+      .mobile-auth {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .stream-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
       }
     }
-    
+
     .loading-placeholder {
       display: flex;
       flex-direction: column;
@@ -174,7 +820,7 @@
       background: var(--card-bg);
       color: var(--text-secondary);
       border-radius: 8px;
-      padding: 20px;
+      padding: 30px;
     }
     
     .loading-spinner {
@@ -186,18 +832,15 @@
       animation: spin 1s linear infinite;
       margin-bottom: 15px;
     }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
   <!-- Preloader -->
   <div id="preloader">
     <div class="preloader-content">
-      <img src="images/pegasus-logo.png" alt="PEGASUS Logo" class="preloader-logo">
+      <div class="logo">
+        <span style="color: #ff003c; font-weight: 800;">PEGASUS</span>
+      </div>
       <div class="loading-circle"></div>
     </div>
   </div>
@@ -207,11 +850,10 @@
     <div class="container">
       <nav class="navbar">
         <a href="index.html" class="logo">
-          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+          <span style="color: #ff003c; font-weight: 800;">PEGASUS</span>
         </a>
         
         <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
           <li><a href="explore.html">Explore</a></li>
           <li><a href="live-streams.html">Live</a></li>
           <li><a href="vod.html">VOD</a></li>
@@ -246,7 +888,7 @@
   <section class="hero">
     <div class="hero-slider">
       <!-- Slide 1 -->
-      <div class="slide active" style="background-image: url('images/hero-banner-1.webp');">
+      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>Premier League Finals Live</h2>
@@ -256,7 +898,7 @@
       </div>
       
       <!-- Slide 2 -->
-      <div class="slide" style="background-image: url('images/hero-banner-2.webp');">
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>UEFA Champions League</h2>
@@ -266,7 +908,7 @@
       </div>
       
       <!-- Slide 3 -->
-      <div class="slide" style="background-image: url('images/hero-banner-3.webp');">
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>NBA Finals Game 7</h2>
@@ -355,12 +997,14 @@
         <!-- Channel Card 1 -->
         <a href="channels.html?channel=1" class="stream-card">
           <div class="card-img">
-            <img src="images/channel-thumb-1.jpg" alt="Premier League Channel">
+            <img src="https://images.unsplash.com/photo-1560272564-c83b66b1ad12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Premier League Channel">
+            <div class="live-badge">LIVE</div>
           </div>
           <div class="card-content">
             <h3 class="card-title">Premier League Channel</h3>
             <div class="card-meta">
               <span>24/7 Football</span>
+              <span class="card-views">12.5K watching</span>
             </div>
           </div>
         </a>
@@ -368,12 +1012,14 @@
         <!-- Channel Card 2 -->
         <a href="channels.html?channel=2" class="stream-card">
           <div class="card-img">
-            <img src="images/channel-thumb-2.jpg" alt="NBA TV">
+            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NBA TV">
+            <div class="live-badge">LIVE</div>
           </div>
           <div class="card-content">
             <h3 class="card-title">NBA TV International</h3>
             <div class="card-meta">
               <span>Basketball</span>
+              <span class="card-views">8.7K watching</span>
             </div>
           </div>
         </a>
@@ -381,12 +1027,13 @@
         <!-- Channel Card 3 -->
         <a href="channels.html?channel=3" class="stream-card">
           <div class="card-img">
-            <img src="images/channel-thumb-3.jpg" alt="F1 Channel">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="F1 Channel">
           </div>
           <div class="card-content">
             <h3 class="card-title">Formula 1 Channel</h3>
             <div class="card-meta">
               <span>Racing</span>
+              <span class="card-views">5.2K watching</span>
             </div>
           </div>
         </a>
@@ -394,12 +1041,13 @@
         <!-- Channel Card 4 -->
         <a href="channels.html?channel=4" class="stream-card">
           <div class="card-img">
-            <img src="images/channel-thumb-4.jpg" alt="ESPN Classics">
+            <img src="https://images.unsplash.com/photo-1552667466-07770ae110d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="ESPN Classics">
           </div>
           <div class="card-content">
             <h3 class="card-title">PEGASUS Classics</h3>
             <div class="card-meta">
               <span>Historic Matches</span>
+              <span class="card-views">3.8K watching</span>
             </div>
           </div>
         </a>
@@ -456,16 +1104,13 @@
       </div>
       
       <div class="copyright">
-        &copy; 2026 PEGASUS Network. All rights reserved.
+        &copy; 2023 PEGASUS Sports Streaming. All rights reserved.
       </div>
     </div>
   </footer>
 
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/script.js"></script>
   <script>
-    // Enhanced Hero Slider Functionality
+    // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize mobile menu
       const hamburger = document.querySelector('.hamburger');
@@ -504,8 +1149,10 @@
         slides[currentSlide].classList.add('active');
         
         // Reset and start progress bar
-        progressBar.style.width = '0%';
-        startProgressBar();
+        if (progressBar) {
+          progressBar.style.width = '0%';
+          startProgressBar();
+        }
         
         // Restart auto-advance
         startSlideShow();
@@ -527,7 +1174,7 @@
       function startSlideShow() {
         slideInterval = setInterval(() => {
           showSlide(currentSlide + 1);
-        }, 10000); // Change slide every 10 seconds
+        }, 8000); // Change slide every 8 seconds
       }
       
       // Set up arrow click events
@@ -543,7 +1190,7 @@
       
       // Start the slideshow
       startSlideShow();
-      startProgressBar();
+      if (progressBar) startProgressBar();
       
       // Pause slideshow on hover
       const hero = document.querySelector('.hero');
@@ -555,34 +1202,194 @@
         
         hero.addEventListener('mouseleave', () => {
           startSlideShow();
-          startProgressBar();
+          if (progressBar) startProgressBar();
         });
       }
       
-      // Touch swipe support for mobile
-      let touchStartX = 0;
-      let touchEndX = 0;
+      // Hide preloader after page loads
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+          preloader.classList.add('hide');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }
+      }, 1500);
       
-      hero.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-      }, false);
-      
-      hero.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, false);
-      
-      function handleSwipe() {
-        if (touchEndX < touchStartX - 50) {
-          // Swipe left - next slide
-          showSlide(currentSlide + 1);
+      // Simulate loading content
+      setTimeout(() => {
+        // Load live content
+        const liveContent = document.getElementById('live-content');
+        if (liveContent) {
+          liveContent.innerHTML = `
+            <a href="player.html?type=live&id=1" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1552667466-07770ae110d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Manchester United vs Liverpool">
+                <div class="live-badge">LIVE</div>
+                <div class="premium-badge">PREMIUM</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Manchester United vs Liverpool</h3>
+                <div class="card-meta">
+                  <span>Premier League</span>
+                  <span class="card-views">24.5K watching</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=live&id=2" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="LA Lakers vs Boston Celtics">
+                <div class="live-badge">LIVE</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">LA Lakers vs Boston Celtics</h3>
+                <div class="card-meta">
+                  <span>NBA</span>
+                  <span class="card-views">18.7K watching</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=live&id=3" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="UFC Fight Night">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">UFC Fight Night: Thompson vs Holland</h3>
+                <div class="card-meta">
+                  <span>MMA</span>
+                  <span class="card-views">Starts in 2h 15m</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=live&id=4" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Grand Slam Tennis">
+                <div class="premium-badge">PREMIUM</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Australian Open: Finals</h3>
+                <div class="card-meta">
+                  <span>Tennis</span>
+                  <span class="card-views">Starts in 1d 4h</span>
+                </div>
+              </div>
+            </a>
+          `;
         }
         
-        if (touchEndX > touchStartX + 50) {
-          // Swipe right - previous slide
-          showSlide(currentSlide - 1);
+        // Load VOD content
+        const vodContent = document.getElementById('vod-content');
+        if (vodContent) {
+          vodContent.innerHTML = `
+            <a href="player.html?type=vod&id=1" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="World Cup Highlights">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">World Cup 2022 Highlights</h3>
+                <div class="card-meta">
+                  <span>Football</span>
+                  <span class="card-views">2.4M views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=vod&id=2" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NBA Finals">
+                <div class="premium-badge">PREMIUM</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">NBA Finals 2022: Full Games</h3>
+                <div class="card-meta">
+                  <span>Basketball</span>
+                  <span class="card-views">1.8M views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=vod&id=3" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1516466723877-e4ec1d736c8a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wrestlemania">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Wrestlemania 38: Full Event</h3>
+                <div class="card-meta">
+                  <span>Wrestling</span>
+                  <span class="card-views">950K views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=vod&id=4" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1598880940080-ff9b298d0257?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Formula 1">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Formula 1: Season Review</h3>
+                <div class="card-meta">
+                  <span>Racing</span>
+                  <span class="card-views">1.2M views</span>
+                </div>
+              </div>
+            </a>
+          `;
         }
-      }
+        
+        // Load highlights content
+        const highlightsContent = document.getElementById('highlights-content');
+        if (highlightsContent) {
+          highlightsContent.innerHTML = `
+            <a href="player.html?type=highlight&id=1" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Top Goals">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Top 10 Goals of the Month</h3>
+                <div class="card-meta">
+                  <span>Football</span>
+                  <span class="card-views">450K views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=highlight&id=2" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="NBA Dunks">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Best Dunks of the Season</h3>
+                <div class="card-meta">
+                  <span>Basketball</span>
+                  <span class="card-views">380K views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=highlight&id=3" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1552667466-07770ae110d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="MMA KO">
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Most Brutal KOs in UFC History</h3>
+                <div class="card-meta">
+                  <span>MMA</span>
+                  <span class="card-views">520K views</span>
+                </div>
+              </div>
+            </a>
+            <a href="player.html?type=highlight&id=4" class="stream-card">
+              <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tennis Moments">
+                <div class="premium-badge">PREMIUM</div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">Unforgettable Tennis Moments</h3>
+                <div class="card-meta">
+                  <span>Tennis</span>
+                  <span class="card-views">290K views</span>
+                </div>
+              </div>
+            </a>
+          `;
+        }
+      }, 2000);
     });
   </script>
 </body>
