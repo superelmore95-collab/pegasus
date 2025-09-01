@@ -34,6 +34,75 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* DAZN-style header */
+    header {
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hero banner styles */
+    .content-hero {
+      height: 50vh;
+      min-height: 400px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+    
+    .content-hero .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    
+    .content-hero .slide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+    }
+    
+    .content-hero .slide-content {
+      position: absolute;
+      bottom: 60px;
+      left: 40px;
+      max-width: 60%;
+      text-align: left;
+      z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+      .content-hero {
+        height: 40vh;
+        min-height: 300px;
+      }
+      
+      .content-hero .slide-content {
+        max-width: 90%;
+        left: 20px;
+        bottom: 40px;
+        text-align: center;
+      }
+      
+      .content-hero .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -65,7 +134,7 @@
           <li class="mobile-auth-item">
             <div class="mobile-auth">
               <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn">Subscribe</a>
+              <a href="signup.html" class="btn subscribe">Subscribe</a>
             </div>
           </li>
         </ul>
@@ -73,7 +142,7 @@
         <!-- Desktop Auth Buttons (Hidden on Mobile) -->
         <div class="auth-buttons" id="auth-buttons">
           <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn">Subscribe</a>
+          <a href="signup.html" class="btn subscribe">Subscribe</a>
         </div>
         
         <div class="hamburger">
@@ -86,12 +155,13 @@
   </header>
 
   <!-- Hero Banner for Channels -->
-  <section class="hero" style="height: 60vh; min-height: 400px;">
+  <section class="content-hero">
     <div style="background-image: url('images/channels-banner.jpg');" class="slide active">
       <div class="slide-overlay"></div>
       <div class="slide-content">
         <h2>Sports Channels</h2>
         <p>24/7 coverage of your favorite sports</p>
+        <a href="#channels-container" class="btn">Browse Channels</a>
       </div>
     </div>
   </section>
@@ -119,6 +189,57 @@
           <div class="loading-spinner"></div>
           <p>Loading channels...</p>
         </div>
+        <!-- Channel Card 1 -->
+        <a href="channels.html?channel=1" class="stream-card">
+          <div class="card-img">
+            <img src="images/channel-thumb-1.jpg" alt="Premier League Channel">
+            <div class="card-content">
+              <h3 class="card-title">Premier League Channel</h3>
+              <div class="card-meta">
+                <span>24/7 Football</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Channel Card 2 -->
+        <a href="channels.html?channel=2" class="stream-card">
+          <div class="card-img">
+            <img src="images/channel-thumb-2.jpg" alt="NBA TV">
+            <div class="card-content">
+              <h3 class="card-title">NBA TV International</h3>
+              <div class="card-meta">
+                <span>Basketball</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Channel Card 3 -->
+        <a href="channels.html?channel=3" class="stream-card">
+          <div class="card-img">
+            <img src="images/channel-thumb-3.jpg" alt="F1 Channel">
+            <div class="card-content">
+              <h3 class="card-title">Formula 1 Channel</h3>
+              <div class="card-meta">
+                <span>Racing</span>
+              </div>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Channel Card 4 -->
+        <a href="channels.html?channel=4" class="stream-card">
+          <div class="card-img">
+            <img src="images/channel-thumb-4.jpg" alt="ESPN Classics">
+            <div class="card-content">
+              <h3 class="card-title">PEGASUS Classics</h3>
+              <div class="card-meta">
+                <span>Historic Matches</span>
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -264,6 +385,16 @@
     
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Add scroll event for header
+      window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+      
       // Load channels
       loadChannels();
       
