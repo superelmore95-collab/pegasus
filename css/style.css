@@ -35,13 +35,14 @@ body {
   padding: 0 15px;
 }
 
+/* DAZN-style buttons */
 .btn {
   display: inline-block;
   background: var(--accent);
   color: #000;
   font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 30px;
+  padding: 10px 20px;
+  border-radius: 4px; /* Changed from 30px to 4px for rectangular shape */
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 12px;
@@ -49,6 +50,8 @@ body {
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;
+  min-width: 100px;
+  text-align: center;
 }
 
 .btn:hover {
@@ -61,6 +64,7 @@ body {
   background: transparent;
   border: 2px solid var(--accent);
   color: var(--accent);
+  min-width: 90px;
 }
 
 .btn-outline:hover {
@@ -1206,11 +1210,11 @@ footer {
 @media (max-width: 768px) {
   .nav-links {
     position: fixed;
-    top: 40px;
+    top: 60px;
     left: -100%;
     background: var(--primary);
     width: 100%;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 60px);
     flex-direction: column;
     padding: 20px 0;
     transition: var(--transition);
@@ -1321,6 +1325,7 @@ footer {
     padding: 10px;
     font-size: 12px;
     text-align: center;
+    min-width: auto;
   }
   
   .player-wrapper {
