@@ -29,47 +29,6 @@
       text-align: left;
     }
     
-    .categories-section {
-      padding: 40px 0;
-      background: var(--secondary);
-    }
-    
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    
-    .category-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: var(--transition);
-      text-align: center;
-      aspect-ratio: 1;
-    }
-    
-    .category-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .category-icon {
-      height: 70%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: var(--accent);
-    }
-    
-    .category-name {
-      padding: 15px;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
     .leagues-section {
       padding: 60px 0;
     }
@@ -96,189 +55,194 @@
     
     .league-logo {
       width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin: 0 auto 15px;
-}
+      height: 80px;
+      object-fit: contain;
+      margin: 0 auto 15px;
+    }
 
-.upcoming-events {
-  padding: 60px 0;
-  background: var(--secondary);
-}
+    .upcoming-events {
+      padding: 60px 0;
+      background: var(--secondary);
+    }
 
-.events-tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
+    .events-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
 
-.event-tab {
-  padding: 10px 20px;
-  background: var(--card-bg);
-  border-radius: 30px;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
+    .event-tab {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
 
-.event-tab.active {
-  background: var(--accent);
-  color: #000;
-}
+    .event-tab.active {
+      background: var(--accent);
+      color: #000;
+    }
 
-.events-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
 
-.event-card {
-  background: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: var(--transition);
-}
+    .event-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
 
-.event-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
 
-.event-date {
-  padding: 10px 15px;
-  background: var(--accent);
-  color: #000;
-  font-weight: 600;
-  text-align: center;
-}
+    .event-date {
+      padding: 10px 15px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      text-align: center;
+    }
 
-.event-info {
-  padding: 15px;
-}
+    .event-info {
+      padding: 15px;
+    }
 
-.event-teams {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
+    .event-teams {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-.team {
-  text-align: center;
-  flex: 1;
-}
+    .team {
+      text-align: center;
+      flex: 1;
+    }
 
-.team-logo {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  margin-bottom: 5px;
-}
+    .team-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
 
-.vs {
-  font-weight: 600;
-  margin: 0 10px;
-}
+    .vs {
+      font-weight: 600;
+      margin: 0 10px;
+    }
 
-.event-league {
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 12px;
-  margin-top: 10px;
-}
+    .event-league {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-top: 10px;
+    }
 
-.fight-cards-section {
-  padding: 60px 0;
-}
+    .fight-cards-section {
+      padding: 60px 0;
+    }
 
-.fight-card {
-  background: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
+    .fight-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
 
-.fight-card-header {
-  padding: 15px;
-  background: var(--accent);
-  color: #000;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .fight-card-header {
+      padding: 15px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-.fight-card-content {
-  padding: 20px;
-}
+    .fight-card-content {
+      padding: 20px;
+    }
 
-.fight {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+    .fight {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-.fight:last-child {
-  border-bottom: none;
-}
+    .fight:last-child {
+      border-bottom: none;
+    }
 
-.fighter {
-  text-align: center;
-  flex: 1;
-}
+    .fighter {
+      text-align: center;
+      flex: 1;
+    }
 
-.fighter-name {
-  font-weight: 600;
-  margin-top: 10px;
-}
+    .fighter-name {
+      font-weight: 600;
+      margin-top: 10px;
+    }
 
-.fighter-record {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
+    .fighter-record {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
 
-.weight-class {
-  text-align: center;
-  margin: 0 15px;
-  color: var(--text-secondary);
-  font-size: 12px;
-}
+    .weight-class {
+      text-align: center;
+      margin: 0 15px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
 
-@media (max-width: 768px) {
-  .explore-hero .slide-content {
-    max-width: 90%;
-    left: 20px;
-    text-align: center;
-  }
-  
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-  
-  .leagues-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-  
-  .events-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .event-teams {
-    flex-direction: column;
-  }
-  
-  .team {
-    margin: 10px 0;
-  }
-  
-  .vs {
-    margin: 10px 0;
-  }
-}
+    @media (max-width: 768px) {
+      .explore-hero .slide-content {
+        max-width: 90%;
+        left: 20px;
+        text-align: center;
+      }
+      
+      .leagues-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+      
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .event-teams {
+        flex-direction: column;
+      }
+      
+      .team {
+        margin: 10px 0;
+      }
+      
+      .vs {
+        margin: 10px 0;
+      }
+      
+      .fight {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .weight-class {
+        margin: 10px 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -298,7 +262,12 @@
           <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
         </a>
         
-        <ul class="nav-links">
+        <ul class="nav-links visible-for-guests">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html" class="active">Explore</a></li>
+        </ul>
+        
+        <ul class="nav-links hidden-for-guests">
           <li><a href="index.html">Home</a></li>
           <li><a href="explore.html" class="active">Explore</a></li>
           <li><a href="live-streams.html">Live</a></li>
@@ -337,7 +306,7 @@
       <div class="slide-content">
         <h2>Explore All Sports</h2>
         <p>Discover live games, highlights, and channels across all categories</p>
-        <a href="#categories" class="btn">Explore Now</a>
+        <a href="#featured" class="btn">Explore Now</a>
         <div class="mini-progress">
           <div class="mini-progress-bar"></div>
         </div>
@@ -353,75 +322,8 @@
     </div>
   </section>
 
-  <!-- Categories Section -->
-  <section id="categories" class="categories-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Sports Categories</h2>
-      </div>
-      
-      <div class="categories-grid">
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-futbol"></i>
-          </div>
-          <div class="category-name">Football</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-basketball-ball"></i>
-          </div>
-          <div class="category-name">Basketball</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-table-tennis"></i>
-          </div>
-          <div class="category-name">Tennis</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-flag-checkered"></i>
-          </div>
-          <div class="category-name">Racing</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-fist-raised"></i>
-          </div>
-          <div class="category-name">MMA</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-hockey-puck"></i>
-          </div>
-          <div class="category-name">Hockey</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-baseball-ball"></i>
-          </div>
-          <div class="category-name">Baseball</div>
-        </div>
-        
-        <div class="category-card">
-          <div class="category-icon">
-            <i class="fas fa-golf-ball"></i>
-          </div>
-          <div class="category-name">Golf</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Content from Backend Section -->
-  <section class="section">
+  <section id="featured" class="section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Featured Content</h2>
@@ -503,59 +405,10 @@
         <div class="event-tab" data-day="month">This Month</div>
       </div>
       
-      <div class="events-grid">
-        <div class="event-card">
-          <div class="event-date">Today, 19:45</div>
-          <div class="event-info">
-            <div class="event-teams">
-              <div class="team">
-                <img src="images/team1.png" alt="Team 1" class="team-logo">
-                <div>Manchester United</div>
-              </div>
-              <div class="vs">VS</div>
-              <div class="team">
-                <img src="images/team2.png" alt="Team 2" class="team-logo">
-                <div>Liverpool</div>
-              </div>
-            </div>
-            <div class="event-league">Premier League</div>
-          </div>
-        </div>
-        
-        <div class="event-card">
-          <div class="event-date">Today, 20:00</div>
-          <div class="event-info">
-            <div class="event-teams">
-              <div class="team">
-                <img src="images/team3.png" alt="Team 3" class="team-logo">
-                <div>LA Lakers</div>
-              </div>
-              <div class="vs">VS</div>
-              <div class="team">
-                <img src="images/team4.png" alt="Team 4" class="team-logo">
-                <div>Boston Celtics</div>
-              </div>
-            </div>
-            <div class="event-league">NBA</div>
-          </div>
-        </div>
-        
-        <div class="event-card">
-          <div class="event-date">Tomorrow, 15:00</div>
-          <div class="event-info">
-            <div class="event-teams">
-              <div class="team">
-                <img src="images/team5.png" alt="Team 5" class="team-logo">
-                <div>Ferrari</div>
-              </div>
-              <div class="vs">VS</div>
-              <div class="team">
-                <img src="images/team6.png" alt="Team 6" class="team-logo">
-                <div>Red Bull</div>
-              </div>
-            </div>
-            <div class="event-league">Formula 1 - Monaco GP</div>
-          </div>
+      <div class="events-grid" id="upcoming-events-container">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading upcoming events...</p>
         </div>
       </div>
     </div>
@@ -565,51 +418,14 @@
   <section class="fight-cards-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Fight Cards</h2>
+        <h2 class="section-title">MMA Fight Cards</h2>
         <a href="#" class="view-all">View All</a>
       </div>
       
-      <div class="fight-card">
-        <div class="fight-card-header">
-          <span>UFC 300</span>
-          <span>April 15, 2023</span>
-        </div>
-        <div class="fight-card-content">
-          <div class="fight">
-            <div class="fighter">
-              <div class="fighter-name">Jon Jones</div>
-              <div class="fighter-record">27-1-0</div>
-            </div>
-            <div class="weight-class">Heavyweight Title</div>
-            <div class="fighter">
-              <div class="fighter-name">Stipe Miocic</div>
-              <div class="fighter-record">20-4-0</div>
-            </div>
-          </div>
-          
-          <div class="fight">
-            <div class="fighter">
-              <div class="fighter-name">Israel Adesanya</div>
-              <div class="fighter-record">24-2-0</div>
-            </div>
-            <div class="weight-class">Middleweight Title</div>
-            <div class="fighter">
-              <div class="fighter-name">Alex Pereira</div>
-              <div class="fighter-record">7-2-0</div>
-            </div>
-          </div>
-          
-          <div class="fight">
-            <div class="fighter">
-              <div class="fighter-name">Conor McGregor</div>
-              <div class="fighter-record">22-6-0</div>
-            </div>
-            <div class="weight-class">Welterweight</div>
-            <div class="fighter">
-              <div class="fighter-name">Michael Chandler</div>
-              <div class="fighter-record">23-8-0</div>
-            </div>
-          </div>
+      <div id="mma-fight-cards-container">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading MMA fight cards...</p>
         </div>
       </div>
     </div>
@@ -689,13 +505,20 @@
       // Load featured content from backend
       loadFeaturedContent();
       
+      // Load upcoming events
+      loadUpcomingEvents();
+      
+      // Load MMA fight cards
+      loadMMAFightCards();
+      
       // Event tabs functionality
       const eventTabs = document.querySelectorAll('.event-tab');
       eventTabs.forEach(tab => {
         tab.addEventListener('click', function() {
           eventTabs.forEach(t => t.classList.remove('active'));
           this.classList.add('active');
-          // In a real implementation, you would filter events based on the selected tab
+          const day = this.getAttribute('data-day');
+          loadUpcomingEvents(day);
         });
       });
     });
@@ -771,6 +594,151 @@
         console.error('Error loading featured content:', error);
         const container = document.getElementById('featured-content');
         container.innerHTML = '<p class="error-message">Failed to load featured content. Please try again later.</p>';
+      }
+    }
+    
+    // Load upcoming events
+    async function loadUpcomingEvents(filter = 'today') {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('upcoming-events-container');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading upcoming events...</p>
+          </div>
+        `;
+        
+        // In a real implementation, you would filter by date based on the filter parameter
+        const response = await fetch(`${API_BASE}/api/content?type=live&is_upcoming=true`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        const upcomingEvents = content.live || [];
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        if (upcomingEvents.length === 0) {
+          container.innerHTML = '<p class="no-content">No upcoming events found.</p>';
+          return;
+        }
+        
+        // Display events
+        upcomingEvents.forEach(event => {
+          const eventDate = new Date(event.start_time || event.created_at);
+          const formattedDate = eventDate.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          const card = document.createElement('div');
+          card.className = 'event-card';
+          
+          card.innerHTML = `
+            <div class="event-date">${formattedDate}</div>
+            <div class="event-info">
+              <div class="event-teams">
+                <div class="team">
+                  <div>${event.title.split(' vs ')[0] || 'Team 1'}</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                  <div>${event.title.split(' vs ')[1] || 'Team 2'}</div>
+                </div>
+              </div>
+              <div class="event-league">${event.category || 'Sports'}</div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading upcoming events:', error);
+        const container = document.getElementById('upcoming-events-container');
+        container.innerHTML = '<p class="error-message">Failed to load upcoming events. Please try again later.</p>';
+      }
+    }
+    
+    // Load MMA fight cards
+    async function loadMMAFightCards() {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('mma-fight-cards-container');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading MMA fight cards...</p>
+          </div>
+        `;
+        
+        // Filter for MMA content
+        const response = await fetch(`${API_BASE}/api/content?category=MMA`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Combine all MMA content
+        const mmaContent = [
+          ...(content.live || []).filter(item => item.category === 'MMA'),
+          ...(content.vod || []).filter(item => item.category === 'MMA'),
+          ...(content.highlights || []).filter(item => item.category === 'MMA')
+        ];
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        if (mmaContent.length === 0) {
+          container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
+          return;
+        }
+        
+        // Display MMA content as fight cards
+        mmaContent.forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = document.createElement('a');
+          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.className = 'stream-card';
+          
+          card.innerHTML = `
+            <div class="card-img">
+              <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                   alt="${item.title || item.name}" 
+                   onerror="this.src='https://via.placeholder.com/400x225'">
+              ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+              <div class="card-content">
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <div class="card-meta">
+                  <span>MMA</span>
+                  <span class="card-views">${isLive ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading MMA fight cards:', error);
+        const container = document.getElementById('mma-fight-cards-container');
+        container.innerHTML = '<p class="error-message">Failed to load MMA content. Please try again later.</p>';
       }
     }
   </script>
