@@ -92,6 +92,75 @@
       padding: 8px 12px;
       border-radius: 4px;
     }
+
+    /* DAZN-style header */
+    header {
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hero banner styles */
+    .content-hero {
+      height: 50vh;
+      min-height: 400px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+    
+    .content-hero .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    
+    .content-hero .slide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+    }
+    
+    .content-hero .slide-content {
+      position: absolute;
+      bottom: 60px;
+      left: 40px;
+      max-width: 60%;
+      text-align: left;
+      z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+      .content-hero {
+        height: 40vh;
+        min-height: 300px;
+      }
+      
+      .content-hero .slide-content {
+        max-width: 90%;
+        left: 20px;
+        bottom: 40px;
+        text-align: center;
+      }
+      
+      .content-hero .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -139,7 +208,7 @@
             <li class="mobile-auth-item">
               <div class="mobile-auth">
                 <a href="signin.html" class="btn btn-outline">Sign In</a>
-                <a href="signup.html" class="btn">Subscribe</a>
+                <a href="signup.html" class="btn subscribe">Subscribe</a>
               </div>
             </li>
           </ul>
@@ -147,7 +216,7 @@
           <!-- Desktop Auth Buttons -->
           <div class="auth-buttons" id="auth-buttons">
             <a href="signin.html" class="btn btn-outline">Sign In</a>
-            <a href="signup.html" class="btn">Subscribe</a>
+            <a href="signup.html" class="btn subscribe">Subscribe</a>
           </div>
           
           <div class="hamburger">
@@ -160,18 +229,19 @@
     </header>
 
     <!-- Hero Banner for Live Streams -->
-    <section class="hero" style="height: 60vh; min-height: 400px;">
+    <section class="content-hero">
       <div style="background-image: url('images/live-banner.jpg');" class="slide active">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>Live Sports Streaming</h2>
           <p>Watch your favorite sports live as they happen</p>
+          <a href="#live-content" class="btn">Watch Now</a>
         </div>
       </div>
     </section>
 
     <!-- Live Streams Section -->
-    <section class="section">
+    <section class="section" id="live-content">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Live & Upcoming</h2>
@@ -187,7 +257,7 @@
           </div>
         </div>
         
-        <div class="stream-grid" id="live-content">
+        <div class="stream-grid" id="live-container">
           <div class="loading-placeholder">
             <div class="loading-spinner"></div>
             <p>Loading live streams...</p>
@@ -251,7 +321,6 @@
     </footer>
   </div>
 
-  <!-- In all HTML files, add this first -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
@@ -284,6 +353,16 @@
       if (typeof updateAuthUI === 'function') {
         updateAuthUI();
       }
+      
+      // Add scroll event for header
+      window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
       
       // Check if user is authenticated
       const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
@@ -339,7 +418,7 @@
         let liveStreams = content.live || [];
         
         // Update the content section
-        updateLiveContentSection(liveStreams);
+        updateLiveContainer(liveStreams);
         
       } catch (error) {
         console.error('Error loading live streams:', error);
@@ -348,26 +427,26 @@
       }
     }
     
-    function updateLiveContentSection(streams) {
-      const contentSection = document.getElementById('live-content');
+    function updateLiveContainer(streams) {
+      const container = document.getElementById('live-container');
       
-      if (!contentSection) {
-        console.warn('Live content section not found');
+      if (!container) {
+        console.warn('Live container not found');
         return;
       }
       
       // Clear loading state
-      contentSection.innerHTML = '';
+      container.innerHTML = '';
       
       if (!streams || streams.length === 0) {
-        contentSection.innerHTML = '<p class="no-content">No live streams available at the moment.</p>';
+        container.innerHTML = '<p class="no-content">No live streams available at the moment.</p>';
         return;
       }
       
       // Add content items
       streams.forEach(stream => {
         const card = createLiveStreamCard(stream);
-        contentSection.appendChild(card);
+        container.appendChild(card);
       });
     }
     
@@ -425,7 +504,7 @@
         }
       ];
       
-      updateLiveContentSection(fallbackStreams);
+      updateLiveContainer(fallbackStreams);
     }
   </script>
 </body>
