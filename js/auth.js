@@ -205,14 +205,14 @@ class AuthManager {
       if (authButtons) {
         authButtons.innerHTML = `
           <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn">Subscribe</a>
+          <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
         `;
       }
       
       if (mobileAuth) {
         mobileAuth.innerHTML = `
           <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn">Subscribe</a>
+          <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
         `;
       }
     }
