@@ -615,22 +615,36 @@ header.scrolled {
 
 .player-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-  position: sticky;
-  top: 0;
-  background: var(--primary);
-  padding: 10px 0;
-  z-index: 10;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+  margin-top: 15px; /* Add space below the player */
+  padding: 10px;
+  background: var(--card-bg); /* Match your theme */
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.player-actions .btn {
+/* Ensure player container has proper layout */
+.player-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  font-size: 11px;
+  width: 100%;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .player-actions {
+    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  }
+  
+  .player-actions .btn {
+    flex: 1; /* Make buttons equal width */
+    min-width: 120px; /* Minimum width for touch targets */
+    text-align: center;
+  }
 }
 
 .ad-container {
