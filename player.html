@@ -7,6 +7,90 @@
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .content-type-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--accent);
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      z-index: 5;
+    }
+    
+    .thumbnail-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+    
+    .thumbnail-fallback img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .play-button-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 4rem;
+      cursor: pointer;
+    }
+    
+    .related-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .related-tab {
+      padding: 8px 16px;
+      background: var(--card-bg);
+      border: none;
+      border-radius: 30px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    
+    .related-tab.active {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .no-content {
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 40px 0;
+    }
+    
+    .error-message {
+      color: var(--danger);
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body class="player-page">
   <!-- Preloader -->
@@ -16,6 +100,51 @@
       <div class="loading-circle"></div>
     </div>
   </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
+        
+        <ul class="nav-links visible-for-guests">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+        </ul>
+        
+        <ul class="nav-links hidden-for-guests">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <a href="signin.html" class="btn btn-outline">Sign In</a>
+              <a href="signup.html" class="btn">Subscribe</a>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons" id="auth-buttons">
+          <a href="signin.html" class="btn btn-outline">Sign In</a>
+          <a href="signup.html" class="btn">Subscribe</a>
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
   <!-- Player Container -->
   <div class="player-container" id="player-container">
@@ -384,7 +513,6 @@
                      onerror="this.src='https://via.placeholder.com/400x225'">
                 ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-                <div class="content-type-badge content-type-${itemType}">${itemType.toUpperCase()}</div>
                 <div class="card-content">
                   <h3 class="card-title">${item.title || item.name}</h3>
                   <div class="card-meta">
@@ -468,7 +596,7 @@
       } catch (error) {
         console.error('Error toggling favorite:', error);
         alert('An error occurred. Please try again.');
-        favoriteBtn.innerHTML = '<i class="far fa-heart'></i> Add to Favorites';
+        favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
       } finally {
         favoriteBtn.disabled = false;
       }
