@@ -90,6 +90,58 @@
       text-align: center;
       padding: 20px;
     }
+    
+    /* Player action buttons */
+    .player-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0;
+      padding: 15px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      flex-wrap: wrap;
+    }
+    
+    .player-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 30px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .player-action-btn:hover {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .player-action-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    @media (max-width: 768px) {
+      .player-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .player-action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body class="player-page">
@@ -126,7 +178,7 @@
           <li class="mobile-auth-item">
             <div class="mobile-auth">
               <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn">Subscribe</a>
+              <a href="signup.html" class="btn subscribe">Subscribe</a>
             </div>
           </li>
         </ul>
@@ -134,7 +186,7 @@
         <!-- Desktop Auth Buttons (Hidden on Mobile) -->
         <div class="auth-buttons" id="auth-buttons">
           <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn">Subscribe</a>
+          <a href="signup.html" class="btn subscribe">Subscribe</a>
         </div>
         
         <div class="hamburger">
@@ -146,50 +198,36 @@
     </div>
   </header>
 
-<!-- In player.html, move the player actions -->
-<div class="player-container" id="player-container">
-  <div class="player-wrapper">
-    <div class="video-player" id="video-player">
-      <!-- Player content -->
+  <!-- Player Container -->
+  <div class="player-container" id="player-container">
+    <div class="player-wrapper">
+      <div class="video-player" id="video-player">
+        <!-- Player content will be loaded here -->
+      </div>
     </div>
-  </div>
-  
-  <!-- Moved player actions here -->
-  <div class="player-actions">
-    <button class="btn" id="favorite-btn">
-      <i class="far fa-heart"></i> Favorite
-    </button>
-    <button class="btn btn-outline" id="share-btn">
-      <i class="fas fa-share-alt"></i> Share
-    </button>
-    <button class="btn btn-outline" id="download-btn" style="display: none;">
-      <i class="fas fa-download"></i> Download
-    </button>
-  </div>
-  
-  <div class="player-controls">
-    <h1 class="player-title" id="player-title">Content Title</h1>
-    <div class="player-meta">
-      <span id="player-status">Loading...</span>
-      <span id="player-viewers">0 viewers</span>
+    
+    <!-- Player Actions -->
+    <div class="player-actions">
+      <button class="player-action-btn" id="favorite-btn">
+        <i class="far fa-heart"></i> Favorite
+      </button>
+      <button class="player-action-btn" id="share-btn">
+        <i class="fas fa-share-alt"></i> Share
+      </button>
+      <button class="player-action-btn" id="download-btn" style="display: none;">
+        <i class="fas fa-download"></i> Download
+      </button>
     </div>
-  </div>
-</div>
-        <div class="player-actions">
-          <button class="btn" id="favorite-btn">
-            <i class="far fa-heart"></i> Favorite
-          </button>
-          <button class="btn btn-outline" id="share-btn">
-            <i class="fas fa-share-alt"></i> Share
-          </button>
-          <button class="btn btn-outline" id="download-btn" style="display: none;">
-            <i class="fas fa-download"></i> Download
-          </button>
-        </div>
+    
+    <div class="player-controls">
+      <h1 class="player-title" id="player-title">Content Title</h1>
+      <div class="player-meta">
+        <span id="player-status">Loading...</span>
+        <span id="player-viewers">0 viewers</span>
       </div>
     </div>
   </div>
-  
+
   <!-- Player Info and Related Content -->
   <div class="player-info">
     <p class="player-description" id="player-description">Content description will appear here.</p>
@@ -234,7 +272,7 @@
         <h3>Premium Subscription</h3>
         <p>Upgrade to unlock all content without ads and access exclusive features</p>
         <div class="ad-placeholder">
-          <a href="signup.html" class="btn">Subscribe Now</a>
+          <a href="signup.html" class="btn subscribe">Subscribe Now</a>
         </div>
       </div>
     </div>
