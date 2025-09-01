@@ -96,189 +96,189 @@
     
     .league-logo {
       width: 80px;
-      height: 80px;
-      object-fit: contain;
-      margin: 0 auto 15px;
-    }
-    
-    .upcoming-events {
-      padding: 60px 0;
-      background: var(--secondary);
-    }
-    
-    .events-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-    
-    .event-tab {
-      padding: 10px 20px;
-      background: var(--card-bg);
-      border-radius: 30px;
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-    
-    .event-tab.active {
-      background: var(--accent);
-      color: #000;
-    }
-    
-    .events-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    
-    .event-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: var(--transition);
-    }
-    
-    .event-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-    
-    .event-date {
-      padding: 10px 15px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      text-align: center;
-    }
-    
-    .event-info {
-      padding: 15px;
-    }
-    
-    .event-teams {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    
-    .team {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .team-logo {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      margin-bottom: 5px;
-    }
-    
-    .vs {
-      font-weight: 600;
-      margin: 0 10px;
-    }
-    
-    .event-league {
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 12px;
-      margin-top: 10px;
-    }
-    
-    .fight-cards-section {
-      padding: 60px 0;
-    }
-    
-    .fight-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 30px;
-    }
-    
-    .fight-card-header {
-      padding: 15px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .fight-card-content {
-      padding: 20px;
-    }
-    
-    .fight {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .fight:last-child {
-      border-bottom: none;
-    }
-    
-    .fighter {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .fighter-name {
-      font-weight: 600;
-      margin-top: 10px;
-    }
-    
-    .fighter-record {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-    
-    .weight-class {
-      text-align: center;
-      margin: 0 15px;
-      color: var(--text-secondary);
-      font-size: 12px;
-    }
-    
-    @media (max-width: 768px) {
-      .explore-hero .slide-content {
-        max-width: 90%;
-        left: 20px;
-        text-align: center;
-      }
-      
-      .categories-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-      
-      .leagues-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      }
-      
-      .events-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .event-teams {
-        flex-direction: column;
-      }
-      
-      .team {
-        margin: 10px 0;
-      }
-      
-      .vs {
-        margin: 10px 0;
-      }
-    }
+  height: 80px;
+  object-fit: contain;
+  margin: 0 auto 15px;
+}
+
+.upcoming-events {
+  padding: 60px 0;
+  background: var(--secondary);
+}
+
+.events-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.event-tab {
+  padding: 10px 20px;
+  background: var(--card-bg);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.event-tab.active {
+  background: var(--accent);
+  color: #000;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.event-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.event-date {
+  padding: 10px 15px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  text-align: center;
+}
+
+.event-info {
+  padding: 15px;
+}
+
+.event-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.team {
+  text-align: center;
+  flex: 1;
+}
+
+.team-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
+
+.vs {
+  font-weight: 600;
+  margin: 0 10px;
+}
+
+.event-league {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.fight-cards-section {
+  padding: 60px 0;
+}
+
+.fight-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.fight-card-header {
+  padding: 15px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fight-card-content {
+  padding: 20px;
+}
+
+.fight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fight:last-child {
+  border-bottom: none;
+}
+
+.fighter {
+  text-align: center;
+  flex: 1;
+}
+
+.fighter-name {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.fighter-record {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.weight-class {
+  text-align: center;
+  margin: 0 15px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .explore-hero .slide-content {
+    max-width: 90%;
+    left: 20px;
+    text-align: center;
+  }
+  
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .leagues-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .event-teams {
+    flex-direction: column;
+  }
+  
+  .team {
+    margin: 10px 0;
+  }
+  
+  .vs {
+    margin: 10px 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -338,6 +338,17 @@
         <h2>Explore All Sports</h2>
         <p>Discover live games, highlights, and channels across all categories</p>
         <a href="#categories" class="btn">Explore Now</a>
+        <div class="mini-progress">
+          <div class="mini-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+    <div class="slider-arrows">
+      <div class="arrow prev">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+      <div class="arrow next">
+        <i class="fas fa-chevron-right"></i>
       </div>
     </div>
   </section>
@@ -404,6 +415,23 @@
             <i class="fas fa-golf-ball"></i>
           </div>
           <div class="category-name">Golf</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content from Backend Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Content</h2>
+        <a href="#" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="featured-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading featured content...</p>
         </div>
       </div>
     </div>
@@ -658,6 +686,9 @@
         });
       }
       
+      // Load featured content from backend
+      loadFeaturedContent();
+      
       // Event tabs functionality
       const eventTabs = document.querySelectorAll('.event-tab');
       eventTabs.forEach(tab => {
@@ -668,6 +699,80 @@
         });
       });
     });
+    
+    // Load featured content from backend
+    async function loadFeaturedContent() {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('featured-content');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading featured content...</p>
+          </div>
+        `;
+        
+        const response = await fetch(`${API_BASE}/api/content?limit=8`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        // Combine all content types
+        const allContent = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
+        
+        // Display content
+        if (allContent.length === 0) {
+          container.innerHTML = '<p class="no-content">No featured content available</p>';
+          return;
+        }
+        
+        // Show first 8 items
+        allContent.slice(0, 8).forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = document.createElement('a');
+          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.className = 'stream-card';
+          
+          card.innerHTML = `
+            <div class="card-img">
+              <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                   alt="${item.title || item.name}" 
+                   onerror="this.src='https://via.placeholder.com/400x225'">
+              ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+              <div class="card-content">
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <div class="card-meta">
+                  <span>${item.category || 'Sports'}</span>
+                  <span class="card-views">${isLive ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading featured content:', error);
+        const container = document.getElementById('featured-content');
+        container.innerHTML = '<p class="error-message">Failed to load featured content. Please try again later.</p>';
+      }
+    }
   </script>
 </body>
 </html>
