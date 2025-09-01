@@ -669,78 +669,71 @@
       }
     }
     
-    // Load MMA fight cards
-    async function loadMMAFightCards() {
-      try {
-        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
-        const container = document.getElementById('mma-fight-cards-container');
-        
-        // Show loading state
-        container.innerHTML = `
-          <div class="loading-placeholder">
-            <div class="loading-spinner"></div>
-            <p>Loading MMA fight cards...</p>
-          </div>
-        `;
-        
-        // Filter for MMA content
-        const response = await fetch(`${API_BASE}/api/content?category=MMA`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const content = await response.json();
-        
-        // Combine all MMA content
-        const mmaContent = [
-          ...(content.live || []).filter(item => item.category === 'MMA'),
-          ...(content.vod || []).filter(item => item.category === 'MMA'),
-          ...(content.highlights || []).filter(item => item.category === 'MMA')
-        ];
-        
-        // Clear loading state
-        container.innerHTML = '';
-        
-        if (mmaContent.length === 0) {
-          container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
-          return;
-        }
-        
-        // Display MMA content as fight cards
-        mmaContent.forEach(item => {
-          const isLive = item.is_live || false;
-          const itemType = isLive ? 'live' : (item.type || 'vod');
-          const card = document.createElement('a');
-          card.href = `player.html?type=${itemType}&id=${item.id}`;
-          card.className = 'stream-card';
-          
-          card.innerHTML = `
-            <div class="card-img">
-              <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
-                   alt="${item.title || item.name}" 
-                   onerror="this.src='https://via.placeholder.com/400x225'">
-              ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-              <div class="card-content">
-                <h3 class="card-title">${item.title || item.name}</h3>
-                <div class="card-meta">
-                  <span>MMA</span>
-                  <span class="card-views">${isLive ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
-                </div>
-              </div>
-            </div>
-          `;
-          
-          container.appendChild(card);
-        });
-        
-      } catch (error) {
-        console.error('Error loading MMA fight cards:', error);
-        const container = document.getElementById('mma-fight-cards-container');
-        container.innerHTML = '<p class="error-message">Failed to load MMA content. Please try again later.</p>';
-      }
+// In explore.html, update the loadMMAFightCards function
+async function loadMMAFightCards() {
+  try {
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    const container = document.getElementById('mma-fight-cards-container');
+    
+    // Show loading state
+    container.innerHTML = `
+      <div class="loading-placeholder">
+        <div class="loading-spinner"></div>
+        <p>Loading MMA fight cards...</p>
+      </div>
+    `;
+    
+    // Get MMA content from backend
+    const response = await fetch(`${API_BASE}/api/content?category=MMA`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
+    const content = await response.json();
+    
+    // Clear loading state
+    container.innerHTML = '';
+    
+    if (!content.vod || content.vod.length === 0) {
+      container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
+      return;
+    }
+    
+    // Create fight card structure
+    const fightCard = document.createElement('div');
+    fightCard.className = 'fight-card';
+    
+    fightCard.innerHTML = `
+      <div class="fight-card-header">
+        <span>UFC Fight Night</span>
+        <span>December 15, 2023</span>
+      </div>
+      <div class="fight-card-content">
+        ${content.vod.map(item => `
+          <div class="fight">
+            <div class="fighter">
+              <div class="fighter-name">${item.title.split(' vs ')[0] || 'Fighter 1'}</div>
+              <div class="fighter-record">22-5-0</div>
+            </div>
+            <div class="weight-class">Lightweight</div>
+            <div class="fighter">
+              <div class="fighter-name">${item.title.split(' vs ')[1] || 'Fighter 2'}</div>
+              <div class="fighter-record">18-3-0</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    
+    container.appendChild(fightCard);
+    
+  } catch (error) {
+    console.error('Error loading MMA fight cards:', error);
+    const container = document.getElementById('mma-fight-cards-container');
+    container.innerHTML = '<p class="error-message">Failed to load MMA content. Please try again later.</p>';
+  }
+}
   </script>
 </body>
 </html>
