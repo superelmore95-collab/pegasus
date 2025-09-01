@@ -27,27 +27,17 @@ class AuthManager {
 
   // New method to update navigation based on authentication status
   updateNavigationBasedOnAuth() {
-    const navLinks = document.querySelector('.nav-links');
-    if (!navLinks) return;
-    
     const isAuthenticated = this.isAuthenticated();
+    document.body.classList.toggle('user-logged-in', isAuthenticated);
     
-    // Get all navigation items except the mobile auth item
-    const navItems = Array.from(navLinks.querySelectorAll('li:not(.mobile-auth-item)'));
-    
-    if (!isAuthenticated) {
-      // Hide navigation items for logged out users
-      navItems.forEach(item => {
-        if (!item.querySelector('a[href="index.html"]')) {
-          item.style.display = 'none';
-        }
-      });
-    } else {
-      // Show all navigation items for logged in users
-      navItems.forEach(item => {
-        item.style.display = 'list-item';
-      });
-    }
+    const navLinks = document.querySelectorAll('.nav-links');
+    navLinks.forEach(nav => {
+      if (nav.classList.contains('hidden-for-guests')) {
+        nav.style.display = isAuthenticated ? 'flex' : 'none';
+      } else if (nav.classList.contains('visible-for-guests')) {
+        nav.style.display = isAuthenticated ? 'none' : 'flex';
+      }
+    });
   }
 
   async signIn(email, password, remember) {
