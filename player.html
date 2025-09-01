@@ -628,6 +628,7 @@
             favoriteBtn.classList.remove('active');
             favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
             window.currentFavoriteId = null;
+            alert('Removed from favorites');
           } else {
             alert('Error: ' + result.error);
             favoriteBtn.innerHTML = originalHtml;
@@ -639,6 +640,7 @@
             favoriteBtn.classList.add('active');
             favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
             window.currentFavoriteId = result.favoriteId;
+            alert('Added to favorites');
           } else {
             alert('Error: ' + result.error);
             favoriteBtn.innerHTML = originalHtml;
