@@ -385,12 +385,12 @@
                 ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
                 <div class="content-type-badge content-type-${itemType}">${itemType.toUpperCase()}</div>
-              </div>
-              <div class="card-content">
-                <h3 class="card-title">${item.title || item.name}</h3>
-                <div class="card-meta">
-                  <span>${item.category || 'Sports'}</span>
-                  <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                <div class="card-content">
+                  <h3 class="card-title">${item.title || item.name}</h3>
+                  <div class="card-meta">
+                    <span>${item.category || 'Sports'}</span>
+                    <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                  </div>
                 </div>
               </div>
             </a>
@@ -468,7 +468,7 @@
       } catch (error) {
         console.error('Error toggling favorite:', error);
         alert('An error occurred. Please try again.');
-        favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+        favoriteBtn.innerHTML = '<i class="far fa-heart'></i> Add to Favorites';
       } finally {
         favoriteBtn.disabled = false;
       }
