@@ -264,12 +264,12 @@ function loadRelatedContent(type, content) {
                 <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
                 ${itemType === 'live' ? '<div class="live-badge">LIVE</div>' : ''}
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-            </div>
-            <div class="card-content">
-                <h3 class="card-title">${item.title || item.name}</h3>
-                <div class="card-meta">
+                <div class="card-content">
+                  <h3 class="card-title">${item.title || item.name}</h3>
+                  <div class="card-meta">
                     <span>${item.category || 'Sports'}</span>
                     <span class="card-views">${itemType === 'live' ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
+                  </div>
                 </div>
             </div>
         `;
@@ -364,12 +364,12 @@ function filterRelatedContent(type) {
                         <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
                         ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
                         <div class="content-type-badge content-type-${itemType}">${itemType.toUpperCase()}</div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${item.title || item.name}</h3>
-                        <div class="card-meta">
+                        <div class="card-content">
+                          <h3 class="card-title">${item.title || item.name}</h3>
+                          <div class="card-meta">
                             <span>${item.category || 'Sports'}</span>
                             <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                          </div>
                         </div>
                     </div>
                 </a>
