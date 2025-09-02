@@ -73,8 +73,7 @@ class PegasusApp {
       hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
       // Add new event listener
-      newHamburger.addEventListener('click', (e) => {
-        e.stopPropagation();
+      newHamburger.addEventListener('click', () => {
         newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         
@@ -261,7 +260,7 @@ class PegasusApp {
       // Handle non-JSON responses
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+        throw new Error(`Server returned non-JJSON response: ${response.status} ${response.statusText}`);
       }
       
       if (!response.ok) {
@@ -307,7 +306,6 @@ class PegasusApp {
           `${item.viewers_count || 0} watching` : 
           `${item.views_count || item.view_count || 0} views`;
         
-        // FIXED: Corrected the template literal syntax error
         card.innerHTML = `
           <div class="card-img">
             <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
@@ -407,12 +405,14 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (error) {
     console.error('Failed to initialize PegasusApp:', error);
     // Ensure preloader is hidden even if there's an error
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-      preloader.classList.add('hide');
-      setTimeout(() => {
-        preloader.style.display = 'none';
-      }, 500);
-    }
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.classList.add('hide');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }
+    }, 1000);
   }
 });
