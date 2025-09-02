@@ -8,7 +8,7 @@ class AuthManager {
   init() {
     this.updateAuthUI();
     this.setupScrollHeader();
-    this.setupMobileUserMenu();
+    this.setupMobileMenu();
   }
 
   setupScrollHeader() {
@@ -24,30 +24,44 @@ class AuthManager {
     });
   }
 
-  // Setup mobile user menu functionality
-  setupMobileUserMenu() {
-    // Handle mobile user menu toggle
-    document.addEventListener('click', (e) => {
-      const userMenuBtn = e.target.closest('.user-btn');
-      const userDropdown = document.getElementById('user-dropdown');
-      
-      if (userMenuBtn && userDropdown) {
-        userDropdown.classList.toggle('show');
-        e.stopPropagation();
-      } else if (userDropdown && userDropdown.classList.contains('show')) {
-        // Close dropdown when clicking outside
-        userDropdown.classList.remove('show');
-      }
-    });
+  setupMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
     
-    // Handle mobile menu user dropdown
-    const mobileUserMenuBtn = document.querySelector('.nav-links .user-btn');
-    if (mobileUserMenuBtn) {
-      mobileUserMenuBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const mobileUserDropdown = document.querySelector('.nav-links .user-dropdown');
-        if (mobileUserDropdown) {
-          mobileUserDropdown.classList.toggle('show');
+    if (hamburger && navLinks) {
+      // Remove any existing event listeners to avoid duplicates
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+      
+      // Add new event listener
+      newHamburger.addEventListener('click', () => {
+        newHamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        
+        // Toggle body scroll when menu is open
+        if (navLinks.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      });
+      
+      // Close menu when clicking on links
+      const navItems = navLinks.querySelectorAll('a');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
         }
       });
     }
@@ -149,7 +163,6 @@ class AuthManager {
 
   updateAuthUI() {
     const authButtons = document.querySelector('.auth-buttons');
-    const mobileAuth = document.querySelector('.mobile-auth');
     
     if (this.isAuthenticated()) {
       const user = this.getCurrentUser();
@@ -183,8 +196,7 @@ class AuthManager {
         }
         
         if (userMenuBtn && userDropdown) {
-          userMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+          userMenuBtn.addEventListener('click', () => {
             userDropdown.classList.toggle('show');
           });
           
@@ -195,66 +207,12 @@ class AuthManager {
           });
         }
       }
-      
-      // Update mobile nav with user menu
-      if (mobileAuth) {
-        mobileAuth.style.display = 'none'; // Hide auth buttons
-        
-        // Add user menu to mobile navigation if it doesn't exist
-        const navLinks = document.querySelector('.nav-links');
-        const existingMobileUserMenu = navLinks.querySelector('.mobile-user-menu');
-        
-        if (!existingMobileUserMenu) {
-          const mobileUserMenu = document.createElement('li');
-          mobileUserMenu.className = 'mobile-user-menu';
-          mobileUserMenu.innerHTML = `
-            <div class="user-menu">
-              <button class="user-btn">
-                <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
-                <span>${user.name}</span>
-                <i class="fas fa-chevron-down"></i>
-              </button>
-              <div class="user-dropdown">
-                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
-                <a href="favorites.html"><i class="fas fa-heart"></i> Favorites</a>
-                ${user.role === 'admin' ? '<a href="admin.html"><i class="fas fa-cog"></i> Admin</a>' : ''}
-                <a href="#" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-              </div>
-            </div>
-          `;
-          
-          // Add logout handler for mobile
-          const mobileLogoutBtn = mobileUserMenu.querySelector('.logout-btn');
-          if (mobileLogoutBtn) {
-            mobileLogoutBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              this.signOut();
-            });
-          }
-          
-          navLinks.appendChild(mobileUserMenu);
-        }
-      }
     } else {
       if (authButtons) {
         authButtons.innerHTML = `
           <a href="signin.html" class="btn btn-outline">Sign In</a>
           <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
         `;
-      }
-      
-      if (mobileAuth) {
-        mobileAuth.style.display = 'flex';
-        mobileAuth.innerHTML = `
-          <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
-        `;
-        
-        // Remove mobile user menu if it exists
-        const mobileUserMenu = document.querySelector('.mobile-user-menu');
-        if (mobileUserMenu) {
-          mobileUserMenu.remove();
-        }
       }
     }
   }
