@@ -141,6 +141,9 @@
       max-width: 60%;
       text-align: left;
       z-index: 10;
+      padding: 20px;
+      background: rgba(10, 10, 18, 0.7);
+      border-radius: 8px;
     }
     
     @media (max-width: 768px) {
@@ -354,7 +357,8 @@
         const newHamburger = hamburger.cloneNode(true);
         hamburger.parentNode.replaceChild(newHamburger, hamburger);
         
-        newHamburger.addEventListener('click', () => {
+        newHamburger.addEventListener('click', (e) => {
+          e.stopPropagation();
           newHamburger.classList.toggle('active');
           navLinks.classList.toggle('active');
           
@@ -508,7 +512,7 @@
       
       card.innerHTML = `
         <div class="card-img">
-          <img src="${stream.thumbnail}" alt="${stream.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+          <img src="${stream.thumbnail || stream.thumbnail_url || 'https://via.placeholder.com/400x225'}" alt="${stream.title}" onerror="this.src='https://via.placeholder.com/400x225'">
           ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
           ${stream.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
         </div>
