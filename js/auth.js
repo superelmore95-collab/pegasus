@@ -120,7 +120,6 @@ class AuthManager {
 
   updateAuthUI() {
     const authButtons = document.querySelector('.auth-buttons');
-    const mobileAuth = document.querySelector('.mobile-auth');
     
     if (this.isAuthenticated()) {
       const user = this.getCurrentUser();
@@ -141,58 +140,33 @@ class AuthManager {
             </div>
           </div>
         `;
-      }
-      
-      if (mobileAuth) {
-        mobileAuth.innerHTML = `
-          <a href="profile.html" class="btn btn-outline">Profile</a>
-          <a href="favorites.html" class="btn btn-outline">Favorites</a>
-          ${user.role === 'admin' ? '<a href="admin.html" class="btn btn-outline">Admin</a>' : ''}
-          <a href="#" id="mobile-logout-btn" class="btn">Logout</a>
-        `;
-      }
-      
-      const logoutBtn = document.getElementById('logout-btn');
-      const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-      const userMenuBtn = document.getElementById('user-menu-btn');
-      const userDropdown = document.getElementById('user-dropdown');
-      
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.signOut();
-        });
-      }
-      
-      if (mobileLogoutBtn) {
-        mobileLogoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.signOut();
-        });
-      }
-      
-      if (userMenuBtn && userDropdown) {
-        userMenuBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          userDropdown.classList.toggle('show');
-        });
         
-        document.addEventListener('click', (e) => {
-          if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-            userDropdown.classList.remove('show');
-          }
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+        
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.signOut();
+          });
+        }
+        
+        if (userMenuBtn && userDropdown) {
+          userMenuBtn.addEventListener('click', () => {
+            userDropdown.classList.toggle('show');
+          });
+          
+          document.addEventListener('click', (e) => {
+            if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+              userDropdown.classList.remove('show');
+            }
+          });
+        }
       }
     } else {
       if (authButtons) {
         authButtons.innerHTML = `
-          <a href="signin.html" class="btn btn-outline">Sign In</a>
-          <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
-        `;
-      }
-      
-      if (mobileAuth) {
-        mobileAuth.innerHTML = `
           <a href="signin.html" class="btn btn-outline">Sign In</a>
           <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
         `;
@@ -205,12 +179,11 @@ class AuthManager {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-      // Remove any existing event listeners
+      // Remove any existing event listeners to avoid duplicates
       const newHamburger = hamburger.cloneNode(true);
       hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
-      newHamburger.addEventListener('click', (e) => {
-        e.stopPropagation();
+      newHamburger.addEventListener('click', () => {
         newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         
