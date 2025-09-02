@@ -143,7 +143,7 @@ class PegasusApp {
     
     function startProgressBar() {
       let width = 0;
-      progressInterval = setInterval(() => {
+      progressInterval = setInterval(() {
         if (width >= 100) {
           clearInterval(progressInterval);
           showSlide(currentSlide + 1);
@@ -307,13 +307,17 @@ class PegasusApp {
           `${item.viewers_count || 0} watching` : 
           `${item.views_count || item.view_count || 0} views`;
         
+        // FIXED: Corrected the ternary operator syntax for premium badge
+        const premiumBadge = (item.requires_premium || item.is_premium) ? 
+          '<div class="premium-badge">PREMIUM</div>' : '';
+        
         card.innerHTML = `
           <div class="card-img">
             <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
                  alt="${item.title || item.name}" 
                  onerror="this.src='https://via.placeholder.com/400x225'">
             ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${item.requires_premium || item.is_premium ? '<div class='premium-badge'>PREMIUM</div>' : ''}
+            ${premiumBadge}
             <div class="card-content">
               <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
