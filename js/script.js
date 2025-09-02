@@ -37,7 +37,7 @@ class PegasusApp {
     const header = document.querySelector('header');
     if (!header) return;
     
-    window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () {
       if (window.scrollY > 50) {
         header.classList.add('scrolled');
       } else {
@@ -256,7 +256,7 @@ class PegasusApp {
       // Handle non-JSON responses
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        throw new Error(`Server returned non-JJSON response: ${response.status} ${response.statusText}`);
+        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
       }
       
       if (!response.ok) {
