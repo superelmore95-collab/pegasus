@@ -8,111 +8,159 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .loading-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 200px;
-      background: var(--card-bg);
-      color: var(--text-secondary);
-      border-radius: 8px;
-      padding: 20px;
-    }
-    
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top: 4px solid var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* DAZN-style header */
-    header {
-      background: transparent;
-      transition: all 0.3s ease;
-    }
-    
-    header.scrolled {
-      background: rgba(10, 10, 18, 0.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Hero banner styles */
-    .content-hero {
-      height: 50vh;
-      min-height: 400px;
+    /* DAZN-style Explore Page */
+    .explore-hero {
+      height: 70vh;
+      min-height: 500px;
       position: relative;
       overflow: hidden;
-      margin-top: 60px;
+      margin-top: 40px;
     }
     
-    .content-hero .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .explore-hero .slide {
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
     }
     
-    .content-hero .slide-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
-    }
-    
-    .content-hero .slide-content {
-      position: absolute;
-      bottom: 60px;
+    .explore-hero .slide-content {
+      bottom: 100px;
       left: 40px;
-      max-width: 60%;
+      max-width: 50%;
       text-align: left;
-      z-index: 10;
     }
     
-    @media (max-width: 768px) {
-      .content-hero {
-        height: 40vh;
-        min-height: 300px;
-      }
-      
-      .content-hero .slide-content {
-        max-width: 90%;
-        left: 20px;
-        bottom: 40px;
-        text-align: center;
-      }
-      
-      .content-hero .btn {
-        width: 100%;
-        max-width: 300px;
-      }
+    .leagues-section {
+      padding: 60px 0;
+    }
+    
+    .leagues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .league-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    
+    .league-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .league-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin: 0 auto 15px;
     }
 
-    /* MMA-specific styles */
-    .mma-fight-card {
+    .upcoming-events {
+      padding: 60px 0;
+      background: var(--secondary);
+    }
+
+    .events-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .event-tab {
+      padding: 10px 20px;
+      background: var(--card-bg);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .event-tab.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .event-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .event-date {
+      padding: 10px 15px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .event-info {
+      padding: 15px;
+    }
+
+    .event-teams {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .team {
+      text-align: center;
+      flex: 1;
+    }
+
+    .team-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .vs {
+      font-weight: 600;
+      margin: 0 10px;
+    }
+
+    .event-league {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .fight-cards-section {
+      padding: 60px 0;
+    }
+
+    .fight-card {
       background: var(--card-bg);
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 30px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    
+
     .fight-card-header {
       padding: 15px;
       background: var(--accent);
@@ -122,11 +170,11 @@
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .fight-card-content {
       padding: 20px;
     }
-    
+
     .fight {
       display: flex;
       justify-content: space-between;
@@ -134,45 +182,110 @@
       padding: 15px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
+
     .fight:last-child {
       border-bottom: none;
     }
-    
+
     .fighter {
       text-align: center;
       flex: 1;
     }
-    
-    .fighter-image {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
-    
+
     .fighter-name {
       font-weight: 600;
-      margin-bottom: 5px;
+      margin-top: 10px;
     }
-    
+
     .fighter-record {
       font-size: 12px;
       color: var(--text-secondary);
     }
-    
+
     .weight-class {
       text-align: center;
       margin: 0 15px;
       color: var(--text-secondary);
       font-size: 12px;
     }
-    
-    .vs {
-      font-weight: 600;
-      margin: 0 10px;
-      color: var(--accent);
+
+    .sports-leagues {
+      padding: 60px 0;
+      background: var(--secondary);
+    }
+
+    .leagues-scroll {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 20px 0;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .league-item {
+      flex: 0 0 auto;
+      width: 120px;
+      text-align: center;
+      scroll-snap-align: start;
+    }
+
+    .league-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .explore-hero .slide-content {
+        max-width: 90%;
+        left: 20px;
+        text-align: center;
+      }
+      
+      .leagues-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+      
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .event-teams {
+        flex-direction: column;
+      }
+      
+      .team {
+        margin: 10px 0;
+      }
+      
+      .vs {
+        margin: 10px 0;
+      }
+      
+      .fight {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .weight-class {
+        margin: 10px 0;
+      }
+
+      .leagues-scroll {
+        gap: 15px;
+        padding: 15px 0;
+      }
+
+      .league-item {
+        width: 100px;
+      }
+
+      .league-item img {
+        width: 60px;
+        height: 60px;
+      }
     }
   </style>
 </head>
@@ -193,24 +306,21 @@
           <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
         </a>
         
-        <ul class="nav-links">
+        <ul class="nav-links visible-for-guests">
           <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html" class="active">Explore</a></li>
+        </ul>
+        
+        <ul class="nav-links hidden-for-guests">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html" class="active">Explore</a></li>
           <li><a href="live-streams.html">Live</a></li>
           <li><a href="vod.html">VOD</a></li>
           <li><a href="highlights.html">Highlights</a></li>
           <li><a href="channels.html">Channels</a></li>
-          <li><a href="explore.html" class="active">Explore</a></li>
-          
-          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-          <li class="mobile-auth-item">
-            <div class="mobile-auth">
-              <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn subscribe">Subscribe</a>
-            </div>
-          </li>
         </ul>
         
-        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <!-- Desktop Auth Buttons -->
         <div class="auth-buttons" id="auth-buttons">
           <a href="signin.html" class="btn btn-outline">Sign In</a>
           <a href="signup.html" class="btn subscribe">Subscribe</a>
@@ -225,70 +335,121 @@
     </div>
   </header>
 
-  <!-- Hero Banner for Explore -->
-  <section class="content-hero">
+  <!-- Hero Banner -->
+  <section class="explore-hero">
     <div style="background-image: url('images/explore-banner.jpg');" class="slide active">
       <div class="slide-overlay"></div>
       <div class="slide-content">
-        <h2>Explore Sports</h2>
-        <p>Discover all sports content in one place</p>
-        <a href="#explore-content" class="btn">Explore Now</a>
+        <h2>Explore All Sports</h2>
+        <p>Discover live games, highlights, and channels across all categories</p>
+        <a href="#featured" class="btn">Explore Now</a>
       </div>
     </div>
   </section>
 
-  <!-- Explore Content -->
-  <section class="section" id="explore-content">
+  <!-- Sports Leagues Scroll -->
+  <section class="sports-leagues">
     <div class="container">
-      <!-- Category Filters -->
-      <div class="category-filters">
-        <button class="category-filter active" data-category="all">All Sports</button>
-        <button class="category-filter" data-category="Football">Football</button>
-        <button class="category-filter" data-category="Basketball">Basketball</button>
-        <button class="category-filter" data-category="Tennis">Tennis</button>
-        <button class="category-filter" data-category="Formula 1">Formula 1</button>
-        <button class="category-filter" data-category="MMA">MMA</button>
+      <div class="section-header">
+        <h2 class="section-title">Popular Leagues</h2>
       </div>
-
-      <!-- Live & Upcoming Events -->
-      <div class="content-section" id="upcoming-events">
-        <div class="section-header">
-          <h2 class="section-title">Upcoming Events</h2>
+      
+      <div class="leagues-scroll">
+        <div class="league-item">
+          <img src="images/premier-league.png" alt="Premier League">
+          <div>Premier League</div>
         </div>
         
-        <div class="stream-grid" id="upcoming-container">
-          <div class="loading-placeholder">
-            <div class="loading-spinner"></div>
-            <p>Loading upcoming events...</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- MMA Fight Cards Section -->
-      <div class="content-section" id="mma-section">
-        <div class="section-header">
-          <h2 class="section-title">MMA Fight Cards</h2>
+        <div class="league-item">
+          <img src="images/nba.png" alt="NBA">
+          <div>NBA</div>
         </div>
         
-        <div id="mma-container">
-          <div class="loading-placeholder">
-            <div class="loading-spinner"></div>
-            <p>Loading MMA content...</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Featured Content -->
-      <div class="content-section">
-        <div class="section-header">
-          <h2 class="section-title">Featured Content</h2>
+        <div class="league-item">
+          <img src="images/uefa.png" alt="UEFA">
+          <div>UEFA Champions League</div>
         </div>
         
-        <div class="stream-grid" id="featured-container">
-          <div class="loading-placeholder">
-            <div class="loading-spinner"></div>
-            <p>Loading featured content...</p>
-          </div>
+        <div class="league-item">
+          <img src="images/nfl.png" alt="NFL">
+          <div>NFL</div>
+        </div>
+        
+        <div class="league-item">
+          <img src="images/formula1.png" alt="Formula 1">
+          <div>Formula 1</div>
+        </div>
+        
+        <div class="league-item">
+          <img src="images/ufc.png" alt="UFC">
+          <div>UFC</div>
+        </div>
+        
+        <div class="league-item">
+          <img src="images/mlb.png" alt="MLB">
+          <div>MLB</div>
+        </div>
+        
+        <div class="league-item">
+          <img src="images/nhl.png" alt="NHL">
+          <div>NHL</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content from Backend Section -->
+  <section id="featured" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Content</h2>
+        <a href="explore.html" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="featured-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading featured content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MMA Content Section -->
+  <section class="fight-cards-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">MMA Content</h2>
+        <a href="explore.html?category=MMA" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="mma-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading MMA content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Events Section -->
+  <section class="upcoming-events">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Upcoming Events</h2>
+      </div>
+      
+      <div class="events-tabs">
+        <div class="event-tab active" data-day="today">Today</div>
+        <div class="event-tab" data-day="tomorrow">Tomorrow</div>
+        <div class="event-tab" data-day="week">This Week</div>
+        <div class="event-tab" data-day="month">This Month</div>
+      </div>
+      
+      <div class="events-grid" id="upcoming-events-container">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading upcoming events...</p>
         </div>
       </div>
     </div>
@@ -313,11 +474,11 @@
           <h3>Navigation</h3>
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
             <li><a href="live-streams.html">Live Streams</a></li>
             <li><a href="vod.html">Video On Demand</a></li>
             <li><a href="highlights.html">Highlights</a></li>
             <li><a href="channels.html">Channels</a></li>
-            <li><a href="explore.html">Explore</a></li>
           </ul>
         </div>
         
@@ -352,13 +513,64 @@
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
   <script>
-    // API base URL
-    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize mobile menu
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
+      }
+      
+      // Load featured content from backend
+      loadFeaturedContent();
+      
+      // Load MMA content
+      loadMMAContent();
+      
+      // Load upcoming events
+      loadUpcomingEvents();
+      
+      // Event tabs functionality
+      const eventTabs = document.querySelectorAll('.event-tab');
+      eventTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          eventTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const day = this.getAttribute('data-day');
+          loadUpcomingEvents(day);
+        });
+      });
+
+      // League items click handling
+      const leagueItems = document.querySelectorAll('.league-item');
+      leagueItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const leagueName = this.querySelector('div').textContent;
+          loadContentByLeague(leagueName);
+        });
+      });
+    });
     
-    // Load explore content
-    async function loadExploreContent() {
+    // Load featured content from backend
+    async function loadFeaturedContent() {
       try {
-        const token = localStorage.getItem('pegasus_token');
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('featured-content');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading featured content...</p>
+          </div>
+        `;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
         const headers = {
           'Content-Type': 'application/json'
         };
@@ -367,8 +579,7 @@
           headers['Authorization'] = `Bearer ${token}`;
         }
         
-        // Load all content
-        const response = await fetch(`${API_BASE}/api/content`, { headers });
+        const response = await fetch(`${API_BASE}/api/content?limit=8`, { headers });
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -376,314 +587,233 @@
         
         const content = await response.json();
         
-        // Update upcoming events
-        updateUpcomingEvents(content.live || []);
+        // Clear loading state
+        container.innerHTML = '';
         
-        // Update MMA content
-        updateMMAContent(content);
+        // Combine all content types
+        const allContent = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
         
-        // Update featured content
-        updateFeaturedContent(content);
-        
-      } catch (error) {
-        console.error('Error loading explore content:', error);
-        const containers = ['upcoming-container', 'mma-container', 'featured-container'];
-        containers.forEach(containerId => {
-          const container = document.getElementById(containerId);
-          if (container) {
-            container.innerHTML = '<p class="error-message">Failed to load content. Please try again later.</p>';
-          }
-        });
-      }
-    }
-    
-    function updateUpcomingEvents(events) {
-      const container = document.getElementById('upcoming-container');
-      
-      if (!container) {
-        console.warn('Upcoming container not found');
-        return;
-      }
-      
-      // Clear loading state
-      container.innerHTML = '';
-      
-      // Filter upcoming events (not live yet)
-      const upcomingEvents = events.filter(event => !event.is_live);
-      
-      if (!upcomingEvents || upcomingEvents.length === 0) {
-        container.innerHTML = '<p class="no-content">No upcoming events at the moment.</p>';
-        return;
-      }
-      
-      // Add events
-      upcomingEvents.forEach(event => {
-        const card = document.createElement('a');
-        card.href = `player.html?type=live&id=${event.id}`;
-        card.className = 'stream-card';
-        
-        const startTime = event.start_time ? new Date(event.start_time).toLocaleString() : 'TBA';
-        
-        card.innerHTML = `
-          <div class="card-img">
-            <img src="${event.thumbnail}" alt="${event.title}" onerror="this.src='https://via.placeholder.com/400x225'">
-            <div class="premium-badge">UPCOMING</div>
-            ${event.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${event.title}</h3>
-            <div class="card-meta">
-              <span>${event.category || 'Sports'}</span>
-              <span class="card-views">${startTime}</span>
-            </div>
-          </div>
-        `;
-        
-        container.appendChild(card);
-      });
-    }
-    
-    function updateMMAContent(content) {
-      const container = document.getElementById('mma-container');
-      
-      if (!container) {
-        console.warn('MMA container not found');
-        return;
-      }
-      
-      // Clear loading state
-      container.innerHTML = '';
-      
-      // Filter MMA content from all types
-      const mmaContent = [];
-      
-      // Add MMA live events
-      if (content.live) {
-        const mmaLive = content.live.filter(item => item.category === 'MMA');
-        mmaLive.forEach(event => mmaContent.push({...event, type: 'live'}));
-      }
-      
-      // Add MMA VOD
-      if (content.vod) {
-        const mmaVOD = content.vod.filter(item => item.category === 'MMA');
-        mmaVOD.forEach(vod => mmaContent.push({...vod, type: 'vod'}));
-      }
-      
-      // Add MMA highlights
-      if (content.highlights) {
-        const mmaHighlights = content.highlights.filter(item => item.category === 'MMA');
-        mmaHighlights.forEach(highlight => mmaContent.push({...highlight, type: 'highlight'}));
-      }
-      
-      if (mmaContent.length === 0) {
-        container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
-        return;
-      }
-      
-      // Group MMA content by event/fight card
-      const fightCards = {};
-      
-      mmaContent.forEach(item => {
-        // Extract event name from title or use a default
-        const eventName = item.title.includes('UFC') ? 'UFC Event' : 
-                         item.title.includes('Bellator') ? 'Bellator Event' :
-                         item.title.includes('Fight Night') ? 'Fight Night' : 'MMA Event';
-        
-        if (!fightCards[eventName]) {
-          fightCards[eventName] = [];
+        // Display content
+        if (allContent.length === 0) {
+          container.innerHTML = '<p class="no-content">No featured content available</p>';
+          return;
         }
         
-        fightCards[eventName].push(item);
-      });
-      
-      // Create fight cards
-      for (const [eventName, fights] of Object.entries(fightCards)) {
-        const fightCard = document.createElement('div');
-        fightCard.className = 'mma-fight-card';
-        
-        let fightsHTML = '';
-        
-        fights.forEach(fight => {
-          // Extract fighter names from title (simplified)
-          const titleParts = fight.title.split(' vs ');
-          const fighter1 = titleParts[0] || 'Fighter 1';
-          const fighter2 = titleParts[1] || 'Fighter 2';
+        // Show first 8 items
+        allContent.slice(0, 8).forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = document.createElement('a');
+          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.className = 'stream-card';
           
-          fightsHTML += `
-            <div class="fight">
-              <div class="fighter">
-                <div class="fighter-image" style="background: #333;"></div>
-                <div class="fighter-name">${fighter1}</div>
-                <div class="fighter-record">20-5-0</div>
+          card.innerHTML = `
+            <div class="card-img">
+              <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                   alt="${item.title || item.name}" 
+                   onerror="this.src='https://via.placeholder.com/400x225'">
+              ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+              <div class="card-content">
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <div class="card-meta">
+                  <span>${item.category || 'Sports'}</span>
+                  <span class="card-views">${isLive ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
+                </div>
               </div>
-              <div class="vs">VS</div>
-              <div class="fighter">
-                <div class="fighter-image" style="background: #333;"></div>
-                <div class="fighter-name">${fighter2}</div>
-                <div class="fighter-record">18-3-0</div>
-              </div>
-              <div class="weight-class">Welterweight</div>
             </div>
           `;
-        });
-        
-        fightCard.innerHTML = `
-          <div class="fight-card-header">
-            <span>${eventName}</span>
-            <span>Sat, Dec 16 • 10:00 PM EST</span>
-          </div>
-          <div class="fight-card-content">
-            ${fightsHTML}
-            <div style="text-align: center; margin-top: 20px;">
-              <a href="live-streams.html?category=MMA" class="btn">View All MMA Events</a>
-            </div>
-          </div>
-        `;
-        
-        container.appendChild(fightCard);
-      }
-    }
-    
-    function updateFeaturedContent(content) {
-      const container = document.getElementById('featured-container');
-      
-      if (!container) {
-        console.warn('Featured container not found');
-        return;
-      }
-      
-      // Clear loading state
-      container.innerHTML = '';
-      
-      // Get featured content (mix of all types)
-      const featuredContent = [];
-      
-      // Add some live events
-      if (content.live) {
-        featuredContent.push(...content.live.slice(0, 2));
-      }
-      
-      // Add some VOD
-      if (content.vod) {
-        featuredContent.push(...content.vod.slice(0, 2));
-      }
-      
-      // Add some highlights
-      if (content.highlights) {
-        featuredContent.push(...content.highlights.slice(0, 2));
-      }
-      
-      if (featuredContent.length === 0) {
-        container.innerHTML = '<p class="no-content">No featured content available.</p>';
-        return;
-      }
-      
-      // Add featured content
-      featuredContent.forEach(item => {
-        const isLive = item.is_live || false;
-        const itemType = isLive ? 'live' : (item.type || 'vod');
-        const viewsText = isLive ? 
-          `${item.viewers_count || 0} watching` : 
-          `${item.views_count || item.view_count || 0} views`;
-        
-        const card = document.createElement('a');
-        card.href = `player.html?type=${itemType}&id=${item.id}`;
-        card.className = 'stream-card';
-        
-        card.innerHTML = `
-          <div class="card-img">
-            <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
-            ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${item.title || item.name}</h3>
-            <div class="card-meta">
-              <span>${item.category || 'Sports'}</span>
-              <span class="card-views">${viewsText}</span>
-            </div>
-          </div>
-        `;
-        
-        container.appendChild(card);
-      });
-    }
-    
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add scroll event for header
-      window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-      });
-      
-      // Load explore content
-      loadExploreContent();
-      
-      // Set up category filters
-      const categoryFilters = document.querySelectorAll('.category-filter');
-      categoryFilters.forEach(filter => {
-        filter.addEventListener('click', function() {
-          // Update active filter
-          categoryFilters.forEach(f => f.classList.remove('active'));
-          this.classList.add('active');
           
-          // Filter content
-          const category = this.getAttribute('data-category');
-          filterContent(category);
+          container.appendChild(card);
         });
-      });
-    });
-    
-    function filterContent(category) {
-      if (category === 'all') {
-        // Show all sections
-        document.getElementById('upcoming-events').style.display = 'block';
-        document.getElementById('mma-section').style.display = 'block';
-        document.querySelectorAll('.content-section')[2].style.display = 'block';
-      } else if (category === 'MMA') {
-        // Show only MMA section
-        document.getElementById('upcoming-events').style.display = 'none';
-        document.getElementById('mma-section').style.display = 'block';
-        document.querySelectorAll('.content-section')[2].style.display = 'none';
-      } else {
-        // Show upcoming and featured, hide MMA
-        document.getElementById('upcoming-events').style.display = 'block';
-        document.getElementById('mma-section').style.display = 'none';
-        document.querySelectorAll('.content-section')[2].style.display = 'block';
         
-        // Filter content by category
-        const upcomingContainer = document.getElementById('upcoming-container');
-        const featuredContainer = document.getElementById('featured-container');
-        
-        if (upcomingContainer) {
-          const items = upcomingContainer.querySelectorAll('.stream-card');
-          items.forEach(item => {
-            const categoryElement = item.querySelector('.card-meta span:first-child');
-            if (categoryElement && categoryElement.textContent === category) {
-              item.style.display = 'block';
-            } else {
-              item.style.display = 'none';
-            }
-          });
-        }
-        
-        if (featuredContainer) {
-          const items = featuredContainer.querySelectorAll('.stream-card');
-          items.forEach(item => {
-            const categoryElement = item.querySelector('.card-meta span:first-child');
-            if (categoryElement && categoryElement.textContent === category) {
-              item.style.display = 'block';
-            } else {
-              item.style.display = 'none';
-            }
-          });
-        }
+      } catch (error) {
+        console.error('Error loading featured content:', error);
+        const container = document.getElementById('featured-content');
+        container.innerHTML = '<p class="error-message">Failed to load featured content. Please try again later.</p>';
       }
+    }
+    
+    // Load MMA content
+    async function loadMMAContent() {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('mma-content');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading MMA content...</p>
+          </div>
+        `;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        // Get MMA content from backend
+        const response = await fetch(`${API_BASE}/api/content?category=MMA&limit=6`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        // Combine all content types
+        const mmaContent = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
+        
+        if (mmaContent.length === 0) {
+          container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
+          return;
+        }
+        
+        // Display MMA content
+        mmaContent.slice(0, 6).forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = document.createElement('a');
+          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.className = 'stream-card';
+          
+          card.innerHTML = `
+            <div class="card-img">
+              <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                   alt="${item.title || item.name}" 
+                   onerror="this.src='https://via.placeholder.com/400x225'">
+              ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+              ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+              <div class="card-content">
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <div class="card-meta">
+                  <span>${item.category || 'MMA'}</span>
+                  <span class="card-views">${isLive ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading MMA content:', error);
+        const container = document.getElementById('mma-content');
+        container.innerHTML = '<p class="error-message">Failed to load MMA content. Please try again later.</p>';
+      }
+    }
+    
+    // Load upcoming events
+    async function loadUpcomingEvents(filter = 'today') {
+      try {
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById('upcoming-events-container');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading upcoming events...</p>
+          </div>
+        `;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        // In a real implementation, you would filter by date based on the filter parameter
+        const response = await fetch(`${API_BASE}/api/content?type=live&is_upcoming=true`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        const upcomingEvents = content.live || [];
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        if (upcomingEvents.length === 0) {
+          container.innerHTML = '<p class="no-content">No upcoming events found.</p>';
+          return;
+        }
+        
+        // Display events
+        upcomingEvents.forEach(event => {
+          const eventDate = new Date(event.start_time || event.created_at);
+          const formattedDate = eventDate.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          const card = document.createElement('div');
+          card.className = 'event-card';
+          card.onclick = function() {
+            window.location.href = `player.html?type=live&id=${event.id}`;
+          };
+          
+          card.innerHTML = `
+            <div class="event-date">${formattedDate}</div>
+            <div class="event-info">
+              <div class="event-teams">
+                <div class="team">
+                  <div>${event.title.split(' vs ')[0] || 'Team 1'}</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team">
+                  <div>${event.title.split(' vs ')[1] || 'Team 2'}</div>
+                </div>
+              </div>
+              <div class="event-league">${event.category || 'Sports'}</div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading upcoming events:', error);
+        const container = document.getElementById('upcoming-events-container');
+        container.innerHTML = '<p class="error-message">Failed to load upcoming events. Please try again later.</p>';
+      }
+    }
+
+    // Load content by league
+    async function loadContentByLeague(leagueName) {
+      // This would filter content by league in a real implementation
+      alert(`Loading content for ${leagueName}. This would filter content in a real implementation.`);
+      
+      // You would make an API call to filter content by league
+      // For now, let's just reload the featured content
+      loadFeaturedContent();
     }
   </script>
 </body>
