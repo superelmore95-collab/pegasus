@@ -8,15 +8,85 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .content-type-badge {
+    .player-page {
+      padding-top: 0;
+    }
+    
+    .player-container {
+      position: relative;
+      width: 100%;
+      background: #000;
+    }
+    
+    .player-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio */
+      background: #000;
+    }
+    
+    .video-player {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    
+    .player-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(transparent 0%, rgba(0,0,0,0.8) 100%);
+      color: white;
+      z-index: 10;
+    }
+    
+    .player-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    
+    .player-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 30px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .player-action-btn:hover {
       background: var(--accent);
       color: #000;
-      padding: 4px 8px;
+    }
+    
+    .player-action-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .content-type-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--accent);
+      color: #000;
+      padding: 6px 12px;
       border-radius: 4px;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 600;
       z-index: 5;
     }
@@ -52,6 +122,33 @@
       color: white;
       font-size: 4rem;
       cursor: pointer;
+      z-index: 2;
+    }
+    
+    .player-info {
+      padding: 20px;
+      background: var(--secondary);
+      margin-top: 0;
+    }
+    
+    .player-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: white;
+    }
+    
+    .player-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .player-description {
+      line-height: 1.6;
+      margin-bottom: 30px;
+      color: var(--text);
     }
     
     .related-tabs {
@@ -69,7 +166,7 @@
       border-radius: 30px;
       color: var(--text);
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s ease;
       font-size: 12px;
       white-space: nowrap;
     }
@@ -79,56 +176,76 @@
       color: #000;
     }
     
-    .no-content {
-      text-align: center;
-      color: var(--text-secondary);
-      padding: 40px 0;
-    }
-    
-    .error-message {
-      color: var(--danger);
-      text-align: center;
+    .comments-section {
+      margin-top: 30px;
       padding: 20px;
-    }
-    
-    /* Player action buttons */
-    .player-actions {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      margin: 20px 0;
-      padding: 15px;
       background: var(--card-bg);
       border-radius: 8px;
+    }
+    
+    .comment-form {
+      margin-bottom: 20px;
+    }
+    
+    .comment-input {
       width: 100%;
-      box-sizing: border-box;
-      flex-wrap: wrap;
-    }
-    
-    .player-action-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 30px;
+      background: var(--secondary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      padding: 12px;
       color: var(--text);
-      cursor: pointer;
-      transition: var(--transition);
+      margin-bottom: 10px;
       font-size: 14px;
-      font-weight: 500;
+      resize: vertical;
+      min-height: 100px;
     }
     
-    .player-action-btn:hover {
-      background: var(--accent);
-      color: #000;
+    .comment-list {
+      max-height: 300px;
+      overflow-y: auto;
     }
     
-    .player-action-btn.active {
-      background: var(--accent);
-      color: #000;
+    .comment-item {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .comment-author {
+      font-weight: 600;
+      margin-right: 8px;
+      font-size: 14px;
+      color: var(--accent);
+    }
+    
+    .comment-time {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .comment-text {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    
+    .login-prompt {
+      text-align: center;
+      padding: 20px;
+      background: var(--secondary);
+      border-radius: 6px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .login-prompt a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .login-prompt a:hover {
+      text-decoration: underline;
     }
     
     @media (max-width: 768px) {
@@ -139,7 +256,26 @@
       
       .player-action-btn {
         width: 100%;
+        max-width: 300px;
         justify-content: center;
+      }
+      
+      .player-title {
+        font-size: 20px;
+      }
+      
+      .player-meta {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .related-tabs {
+        padding-bottom: 5px;
+      }
+      
+      .related-tab {
+        padding: 6px 12px;
+        font-size: 11px;
       }
     }
   </style>
@@ -173,17 +309,9 @@
           <li><a href="vod.html">VOD</a></li>
           <li><a href="highlights.html">Highlights</a></li>
           <li><a href="channels.html">Channels</a></li>
-          
-          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-          <li class="mobile-auth-item">
-            <div class="mobile-auth">
-              <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn subscribe">Subscribe</a>
-            </div>
-          </li>
         </ul>
         
-        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <!-- Desktop Auth Buttons -->
         <div class="auth-buttons" id="auth-buttons">
           <a href="signin.html" class="btn btn-outline">Sign In</a>
           <a href="signup.html" class="btn subscribe">Subscribe</a>
@@ -199,17 +327,28 @@
   </header>
 
   <!-- Player Container -->
-  <div class="player-container" id="player-container">
+  <div class="player-container">
     <div class="player-wrapper">
       <div class="video-player" id="video-player">
-        <!-- Player content will be loaded here -->
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading content...</p>
+        </div>
+      </div>
+      
+      <div class="player-controls">
+        <h1 class="player-title" id="player-title">Content Title</h1>
+        <div class="player-meta">
+          <span id="player-status">Loading...</span>
+          <span id="player-viewers">0 viewers</span>
+        </div>
       </div>
     </div>
     
     <!-- Player Actions -->
     <div class="player-actions">
       <button class="player-action-btn" id="favorite-btn">
-        <i class="far fa-heart"></i> Favorite
+        <i class="far fa-heart"></i> Add to Favorites
       </button>
       <button class="player-action-btn" id="share-btn">
         <i class="fas fa-share-alt"></i> Share
@@ -218,28 +357,22 @@
         <i class="fas fa-download"></i> Download
       </button>
     </div>
-    
-    <div class="player-controls">
-      <h1 class="player-title" id="player-title">Content Title</h1>
-      <div class="player-meta">
-        <span id="player-status">Loading...</span>
-        <span id="player-viewers">0 viewers</span>
-      </div>
-    </div>
   </div>
 
   <!-- Player Info and Related Content -->
   <div class="player-info">
     <p class="player-description" id="player-description">Content description will appear here.</p>
     
-    <!-- Comments Section (only for VOD and highlights) -->
-    <div class="comments-section" id="comments-section" style="display: none;">
+    <!-- Comments Section -->
+    <div class="comments-section" id="comments-section">
       <h3>Comments</h3>
       <div id="comment-form-container">
-        <!-- Will be populated by JavaScript based on auth status -->
+        <div class="login-prompt">
+          <p>Please <a href="signin.html">sign in</a> to leave a comment</p>
+        </div>
       </div>
       <div class="comment-list" id="comment-list">
-        <!-- Comments will be loaded here -->
+        <p>No comments yet. Be the first to comment!</p>
       </div>
     </div>
     
@@ -284,9 +417,13 @@
     // Enhanced player functionality
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize auth manager
-      if (!window.authManager) {
+      if (typeof window.authManager === 'undefined') {
         console.error('Auth manager not initialized');
-        return;
+        // Create a basic fallback
+        window.authManager = {
+          isAuthenticated: () => false,
+          getToken: () => null
+        };
       }
       
       // Get parameters from URL
@@ -295,7 +432,7 @@
       const id = urlParams.get('id');
       
       if (!type || !id) {
-        showError('Missing content parameters');
+        showError('Missing content parameters. Please go back and select content to watch.');
         return;
       }
       
@@ -309,9 +446,10 @@
       
       // Check if comments should be shown (for VOD and highlights only)
       if (type === 'vod' || type === 'highlight') {
-        document.getElementById('comments-section').style.display = 'block';
         loadComments();
         setupCommentForm();
+      } else {
+        document.getElementById('comments-section').style.display = 'none';
       }
       
       // Set up event listeners
@@ -339,7 +477,7 @@
       try {
         const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
         
-        const token = window.authManager ? window.authManager.getToken() : null;
+        const token = window.authManager.getToken();
         const headers = {
           'Content-Type': 'application/json'
         };
@@ -358,7 +496,7 @@
             return;
           } else if (response.status === 403) {
             // Not authorized - premium content
-            showError('Premium subscription required');
+            showError('Premium subscription required to access this content');
             return;
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -398,14 +536,16 @@
       // Update player description if available
       if (content.description) {
         document.getElementById('player-description').textContent = content.description;
+      } else {
+        document.getElementById('player-description').style.display = 'none';
       }
       
       // Update player metadata
       if (type === 'live' || (type === 'channel' && content.is_live)) {
-        document.getElementById('player-status').textContent = 'Live';
+        document.getElementById('player-status').textContent = 'LIVE';
         document.getElementById('player-viewers').textContent = `${content.viewers_count || 0} watching`;
       } else {
-        document.getElementById('player-status').textContent = 'On Demand';
+        document.getElementById('player-status').textContent = 'ON DEMAND';
         document.getElementById('player-viewers').textContent = `${content.views_count || content.view_count || 0} views`;
       }
       
@@ -465,6 +605,12 @@
             </div>
           </div>
         `;
+        
+        // Add click event to play button
+        const playButton = videoPlayer.querySelector('.play-button-overlay');
+        playButton.addEventListener('click', function() {
+          alert('This content would play in a real implementation. In a production environment, this would trigger the actual video player.');
+        });
       } else {
         // Show error if no content available
         videoPlayer.innerHTML = `
@@ -491,7 +637,7 @@
       try {
         const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
         
-        const token = window.authManager ? window.authManager.getToken() : null;
+        const token = window.authManager.getToken();
         const headers = {
           'Content-Type': 'application/json'
         };
@@ -564,12 +710,12 @@
                      onerror="this.src='https://via.placeholder.com/400x225'">
                 ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
                 ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-                <div class="card-content">
-                  <h3 class="card-title">${item.title || item.name}</h3>
-                  <div class="card-meta">
-                    <span>${item.category || 'Sports'}</span>
-                    <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
-                  </div>
+              </div>
+              <div class="card-content">
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <div class="card-meta">
+                  <span>${item.category || 'Sports'}</span>
+                  <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
                 </div>
               </div>
             </a>
@@ -585,17 +731,19 @@
       if (!window.currentContentId || !window.currentContentType) return;
       
       try {
-        const result = await window.authManager.checkFavoriteStatus(window.currentContentId, window.currentContentType);
-        if (result.success) {
-          window.currentFavoriteId = result.favoriteId;
-          const favoriteBtn = document.getElementById('favorite-btn');
-          if (favoriteBtn) {
-            if (result.isFavorited) {
-              favoriteBtn.classList.add('active');
-              favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
-            } else {
-              favoriteBtn.classList.remove('active');
-              favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+        if (window.authManager && window.authManager.checkFavoriteStatus) {
+          const result = await window.authManager.checkFavoriteStatus(window.currentContentId, window.currentContentType);
+          if (result.success) {
+            window.currentFavoriteId = result.favoriteId;
+            const favoriteBtn = document.getElementById('favorite-btn');
+            if (favoriteBtn) {
+              if (result.isFavorited) {
+                favoriteBtn.classList.add('active');
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+              } else {
+                favoriteBtn.classList.remove('active');
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+              }
             }
           }
         }
@@ -623,27 +771,29 @@
         
         if (window.currentFavoriteId) {
           // Remove from favorites
-          const result = await window.authManager.removeFromFavorites(window.currentFavoriteId);
-          if (result.success) {
-            favoriteBtn.classList.remove('active');
-            favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
-            window.currentFavoriteId = null;
-            alert('Removed from favorites');
-          } else {
-            alert('Error: ' + result.error);
-            favoriteBtn.innerHTML = originalHtml;
+          if (window.authManager.removeFromFavorites) {
+            const result = await window.authManager.removeFromFavorites(window.currentFavoriteId);
+            if (result.success) {
+              favoriteBtn.classList.remove('active');
+              favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Add to Favorites';
+              window.currentFavoriteId = null;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
           }
         } else {
           // Add to favorites
-          const result = await window.authManager.addToFavorites(window.currentContentId, window.currentContentType);
-          if (result.success) {
-            favoriteBtn.classList.add('active');
-            favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
-            window.currentFavoriteId = result.favoriteId;
-            alert('Added to favorites');
-          } else {
-            alert('Error: ' + result.error);
-            favoriteBtn.innerHTML = originalHtml;
+          if (window.authManager.addToFavorites) {
+            const result = await window.authManager.addToFavorites(window.currentContentId, window.currentContentType);
+            if (result.success) {
+              favoriteBtn.classList.add('active');
+              favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Remove from Favorites';
+              window.currentFavoriteId = result.favoriteId;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
           }
         }
       } catch (error) {
@@ -680,12 +830,14 @@
     // Load comments
     async function loadComments() {
       try {
-        const result = await window.authManager.getComments(window.currentContentId, window.currentContentType);
-        
-        if (result.success) {
-          displayComments(result.comments);
-        } else {
-          document.getElementById('comment-list').innerHTML = '<p>Failed to load comments</p>';
+        if (window.authManager && window.authManager.getComments) {
+          const result = await window.authManager.getComments(window.currentContentId, window.currentContentType);
+          
+          if (result.success) {
+            displayComments(result.comments);
+          } else {
+            document.getElementById('comment-list').innerHTML = '<p>Failed to load comments</p>';
+          }
         }
       } catch (error) {
         console.error('Error loading comments:', error);
@@ -741,17 +893,19 @@
         const commentText = document.getElementById('comment-text').value.trim();
         if (!commentText) return;
         
-        const result = await window.authManager.addComment(
-          window.currentContentId, 
-          window.currentContentType, 
-          commentText
-        );
-        
-        if (result.success) {
-          document.getElementById('comment-text').value = '';
-          loadComments(); // Reload comments
-        } else {
-          alert('Error: ' + result.error);
+        if (window.authManager && window.authManager.addComment) {
+          const result = await window.authManager.addComment(
+            window.currentContentId, 
+            window.currentContentType, 
+            commentText
+          );
+          
+          if (result.success) {
+            document.getElementById('comment-text').value = '';
+            loadComments(); // Reload comments
+          } else {
+            alert('Error: ' + result.error);
+          }
         }
       } catch (error) {
         console.error('Error submitting comment:', error);
@@ -766,6 +920,7 @@
         <div class="loading-placeholder">
           <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
           <p>${message}</p>
+          <a href="index.html" class="btn" style="margin-top: 20px;">Go Home</a>
         </div>
       `;
       
