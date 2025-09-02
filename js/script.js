@@ -61,34 +61,15 @@ class PegasusApp {
   setupMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    const authButtons = document.querySelector('.auth-buttons');
     
     if (hamburger && navLinks) {
-      // Clone auth buttons for mobile (if they exist)
-      if (authButtons) {
-        const mobileAuthContainer = document.querySelector('.mobile-auth') || 
-                                   document.createElement('div');
-        mobileAuthContainer.className = 'mobile-auth';
-        mobileAuthContainer.innerHTML = authButtons.innerHTML;
-        
-        // Check if mobile auth already exists in nav
-        const existingMobileAuth = navLinks.querySelector('.mobile-auth');
-        if (!existingMobileAuth) {
-          const li = document.createElement('li');
-          li.className = 'mobile-auth-item';
-          li.appendChild(mobileAuthContainer);
-          navLinks.appendChild(li);
-        }
-      }
-      
       // Remove any existing event listeners to avoid duplicates
       const newHamburger = hamburger.cloneNode(true);
       hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
-      // Add click event to hamburger
-      newHamburger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('active');
+      // Add new event listener
+      newHamburger.addEventListener('click', () => {
+        newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         
         // Toggle body scroll when menu is open
