@@ -342,22 +342,24 @@ header.scrolled {
 .slide-content {
   position: absolute;
   bottom: 100px;
-  left: 0;
-  width: 100%;
+  left: 40px;
+  width: auto;
+  max-width: 50%;
   text-align: left;
   z-index: 10;
-  padding: 0 40px;
-  max-width: 60%;
+  padding: 20px;
+  background: rgba(10, 10, 18, 0.7);
+  border-radius: 8px;
 }
 
 .slide-content h2 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-bottom: 15px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .slide-content p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-bottom: 25px;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
 }
@@ -581,19 +583,18 @@ header.scrolled {
   overflow: hidden;
   box-shadow: none;
   margin-bottom: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 56.25vw; /* 16:9 aspect ratio */
-  max-height: 70vh;
-  z-index: 999;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
 }
 
 .video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  position: relative;
+  background: #000;
 }
 
 .video-player video {
@@ -607,9 +608,7 @@ header.scrolled {
 
 .player-info {
   padding: 15px;
-  margin-top: 56.25vw;
-  max-height: 30vh;
-  overflow-y: auto;
+  margin-top: 20px;
 }
 
 .player-title {
@@ -924,16 +923,19 @@ footer {
   max-width: 50%;
   text-align: left;
   z-index: 10;
+  padding: 20px;
+  background: rgba(10, 10, 18, 0.7);
+  border-radius: 8px;
 }
 
 .hero .slide-content h2 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   margin-bottom: 15px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .hero .slide-content p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-bottom: 25px;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
 }
@@ -1011,6 +1013,9 @@ footer {
   left: 40px;
   max-width: 50%;
   text-align: left;
+  padding: 20px;
+  background: rgba(10, 10, 18, 0.7);
+  border-radius: 8px;
 }
 
 .leagues-section {
@@ -1314,6 +1319,7 @@ footer {
     margin-top: 15px;
     padding: 0 15px;
     width: 100%;
+    flex-direction: column;
   }
   
   .mobile-auth .btn {
@@ -1321,6 +1327,7 @@ footer {
     padding: 10px;
     font-size: 12px;
     text-align: center;
+    margin: 5px 0;
   }
   
   .player-wrapper {
@@ -1329,8 +1336,7 @@ footer {
   }
   
   .player-info {
-    margin-top: 56.25vw;
-    max-height: 60vh;
+    margin-top: 20px;
   }
   
   /* Mobile hero adjustments */
@@ -1411,6 +1417,22 @@ footer {
     flex: 0 0 auto;
     width: 85%;
     scroll-snap-align: start;
+  }
+
+  /* Player page mobile adjustments */
+  .player-page .player-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .player-action-btn {
+    justify-content: center;
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .related-content {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1662,6 +1684,9 @@ footer {
   max-width: 60%;
   text-align: left;
   z-index: 10;
+  padding: 20px;
+  background: rgba(10, 10, 18, 0.7);
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
@@ -1741,4 +1766,87 @@ footer {
 .auth-buttons .btn-outline:hover {
   color: black;
   background: white;
+}
+
+/* Leagues carousel */
+.leagues-carousel {
+  position: relative;
+  margin: 40px 0;
+  overflow: hidden;
+}
+
+.leagues-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  gap: 20px;
+}
+
+.league-slide {
+  flex: 0 0 auto;
+  width: 150px;
+  text-align: center;
+}
+
+.league-slide img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.carousel-arrows {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.carousel-arrow {
+  pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.carousel-arrow:hover {
+  background: var(--accent);
+  transform: scale(1.1);
+}
+
+/* Explore page hero without arrows */
+.explore-hero .slider-arrows {
+  display: none;
+}
+
+/* Mobile player fixes */
+.player-page .video-player {
+  position: relative;
+  padding-top: 56.25%;
+}
+
+.player-page .video-player > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Vertical layout for related content on mobile */
+@media (max-width: 768px) {
+  .related-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
