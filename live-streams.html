@@ -262,47 +262,6 @@
   <script>
     // Live streams specific functionality
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize mobile menu
-      const hamburger = document.querySelector('.hamburger');
-      const navLinks = document.querySelector('.nav-links');
-      
-      if (hamburger && navLinks) {
-        // Remove any existing event listeners to avoid duplicates
-        const newHamburger = hamburger.cloneNode(true);
-        hamburger.parentNode.replaceChild(newHamburger, hamburger);
-        
-        newHamburger.addEventListener('click', () => {
-          newHamburger.classList.toggle('active');
-          navLinks.classList.toggle('active');
-          
-          // Toggle body scroll when menu is open
-          if (navLinks.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
-          } else {
-            document.body.style.overflow = '';
-          }
-        });
-        
-        // Close menu when clicking on links
-        const navItems = navLinks.querySelectorAll('a');
-        navItems.forEach(item => {
-          item.addEventListener('click', () => {
-            newHamburger.classList.remove('active');
-            navLinks.classList.remove('active');
-            document.body.style.overflow = '';
-          });
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
-            newHamburger.classList.remove('active');
-            navLinks.classList.remove('active');
-            document.body.style.overflow = '';
-          }
-        });
-      }
-      
       // Set active navigation link
       const currentPage = window.location.pathname.split('/').pop();
       const navLinksAll = document.querySelectorAll('.nav-links a');
@@ -313,11 +272,6 @@
           link.classList.remove('active');
         }
       });
-      
-      // Check auth status
-      if (typeof updateAuthUI === 'function') {
-        updateAuthUI();
-      }
       
       // Add scroll event for header
       window.addEventListener('scroll', function() {
@@ -336,6 +290,9 @@
         document.getElementById('login-wall').style.display = 'block';
         document.getElementById('main-content').style.display = 'none';
       } else {
+        // Show main content
+        document.getElementById('main-content').style.display = 'block';
+        
         // Load live streams content
         loadLiveStreams();
         
@@ -351,7 +308,7 @@
     
     async function loadLiveStreams(filter = 'all') {
       try {
-        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
         const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
         
         if (!token) {
