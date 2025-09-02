@@ -121,43 +121,43 @@
   <div id="main-content">
     <!-- Header -->
     <header>
-      <div class="container">
-        <nav class="navbar">
-          <a href="index.html" class="logo">
-            <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-          </a>
-          
-          <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="live-streams.html" class="active">Live</a></li>
-            <li><a href="vod.html">VOD</a></li>
-            <li><a href="highlights.html">Highlights</a></li>
-            <li><a href="channels.html">Channels</a></li>
-            <li><a href="explore.html">Explore</a></li>
-            
-            <!-- Mobile Auth Buttons -->
-            <li class="mobile-auth-item">
-              <div class="mobile-auth">
-                <a href="signin.html" class="btn btn-outline">Sign In</a>
-                <a href="signup.html" class="btn">Subscribe</a>
-              </div>
-            </li>
-          </ul>
-          
-          <!-- Desktop Auth Buttons -->
-          <div class="auth-buttons" id="auth-buttons">
+  <div class="container">
+    <nav class="navbar">
+      <a href="index.html" class="logo">
+        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="explore.html">Explore</a></li>
+        <li><a href="live-streams.html">Live</a></li>
+        <li><a href="vod.html">VOD</a></li>
+        <li><a href="highlights.html">Highlights</a></li>
+        <li><a href="channels.html">Channels</a></li>
+        
+        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+        <li class="mobile-auth-item">
+          <div class="mobile-auth">
             <a href="signin.html" class="btn btn-outline">Sign In</a>
-            <a href="signup.html" class="btn">Subscribe</a>
+            <a href="signup.html" class="btn subscribe">Subscribe</a>
           </div>
-          
-          <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </nav>
+        </li>
+      </ul>
+      
+      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+      <div class="auth-buttons" id="auth-buttons">
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signup.html" class="btn subscribe">Subscribe</a>
       </div>
-    </header>
+      
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </div>
+</header>
 
     <!-- Hero Banner for Live Streams -->
     <section class="hero" style="height: 60vh; min-height: 400px;">
@@ -430,3 +430,4 @@
   </script>
 </body>
 </html>
+
