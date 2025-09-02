@@ -37,7 +37,7 @@ class PegasusApp {
     const header = document.querySelector('header');
     if (!header) return;
     
-    window.addEventListener('scroll', () {
+    window.addEventListener('scroll', () => {
       if (window.scrollY > 50) {
         header.classList.add('scrolled');
       } else {
@@ -109,7 +109,7 @@ class PegasusApp {
   initHeroSlider() {
     const slides = document.querySelectorAll('.slide');
     const arrows = document.querySelectorAll('.arrow');
-    const progressBar = document.querySelector('.progress-bar');
+    const progressBar = document.querySelector('.mini-progress-bar');
     let currentSlide = 0;
     let slideInterval;
     let progressInterval;
@@ -148,7 +148,9 @@ class PegasusApp {
           showSlide(currentSlide + 1);
         } else {
           width += 0.5; // Adjust speed as needed
-          progressBar.style.width = width + '%';
+          if (progressBar) {
+            progressBar.style.width = width + '%';
+          }
         }
       }, 50);
     }
@@ -192,14 +194,16 @@ class PegasusApp {
     let touchStartX = 0;
     let touchEndX = 0;
     
-    hero.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, false);
-    
-    hero.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    }, false);
+    if (hero) {
+      hero.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, false);
+      
+      hero.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, false);
+    }
     
     function handleSwipe() {
       if (touchEndX < touchStartX - 50) {
@@ -400,5 +404,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.pegasusApp = new PegasusApp();
   } catch (error) {
     console.error('Failed to initialize PegasusApp:', error);
+    // Ensure preloader is hidden even if there's an error
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.classList.add('hide');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }
+    }, 1000);
   }
 });
