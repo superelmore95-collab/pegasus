@@ -143,7 +143,7 @@ class PegasusApp {
     
     function startProgressBar() {
       let width = 0;
-      progressInterval = setInterval(() {
+      progressInterval = setInterval(() => {
         if (width >= 100) {
           clearInterval(progressInterval);
           showSlide(currentSlide + 1);
@@ -307,17 +307,14 @@ class PegasusApp {
           `${item.viewers_count || 0} watching` : 
           `${item.views_count || item.view_count || 0} views`;
         
-        // FIXED: Corrected the ternary operator syntax for premium badge
-        const premiumBadge = (item.requires_premium || item.is_premium) ? 
-          '<div class="premium-badge">PREMIUM</div>' : '';
-        
+        // FIXED: Corrected the template literal syntax error
         card.innerHTML = `
           <div class="card-img">
             <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
                  alt="${item.title || item.name}" 
                  onerror="this.src='https://via.placeholder.com/400x225'">
             ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${premiumBadge}
+            ${item.requires_premium || item.is_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
             <div class="card-content">
               <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
@@ -410,14 +407,12 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (error) {
     console.error('Failed to initialize PegasusApp:', error);
     // Ensure preloader is hidden even if there's an error
-    setTimeout(() => {
-      const preloader = document.getElementById('preloader');
-      if (preloader) {
-        preloader.classList.add('hide');
-        setTimeout(() => {
-          preloader.style.display = 'none';
-        }, 500);
-      }
-    }, 1000);
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.classList.add('hide');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }
   }
 });
