@@ -25,7 +25,6 @@ class AuthManager {
     });
   }
 
-  // New method to update navigation based on authentication status
   updateNavigationBasedOnAuth() {
     const isAuthenticated = this.isAuthenticated();
     document.body.classList.toggle('user-logged-in', isAuthenticated);
@@ -223,9 +222,39 @@ class AuthManager {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
+      // Remove any existing event listeners
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+      
+      newHamburger.addEventListener('click', () => {
+        newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
+        
+        // Toggle body scroll when menu is open
+        if (navLinks.classList.contains('active')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      });
+      
+      // Close menu when clicking on links
+      const navItems = navLinks.querySelectorAll('a');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+          newHamburger.classList.remove('active');
+          navLinks.classList.remove('active');
+          document.body.style.overflow = '';
+        }
       });
     }
   }
@@ -242,7 +271,6 @@ class AuthManager {
       });
       
       if (response.status === 401) {
-        // Token is invalid, clear storage
         this.signOut();
         return false;
       }
@@ -347,7 +375,6 @@ class AuthManager {
     }
   }
 
-  // Comment system methods
   async getComments(contentId, contentType) {
     try {
       const response = await fetch(`${this.API_BASE}/api/comments?contentId=${contentId}&contentType=${contentType}`);
