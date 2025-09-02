@@ -32,40 +32,41 @@ async function loadPlayerContent() {
             headers['Authorization'] = `Bearer ${token}`;
         }
         
-        const response = await fetch(`${API_BASE}/api/content`, { headers });
+        const response = await fetch(`${API_BASE}/api/content/${type}/${id}`, { headers });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Not authenticated - show message
+                showError('Please sign in to access this content');
+                return;
+            } else if (response.status === 403) {
+                // Not authorized - premium content
+                showError('Premium subscription required to access this content');
+                return;
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        }
+        
         const content = await response.json();
         
-        // Find the specific content
-        let contentItem;
-        if (type === 'live') {
-            contentItem = content.live.find(item => item.id == id);
-        } else if (type === 'vod') {
-            contentItem = content.vod.find(item => item.id == id);
-        } else if (type === 'highlight') {
-            contentItem = content.highlights.find(item => item.id == id);
-        } else if (type === 'channel') {
-            contentItem = content.channels.find(item => item.id == id);
-        }
-        
-        if (!contentItem) {
-            throw new Error('Content not found');
-        }
-        
         // Update the page with the content
-        updatePlayerContent(contentItem, type);
+        updatePlayerContent(content, type);
         
         // Load related content
-        loadRelatedContent(type, content);
+        loadRelatedContent(type);
         
         // Check favorite status if user is logged in
         if (window.authManager && window.authManager.isAuthenticated()) {
             checkFavoriteStatus();
         }
         
+        // Hide preloader
+        hidePreloader();
+        
     } catch (error) {
         console.error('Error loading player content:', error);
-        document.getElementById('player-title').textContent = 'Error loading content';
-        document.getElementById('player-status').textContent = 'Content not available';
+        showError('Failed to load content: ' + error.message);
     }
 }
 
@@ -150,12 +151,19 @@ function updatePlayerContent(content, type) {
     // Update player title
     document.getElementById('player-title').textContent = content.title || content.name;
     
+    // Update player description if available
+    if (content.description) {
+        document.getElementById('player-description').textContent = content.description;
+    } else {
+        document.getElementById('player-description').style.display = 'none';
+    }
+    
     // Update player metadata
     if (type === 'live' || (type === 'channel' && content.is_live)) {
-        document.getElementById('player-status').textContent = 'Live';
+        document.getElementById('player-status').textContent = 'LIVE';
         document.getElementById('player-viewers').textContent = `${content.viewers_count || 0} watching`;
     } else {
-        document.getElementById('player-status').textContent = 'On Demand';
+        document.getElementById('player-status').textContent = 'ON DEMAND';
         document.getElementById('player-viewers').textContent = `${content.views_count || content.view_count || 0} views`;
     }
     
@@ -174,6 +182,11 @@ function updatePlayerContent(content, type) {
     if (content.embed_code) {
         // Create wrapper for embed code
         const embedWrapper = document.createElement('div');
+        embedWrapper.style.position = 'absolute';
+        embedWrapper.style.top = '0';
+        embedWrapper.style.left = '0';
+        embedWrapper.style.width = '100%';
+        embedWrapper.style.height = '100%';
         embedWrapper.innerHTML = content.embed_code;
         
         // Make all embedded content responsive
@@ -202,21 +215,27 @@ function updatePlayerContent(content, type) {
         videoPlayer.appendChild(embedWrapper);
     } else if (content.thumbnail || content.thumbnail_url) {
         // Fallback to thumbnail if no embed code
-        videoPlayer.innerHTML += `
-            <div class="thumbnail-fallback">
-                <img src="${content.thumbnail || content.thumbnail_url}" alt="${content.title || content.name}">
-                <div class="play-button-overlay">
-                    <i class="fas fa-play-circle"></i>
-                </div>
+        videoPlayer.innerHTML = `
+          <div class="thumbnail-fallback">
+            <img src="${content.thumbnail || content.thumbnail_url}" alt="${content.title || content.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+            <div class="play-button-overlay">
+              <i class="fas fa-play-circle"></i>
             </div>
+          </div>
         `;
+        
+        // Add click event to play button
+        const playButton = videoPlayer.querySelector('.play-button-overlay');
+        playButton.addEventListener('click', function() {
+            alert('This content would play in a real implementation. In a production environment, this would trigger the actual video player.');
+        });
     } else {
         // Show error if no content available
-        videoPlayer.innerHTML += `
-            <div class="loading-placeholder">
-                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                <p>Content unavailable</p>
-            </div>
+        videoPlayer.innerHTML = `
+          <div class="loading-placeholder">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>Content unavailable</p>
+          </div>
         `;
     }
     
@@ -230,52 +249,97 @@ function updatePlayerContent(content, type) {
 }
 
 // Function to load related content
-function loadRelatedContent(type, content) {
+async function loadRelatedContent(type) {
     const relatedContainer = document.getElementById('related-content');
     
-    let relatedItems = [];
-    if (type === 'live') {
-        relatedItems = content.live.filter(item => item.id != window.location.search.split('=')[1]).slice(0, 4);
-    } else if (type === 'vod') {
-        relatedItems = content.vod.filter(item => item.id != window.location.search.split('=')[1]).slice(0, 4);
-    } else if (type === 'highlight') {
-        relatedItems = content.highlights.filter(item => item.id != window.location.search.split('=')[1]).slice(0, 4);
-    } else if (type === 'channel') {
-        relatedItems = content.channels.filter(item => item.id != window.location.search.split('=')[1]).slice(0, 4);
+    try {
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        // Load all content to filter for related items
+        const response = await fetch(`${API_BASE}/api/content`, { headers });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Store all content for filtering
+        window.allRelatedContent = [];
+        
+        // Combine all content types
+        if (content.live) window.allRelatedContent = window.allRelatedContent.concat(content.live);
+        if (content.vod) window.allRelatedContent = window.allRelatedContent.concat(content.vod);
+        if (content.highlights) window.allRelatedContent = window.allRelatedContent.concat(content.highlights);
+        if (content.channels) window.allRelatedContent = window.allRelatedContent.concat(content.channels);
+        
+        // Filter out current content
+        window.allRelatedContent = window.allRelatedContent.filter(item => 
+            item.id != currentContentId
+        );
+        
+        // Show initial related content
+        filterRelatedContent('all');
+        
+    } catch (error) {
+        console.error('Error loading related content:', error);
+        relatedContainer.innerHTML = '<p class="no-content">Failed to load related content</p>';
     }
+}
+
+// Function to filter related content by type
+function filterRelatedContent(type) {
+    const relatedContainer = document.getElementById('related-content');
     
-    if (relatedItems.length === 0) {
-        relatedContainer.innerHTML = '<p>No related content available</p>';
+    if (!window.allRelatedContent || window.allRelatedContent.length === 0) {
+        relatedContainer.innerHTML = '<p class="no-content">No related content found.</p>';
         return;
     }
     
-    // Clear previous content
-    relatedContainer.innerHTML = '';
+    let filteredContent = window.allRelatedContent;
     
-    // Add related content
-    relatedItems.forEach(item => {
-        const itemType = item.is_live ? 'live' : (item.type || 'vod');
-        const card = document.createElement('a');
-        card.href = `player.html?type=${itemType}&id=${item.id}`;
-        card.className = 'stream-card';
-        
-        card.innerHTML = `
-            <div class="card-img">
-                <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
-                ${itemType === 'live' ? '<div class="live-badge">LIVE</div>' : ''}
-                ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-                <div class="card-content">
-                  <h3 class="card-title">${item.title || item.name}</h3>
-                  <div class="card-meta">
-                    <span>${item.category || 'Sports'}</span>
-                    <span class="card-views">${itemType === 'live' ? `${item.viewers_count || 0} watching` : `${item.views_count || item.view_count || 0} views`}</span>
-                  </div>
-                </div>
-            </div>
-        `;
-        
-        relatedContainer.appendChild(card);
-    });
+    if (type !== 'all') {
+        filteredContent = window.allRelatedContent.filter(item => {
+            if (type === 'live') return item.is_live;
+            if (type === 'vod') return !item.is_live && item.type !== 'highlight';
+            if (type === 'highlight') return item.type === 'highlight';
+            return true;
+        });
+    }
+    
+    if (filteredContent.length > 0) {
+        relatedContainer.innerHTML = filteredContent.map(item => {
+            const isLive = item.is_live || false;
+            const itemType = isLive ? 'live' : (item.type || 'vod');
+            return `
+                <a href="player.html?type=${itemType}&id=${item.id}" class="stream-card">
+                    <div class="card-img">
+                        <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                             alt="${item.title || item.name}" 
+                             onerror="this.src='https://via.placeholder.com/400x225'">
+                        ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                        ${item.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${item.title || item.name}</h3>
+                        <div class="card-meta">
+                            <span>${item.category || 'Sports'}</span>
+                            <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }).join('');
+    } else {
+        relatedContainer.innerHTML = '<p class="no-content">No related content found for this category.</p>';
+    }
 }
 
 // Initialize player when page loads
@@ -334,48 +398,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Function to filter related content by type
-function filterRelatedContent(type) {
-    const relatedContainer = document.getElementById('related-content');
+// Show error message
+function showError(message) {
+    const videoPlayer = document.getElementById('video-player');
+    videoPlayer.innerHTML = `
+        <div class="loading-placeholder">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>${message}</p>
+            <a href="index.html" class="btn" style="margin-top: 20px;">Go Home</a>
+        </div>
+    `;
     
-    if (!window.allRelatedContent || window.allRelatedContent.length === 0) {
-        relatedContainer.innerHTML = '<p>No related content found.</p>';
-        return;
-    }
-    
-    let filteredContent = window.allRelatedContent;
-    
-    if (type !== 'all') {
-        filteredContent = window.allRelatedContent.filter(item => {
-            if (type === 'live') return item.is_live;
-            if (type === 'vod') return !item.is_live && item.type !== 'highlight';
-            if (type === 'highlight') return item.type === 'highlight';
-            return true;
-        });
-    }
-    
-    if (filteredContent.length > 0) {
-        relatedContainer.innerHTML = filteredContent.map(item => {
-            const isLive = item.is_live || false;
-            const itemType = isLive ? 'live' : (item.type || 'vod');
-            return `
-                <a href="player.html?type=${itemType}&id=${item.id}" class="stream-card">
-                    <div class="card-img">
-                        <img src="${item.thumbnail || item.thumbnail_url}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/400x225'">
-                        ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-                        <div class="content-type-badge content-type-${itemType}">${itemType.toUpperCase()}</div>
-                        <div class="card-content">
-                          <h3 class="card-title">${item.title || item.name}</h3>
-                          <div class="card-meta">
-                            <span>${item.category || 'Sports'}</span>
-                            <span class="card-views">${item.views_count || item.viewers_count || 0} ${isLive ? 'watching' : 'views'}</span>
-                          </div>
-                        </div>
-                    </div>
-                </a>
-            `;
-        }).join('');
-    } else {
-        relatedContainer.innerHTML = '<p>No related content found for this category.</p>';
-    }
+    // Hide preloader
+    hidePreloader();
+}
+
+// Hide preloader
+function hidePreloader() {
+    setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if (preloader) {
+            preloader.classList.add('hide');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        }
+    }, 500);
 }
