@@ -73,7 +73,8 @@ class PegasusApp {
       hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
       // Add new event listener
-      newHamburger.addEventListener('click', () => {
+      newHamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
         newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         
@@ -312,7 +313,7 @@ class PegasusApp {
                  alt="${item.title || item.name}" 
                  onerror="this.src='https://via.placeholder.com/400x225'">
             ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${item.requires_premium || item.is_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+            ${item.requires_premium || item.is_premium ? '<div class='premium-badge'>PREMIUM</div>' : ''}
             <div class="card-content">
               <h3 class="card-title">${item.title || item.name}</h3>
               <div class="card-meta">
