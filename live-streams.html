@@ -78,74 +78,19 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    /* DAZN-style header */
-    header {
-      background: transparent;
-      transition: all 0.3s ease;
+    
+    .filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     
-    header.scrolled {
-      background: rgba(10, 10, 18, 0.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Hero banner styles */
-    .content-hero {
-      height: 50vh;
-      min-height: 400px;
-      position: relative;
-      overflow: hidden;
-      margin-top: 60px;
-    }
-    
-    .content-hero .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    
-    .content-hero .slide-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
-    }
-    
-    .content-hero .slide-content {
-      position: absolute;
-      bottom: 60px;
-      left: 40px;
-      max-width: 60%;
-      text-align: left;
-      z-index: 10;
-    }
-    
-    @media (max-width: 768px) {
-      .content-hero {
-        height: 40vh;
-        min-height: 300px;
-      }
-      
-      .content-hero .slide-content {
-        max-width: 90%;
-        left: 20px;
-        bottom: 40px;
-        text-align: center;
-      }
-      
-      .content-hero .btn {
-        width: 100%;
-        max-width: 300px;
-      }
+    .filter select {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 12px;
+      border-radius: 4px;
     }
   </style>
 </head>
@@ -163,7 +108,7 @@
     <div class="login-wall-overlay">
       <div class="login-wall-content">
         <h2>Content Restricted</h2>
-        <p>You need to be logged in to access live streams</p>
+        <p>You need to be logged in to access this content</p>
         <div class="login-wall-buttons">
           <a href="signin.html?redirect=live-streams.html" class="btn">Sign In</a>
           <a href="signup.html?redirect=live-streams.html" class="btn btn-outline">Create Account</a>
@@ -182,63 +127,51 @@
             <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
           </a>
           
-          <div class="nav-container">
-            <ul class="nav-links">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="explore.html">Explore</a></li>
-              <li><a href="live-streams.html" class="active">Live</a></li>
-              <li><a href="vod.html">VOD</a></li>
-              <li><a href="highlights.html">Highlights</a></li>
-              <li><a href="channels.html">Channels</a></li>
-            </ul>
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live-streams.html" class="active">Live</a></li>
+            <li><a href="vod.html">VOD</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+            <li><a href="explore.html">Explore</a></li>
             
-            <div class="auth-buttons" id="auth-buttons">
-              <a href="signin.html" class="btn btn-outline">Sign In</a>
-              <a href="signup.html" class="btn subscribe">Subscribe</a>
-            </div>
+            <!-- Mobile Auth Buttons -->
+            <li class="mobile-auth-item">
+              <div class="mobile-auth">
+                <a href="signin.html" class="btn btn-outline">Sign In</a>
+                <a href="signup.html" class="btn">Subscribe</a>
+              </div>
+            </li>
+          </ul>
+          
+          <!-- Desktop Auth Buttons -->
+          <div class="auth-buttons" id="auth-buttons">
+            <a href="signin.html" class="btn btn-outline">Sign In</a>
+            <a href="signup.html" class="btn">Subscribe</a>
           </div>
           
-          <div class="hamburger-menu">
-            <div class="hamburger" id="hamburger">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            
-            <div class="mobile-menu" id="mobile-menu">
-              <ul class="mobile-nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="explore.html">Explore</a></li>
-                <li><a href="live-streams.html" class="active">Live</a></li>
-                <li><a href="vod.html">VOD</a></li>
-                <li><a href="highlights.html">Highlights</a></li>
-                <li><a href="channels.html">Channels</a></li>
-              </ul>
-              
-              <div class="mobile-auth-buttons" id="mobile-auth-buttons">
-                <a href="signin.html" class="btn btn-outline">Sign In</a>
-                <a href="signup.html" class="btn subscribe">Subscribe</a>
-              </div>
-            </div>
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </nav>
       </div>
     </header>
 
     <!-- Hero Banner for Live Streams -->
-    <section class="content-hero">
+    <section class="hero" style="height: 60vh; min-height: 400px;">
       <div style="background-image: url('images/live-banner.jpg');" class="slide active">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <h2>Live Sports Streaming</h2>
           <p>Watch your favorite sports live as they happen</p>
-          <a href="#live-content" class="btn">Watch Now</a>
         </div>
       </div>
     </section>
 
     <!-- Live Streams Section -->
-    <section class="section" id="live-content">
+    <section class="section">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Live & Upcoming</h2>
@@ -254,7 +187,7 @@
           </div>
         </div>
         
-        <div class="stream-grid" id="live-container">
+        <div class="stream-grid" id="live-content">
           <div class="loading-placeholder">
             <div class="loading-spinner"></div>
             <p>Loading live streams...</p>
@@ -318,26 +251,43 @@
     </footer>
   </div>
 
+  <!-- In all HTML files, add this first -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
   <script>
     // Live streams specific functionality
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize auth manager
-      if (typeof window.authManager === 'undefined') {
-        // Create a basic fallback
-        window.authManager = {
-          isAuthenticated: () => {
-            const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
-            return !!token;
-          },
-          getToken: () => localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token')
-        };
+      // Initialize mobile menu
+      const hamburger = document.querySelector('.hamburger');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('active');
+          navLinks.classList.toggle('active');
+        });
+      }
+      
+      // Set active navigation link
+      const currentPage = window.location.pathname.split('/').pop();
+      const navLinksAll = document.querySelectorAll('.nav-links a');
+      navLinksAll.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+      
+      // Check auth status
+      if (typeof updateAuthUI === 'function') {
+        updateAuthUI();
       }
       
       // Check if user is authenticated
-      if (!window.authManager.isAuthenticated()) {
+      const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
+      if (!token) {
         // Show login wall for protected content
         document.getElementById('login-wall').style.display = 'block';
         document.getElementById('main-content').style.display = 'none';
@@ -353,22 +303,12 @@
           });
         }
       }
-      
-      // Add scroll event for header
-      window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-      });
     });
     
     async function loadLiveStreams(filter = 'all') {
       try {
-        const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
-        const token = window.authManager.getToken();
+        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+        const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
         
         if (!token) {
           throw new Error('No authentication token found');
@@ -396,66 +336,69 @@
         }
         
         const content = await response.json();
-        const liveStreams = content.live || [];
+        let liveStreams = content.live || [];
         
         // Update the content section
-        updateLiveContainer(liveStreams);
+        updateLiveContentSection(liveStreams);
         
       } catch (error) {
         console.error('Error loading live streams:', error);
-        // Fallback to sample content
-        loadSampleLiveStreams();
+        // Fallback to hardcoded content
+        loadFallbackLiveStreams();
       }
     }
     
-    function updateLiveContainer(streams) {
-      const container = document.getElementById('live-container');
+    function updateLiveContentSection(streams) {
+      const contentSection = document.getElementById('live-content');
       
-      if (!container) {
-        console.warn('Live container not found');
+      if (!contentSection) {
+        console.warn('Live content section not found');
         return;
       }
       
       // Clear loading state
-      container.innerHTML = '';
+      contentSection.innerHTML = '';
       
       if (!streams || streams.length === 0) {
-        container.innerHTML = '<p class="no-content">No live streams available at the moment.</p>';
+        contentSection.innerHTML = '<p class="no-content">No live streams available at the moment.</p>';
         return;
       }
       
       // Add content items
       streams.forEach(stream => {
-        const card = document.createElement('a');
-        card.href = `player.html?type=live&id=${stream.id}`;
-        card.className = 'stream-card';
-        
-        const isLive = stream.is_live;
-        const viewersText = isLive ? `${stream.viewers_count || 0} watching` : 'Upcoming';
-        
-        card.innerHTML = `
-          <div class="card-img">
-            <img src="${stream.thumbnail || stream.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
-                 alt="${stream.title || stream.name}" 
-                 onerror="this.src='https://via.placeholder.com/400x225'">
-            ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-            ${stream.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
-          </div>
-          <div class="card-content">
-            <h3 class="card-title">${stream.title || stream.name}</h3>
-            <div class="card-meta">
-              <span>${stream.category || 'Sports'}</span>
-              <span class="card-views">${viewersText}</span>
-            </div>
-          </div>
-        `;
-        
-        container.appendChild(card);
+        const card = createLiveStreamCard(stream);
+        contentSection.appendChild(card);
       });
     }
     
-    function loadSampleLiveStreams() {
-      const sampleStreams = [
+    function createLiveStreamCard(stream) {
+      const card = document.createElement('a');
+      card.href = `player.html?type=live&id=${stream.id}`;
+      card.className = 'stream-card';
+      
+      const isLive = stream.is_live;
+      const viewersText = isLive ? `${stream.viewers_count || 0} watching` : 'Upcoming';
+      
+      card.innerHTML = `
+        <div class="card-img">
+          <img src="${stream.thumbnail}" alt="${stream.title}" onerror="this.src='https://via.placeholder.com/400x225'">
+          ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+          ${stream.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${stream.title}</h3>
+          <div class="card-meta">
+            <span>${stream.category || 'Sports'}</span>
+            <span class="card-views">${viewersText}</span>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+    
+    function loadFallbackLiveStreams() {
+      const fallbackStreams = [
         {
           id: 1,
           title: "Manchester United vs Liverpool",
@@ -482,7 +425,7 @@
         }
       ];
       
-      updateLiveContainer(sampleStreams);
+      updateLiveContentSection(fallbackStreams);
     }
   </script>
 </body>
