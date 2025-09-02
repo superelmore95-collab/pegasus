@@ -59,47 +59,47 @@ class PegasusApp {
   }
 
   setupMobileMenu() {
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  
+  if (hamburger && navLinks) {
+    // Remove any existing event listeners to avoid duplicates
+    const newHamburger = hamburger.cloneNode(true);
+    hamburger.parentNode.replaceChild(newHamburger, hamburger);
     
-    if (hamburger && navLinks) {
-      // Remove any existing event listeners to avoid duplicates
-      const newHamburger = hamburger.cloneNode(true);
-      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+    // Add new event listener
+    newHamburger.addEventListener('click', () => {
+      newHamburger.classList.toggle('active');
+      navLinks.classList.toggle('active');
       
-      // Add new event listener
-      newHamburger.addEventListener('click', () => {
-        newHamburger.classList.toggle('active');
-        navLinks.classList.toggle('active');
-        
-        // Toggle body scroll when menu is open
-        if (navLinks.classList.contains('active')) {
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.body.style.overflow = '';
-        }
+      // Toggle body scroll when menu is open
+      if (navLinks.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // Close menu when clicking on links
+    const navItems = navLinks.querySelectorAll('a');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        newHamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.style.overflow = '';
       });
-      
-      // Close menu when clicking on links
-      const navItems = navLinks.querySelectorAll('a');
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          newHamburger.classList.remove('active');
-          navLinks.classList.remove('active');
-          document.body.style.overflow = '';
-        });
-      });
-      
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
-          newHamburger.classList.remove('active');
-          navLinks.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-    }
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+        newHamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
   }
+}
 
   initHeroSlider() {
     const slides = document.querySelectorAll('.slide');
