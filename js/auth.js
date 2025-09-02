@@ -9,7 +9,6 @@ class AuthManager {
     this.updateAuthUI();
     this.setupEventListeners();
     this.setupScrollHeader();
-    this.updateNavigationBasedOnAuth();
   }
 
   setupScrollHeader() {
@@ -21,20 +20,6 @@ class AuthManager {
         header.classList.add('scrolled');
       } else {
         header.classList.remove('scrolled');
-      }
-    });
-  }
-
-  updateNavigationBasedOnAuth() {
-    const isAuthenticated = this.isAuthenticated();
-    document.body.classList.toggle('user-logged-in', isAuthenticated);
-    
-    const navLinks = document.querySelectorAll('.nav-links');
-    navLinks.forEach(nav => {
-      if (nav.classList.contains('hidden-for-guests')) {
-        nav.style.display = isAuthenticated ? 'flex' : 'none';
-      } else if (nav.classList.contains('visible-for-guests')) {
-        nav.style.display = isAuthenticated ? 'none' : 'flex';
       }
     });
   }
@@ -69,7 +54,6 @@ class AuthManager {
         }
         
         this.updateAuthUI();
-        this.updateNavigationBasedOnAuth();
         return { success: true, data };
       } else {
         return { success: false, error: data.error || 'Authentication failed' };
@@ -102,7 +86,6 @@ class AuthManager {
         localStorage.setItem('pegasus_user', JSON.stringify(data.user));
         localStorage.setItem('pegasus_token', data.token);
         this.updateAuthUI();
-        this.updateNavigationBasedOnAuth();
         return { success: true, data };
       } else {
         return { success: false, error: data.error || 'Registration failed' };
@@ -132,7 +115,6 @@ class AuthManager {
     localStorage.removeItem('pegasus_token');
     localStorage.removeItem('pegasus_expiration');
     this.updateAuthUI();
-    this.updateNavigationBasedOnAuth();
     window.location.href = 'index.html';
   }
 
@@ -190,7 +172,8 @@ class AuthManager {
       }
       
       if (userMenuBtn && userDropdown) {
-        userMenuBtn.addEventListener('click', () => {
+        userMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
           userDropdown.classList.toggle('show');
         });
         
@@ -226,7 +209,8 @@ class AuthManager {
       const newHamburger = hamburger.cloneNode(true);
       hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
-      newHamburger.addEventListener('click', () => {
+      newHamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
         newHamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
         
