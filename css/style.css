@@ -1161,8 +1161,9 @@ footer {
   
   .nav-links a {
     display: block;
-    padding: 10px 0;
+    padding: 15px 0;
     font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   
   .hamburger {
@@ -1215,6 +1216,39 @@ footer {
     transform: rotate(-135deg);
   }
   
+  /* Mobile user menu styles */
+  .nav-links .user-menu {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .nav-links .user-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  .nav-links .user-dropdown {
+    position: static;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+    display: none;
+    margin-top: 10px;
+  }
+  
+  .nav-links .user-dropdown.show {
+    display: block;
+  }
+  
+  .nav-links .user-dropdown a {
+    padding: 12px;
+    font-size: 14px;
+    justify-content: center;
+  }
+  
   .slide-content {
     left: 15px;
     bottom: 60px;
@@ -1239,17 +1273,17 @@ footer {
   .mobile-auth {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
+    gap: 15px;
+    margin-top: 20px;
     padding: 0 15px;
     width: 100%;
+    flex-direction: column;
   }
   
   .mobile-auth .btn {
-    flex: 1;
-    padding: 10px;
-    font-size: 12px;
+    width: 100%;
     text-align: center;
+    margin: 5px 0;
   }
   
   .player-wrapper {
