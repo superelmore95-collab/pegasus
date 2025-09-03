@@ -2,6 +2,7 @@
 class PegasusApp {
   constructor() {
     this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+    this.mobileMenuInitialized = false;
     this.init();
   }
 
@@ -59,47 +60,125 @@ class PegasusApp {
   }
 
   setupMobileMenu() {
-  const hamburger = document.querySelector('.hamburger');
-  const navLinks = document.querySelector('.nav-links');
-  
-  if (hamburger && navLinks) {
-    // Remove any existing event listeners to avoid duplicates
-    const newHamburger = hamburger.cloneNode(true);
-    hamburger.parentNode.replaceChild(newHamburger, hamburger);
+    // Only initialize once to prevent conflicts
+    if (this.mobileMenuInitialized) return;
     
-    // Add new event listener
-    newHamburger.addEventListener('click', () => {
-      newHamburger.classList.toggle('active');
-      navLinks.classList.toggle('active');
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+      // Remove any existing event listeners to avoid duplicates
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
       
-      // Toggle body scroll when menu is open
-      if (navLinks.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-    });
-    
-    // Close menu when clicking on links
-    const navItems = navLinks.querySelectorAll('a');
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        newHamburger.classList.remove('active');
-        navLinks.classList.remove('active');
-        document.body.style.overflow = '';
+      // Add new event listener
+      newHamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleMobileMenu();
       });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
-        newHamburger.classList.remove('active');
-        navLinks.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
+      
+      // Close menu when clicking on links
+      const navItems = navLinks.querySelectorAll('a');
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          this.closeMobileMenu();
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+          this.closeMobileMenu();
+        }
+      });
+      
+      this.mobileMenuInitialized = true;
+    }
   }
-}
+
+  toggleMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('active');
+    
+    // Toggle body scroll when menu is open
+    if (navLinks.classList.contains('active')) {
+      document.body.style.overflow = 'hidden';
+      this.updateMobileAuthUI();
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
+  closeMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    hamburger.classList.remove('active');
+    navLinks.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  updateMobileAuthUI() {
+    const mobileAuth = document.querySelector('.mobile-auth');
+    if (!mobileAuth) return;
+    
+    const user = this.getCurrentUser();
+    
+    if (user) {
+      // User is logged in - show user menu
+      mobileAuth.innerHTML = `
+        <div class="user-menu-mobile">
+          <a href="profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+          <a href="favorites.html" class="btn btn-outline"><i class="fas fa-heart"></i> Favorites</a>
+          ${user.role === 'admin' ? '<a href="admin.html" class="btn btn-outline"><i class="fas fa-cog"></i> Admin</a>' : ''}
+          <button class="btn btn-outline" id="mobile-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      `;
+      
+      // Add logout event
+      const logoutBtn = document.getElementById('mobile-logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          this.signOut();
+        });
+      }
+    } else {
+      // User is not logged in - show sign in/up buttons
+      mobileAuth.innerHTML = `
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
+      `;
+    }
+  }
+
+  getCurrentUser() {
+    try {
+      const userStr = localStorage.getItem('pegasus_user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      console.error('Error getting current user:', error);
+      return null;
+    }
+  }
+
+  signOut() {
+    localStorage.removeItem('pegasus_user');
+    localStorage.removeItem('pegasus_token');
+    localStorage.removeItem('pegasus_expiration');
+    this.closeMobileMenu();
+    this.updateMobileAuthUI();
+    
+    // Update the desktop UI as well
+    if (window.authManager) {
+      window.authManager.updateAuthUI();
+    }
+    
+    // Reload the page to reflect changes
+    window.location.reload();
+  }
 
   initHeroSlider() {
     const slides = document.querySelectorAll('.slide');
