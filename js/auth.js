@@ -1,4 +1,4 @@
-// auth.js - Enhanced Authentication System
+// auth.js - Enhanced Authentication System with Redirect Fix
 class AuthManager {
   constructor() {
     this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
@@ -29,8 +29,13 @@ class AuthManager {
     if (this.isAuthenticated()) {
       // Check if we're on auth pages
       const currentPage = window.location.pathname.split('/').pop();
-      if (currentPage === 'signin.html' || currentPage === 'signup.html') {
-        window.location.href = 'profile.html';
+      const isAuthPage = currentPage === 'signin.html' || currentPage === 'signup.html';
+      
+      if (isAuthPage) {
+        // Use a small timeout to ensure all initialization is complete
+        setTimeout(() => {
+          window.location.href = 'profile.html';
+        }, 100);
       }
     }
   }
