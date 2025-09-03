@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In | PEGASUS</title>
+  <title>Sign In | PEGASUS Sports Streaming</title>
   <link rel="stylesheet" href="css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -136,6 +136,19 @@
     .social-btn.facebook {
       color: #4267B2;
     }
+    
+    .password-toggle {
+      position: relative;
+    }
+    
+    .password-toggle-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
   </style>
 </head>
 <body>
@@ -192,9 +205,12 @@
             <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
           </div>
           
-          <div class="form-group">
+          <div class="form-group password-toggle">
             <label for="password">Password</label>
             <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <span class="password-toggle-icon" id="password-toggle">
+              <i class="far fa-eye"></i>
+            </span>
           </div>
           
           <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
@@ -286,18 +302,34 @@
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script>
-    // Immediate redirect check for auth pages
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already authenticated
-    const user = localStorage.getItem('pegasus_user');
-    const token = localStorage.getItem('pegasus_token');
-    
-    if (user && token) {
-      // User is authenticated, redirect to profile
-      window.location.href = 'profile.html';
-    }
-    // Initialize when page loads
+    // Immediate redirect check for authenticated users :cite[2]:cite[7]
     document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is already authenticated
+      const user = localStorage.getItem('pegasus_user');
+      const token = localStorage.getItem('pegasus_token');
+      
+      if (user && token) {
+        // User is authenticated, redirect to profile :cite[2]:cite[7]
+        window.location.replace('profile.html');
+        return;
+      }
+      
+      // Initialize password toggle
+      const passwordToggle = document.getElementById('password-toggle');
+      const passwordInput = document.getElementById('password');
+      
+      if (passwordToggle && passwordInput) {
+        passwordToggle.addEventListener('click', function() {
+          if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordToggle.innerHTML = '<i class="far fa-eye-slash"></i>';
+          } else {
+            passwordInput.type = 'password';
+            passwordToggle.innerHTML = '<i class="far fa-eye"></i>';
+          }
+        });
+      }
+      
       // Hide preloader
       setTimeout(() => {
         const preloader = document.getElementById('preloader');
@@ -332,6 +364,12 @@
           const password = document.getElementById('password').value;
           const rememberMe = document.getElementById('remember').checked;
           
+          // Basic validation
+          if (!email || !password) {
+            showMessage('Please fill in all fields', 'error');
+            return;
+          }
+          
           // Use the AuthManager from auth.js
           if (window.authManager) {
             const result = await window.authManager.signIn(email, password, rememberMe);
@@ -343,12 +381,12 @@
               setTimeout(() => {
                 const user = window.authManager.getCurrentUser();
                 if (user && user.role === 'admin') {
-                  window.location.href = 'admin.html';
+                  window.location.replace('admin.html');
                 } else {
                   // Check for redirect parameter
                   const urlParams = new URLSearchParams(window.location.search);
                   const redirect = urlParams.get('redirect');
-                  window.location.href = redirect || 'explore.html';
+                  window.location.replace(redirect || 'explore.html');
                 }
               }, 1500);
             } else {
