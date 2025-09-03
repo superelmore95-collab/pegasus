@@ -1,4 +1,4 @@
-// auth-wall.js - Professional Content Restriction System
+// auth-wall.js - Professional Content Restriction System with Enhanced Redirect
 const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
 
 class AuthWall {
@@ -6,6 +6,21 @@ class AuthWall {
     this.loginWall = document.getElementById('login-wall');
     this.protectedSections = document.querySelectorAll('.protected-content');
     this.initLoginWall();
+    this.checkImmediateRedirect();
+  }
+  
+  // Check for immediate redirect on auth pages
+  checkImmediateRedirect() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const isAuthPage = currentPage === 'signin.html' || currentPage === 'signup.html';
+    
+    if (isAuthPage && this.isAuthenticated()) {
+      // Immediate redirect without showing login wall
+      window.location.href = 'profile.html';
+      return;
+    }
+    
+    this.init();
   }
   
   // Initialize professional login wall
@@ -267,7 +282,6 @@ class AuthWall {
 // Initialize auth wall when page loads
 document.addEventListener('DOMContentLoaded', async () => {
   window.authWall = new AuthWall();
-  await window.authWall.init();
   
   // If protected content needs to be loaded after authentication
   if (await window.authWall.init()) {
