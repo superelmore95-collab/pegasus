@@ -8,7 +8,7 @@ class PegasusApp {
 
   init() {
     this.hidePreloader();
-    this.initMobileMenuOnAllPages();
+    this.initMobileMenu();
     this.setupScrollHeader();
     
     // Initialize components based on page
@@ -31,13 +31,6 @@ class PegasusApp {
     // Add this line to load channels
     if (document.getElementById('channels-content')) {
       this.loadContent('channel', 'channels-content', 'all', 4);
-    }
-  }
-
-  initMobileMenuOnAllPages() {
-    // Check if we're on a page that already initializes the menu
-    if (!this.mobileMenuInitialized) {
-      this.setupMobileMenu();
     }
   }
 
@@ -66,7 +59,7 @@ class PegasusApp {
     }, 1000);
   }
 
-  setupMobileMenu() {
+  initMobileMenu() {
     // Only initialize once to prevent conflicts
     if (this.mobileMenuInitialized) return;
     
