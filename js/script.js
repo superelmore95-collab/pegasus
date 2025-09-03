@@ -8,7 +8,7 @@ class PegasusApp {
 
   init() {
     this.hidePreloader();
-    this.setupMobileMenu();
+    this.initMobileMenuOnAllPages();
     this.setupScrollHeader();
     
     // Initialize components based on page
@@ -31,6 +31,13 @@ class PegasusApp {
     // Add this line to load channels
     if (document.getElementById('channels-content')) {
       this.loadContent('channel', 'channels-content', 'all', 4);
+    }
+  }
+
+  initMobileMenuOnAllPages() {
+    // Check if we're on a page that already initializes the menu
+    if (!this.mobileMenuInitialized) {
+      this.setupMobileMenu();
     }
   }
 
@@ -334,7 +341,11 @@ class PegasusApp {
       // Handle non-JSON responses
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        throw new Error(`Server returned non-JSON response: ${response.status} ${response.statusText}`);
+        const text = await response.text();
+        return { 
+          success: false, 
+          error: text || `Server error: ${response.status} ${response.statusText}` 
+        };
       }
       
       if (!response.ok) {
