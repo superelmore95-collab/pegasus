@@ -347,34 +347,6 @@ header.scrolled {
   text-align: center;
 }
 
-/* Mobile menu user section */
-.mobile-user-menu {
-  display: none;
-  flex-direction: column;
-  padding: 15px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mobile-user-menu a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 0;
-  color: var(--text);
-  text-decoration: none;
-  transition: var(--transition);
-  font-size: 14px;
-}
-
-.mobile-user-menu a i {
-  width: 20px;
-  text-align: center;
-}
-
-.mobile-user-menu a:hover {
-  color: var(--accent);
-}
-
 /* ===== HERO SECTION - DAZN STYLE ===== */
 .hero {
   height: 80vh;
@@ -1277,11 +1249,6 @@ footer {
     padding: 10px;
     font-size: 12px;
     text-align: center;
-  }
-  
-  /* Show mobile user menu */
-  .mobile-user-menu {
-    display: flex;
   }
   
   .player-wrapper {
