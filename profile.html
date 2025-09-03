@@ -8,10 +8,40 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Loading overlay for immediate authentication check */
+    #auth-check-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    
+    .auth-check-content {
+      text-align: center;
+      color: white;
+    }
+    
+    .auth-check-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
     .profile-container {
       padding: 40px 0;
       max-width: 1000px;
       margin: 0 auto;
+      display: none; /* Hidden by default until auth check */
     }
     
     .profile-header {
@@ -250,46 +280,54 @@
   </style>
 </head>
 <body>
+  <!-- Authentication check overlay -->
+  <div id="auth-check-overlay">
+    <div class="auth-check-content">
+      <div class="auth-check-spinner"></div>
+      <p>Checking authentication status...</p>
+    </div>
+  </div>
+
   <!-- Header -->
   <header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="explore.html">Explore</a></li>
-        <li><a href="live-streams.html">Live</a></li>
-        <li><a href="vod.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+        </a>
         
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
-            <!-- This will be populated by JavaScript -->
-          </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons" id="auth-buttons">
-        <!-- This will be populated by JavaScript -->
-      </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </div>
-</header>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          <li><a href="live-streams.html">Live</a></li>
+          <li><a href="vod.html">VOD</a></li>
+          <li><a href="highlights.html">Highlights</a></li>
+          <li><a href="channels.html">Channels</a></li>
+          
+          <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+          <li class="mobile-auth-item">
+            <div class="mobile-auth">
+              <!-- This will be populated by JavaScript -->
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+        <div class="auth-buttons" id="auth-buttons">
+          <!-- This will be populated by JavaScript -->
+        </div>
+        
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </div>
+  </header>
 
-  <!-- Profile Section -->
-  <section class="profile-container">
+  <!-- Profile Section (Hidden until auth check) -->
+  <section class="profile-container" id="profile-container">
     <div class="container">
       <div class="profile-header">
         <div class="profile-avatar" id="profile-avatar">U</div>
@@ -584,8 +622,29 @@
     // API base URL
     const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
     
-    // Wait for authManager to initialize
+    // Immediate authentication check
     document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is authenticated
+      const user = localStorage.getItem('pegasus_user');
+      const token = localStorage.getItem('pegasus_token');
+      
+      if (!user || !token) {
+        // Redirect to signin page immediately
+        window.location.href = 'signin.html?redirect=profile.html';
+        return;
+      }
+      
+      // User is authenticated, show the profile content
+      document.getElementById('profile-container').style.display = 'block';
+      document.getElementById('auth-check-overlay').style.display = 'none';
+      
+      // Initialize the rest of the profile functionality
+      initializeProfile();
+    });
+    
+    // Initialize profile functionality
+    function initializeProfile() {
+      // Wait for authManager to initialize
       const checkAuth = setInterval(() => {
         if (window.authManager) {
           clearInterval(checkAuth);
@@ -651,7 +710,7 @@
           document.querySelector(`[data-tab-content="${tabName}"]`).classList.add('active');
         });
       });
-    });
+    }
     
     // Load user profile from API
     async function loadUserProfile() {
