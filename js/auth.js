@@ -275,7 +275,7 @@ class AuthManager {
       const token = this.getToken();
       if (!token) return { success: false, error: 'Not authenticated' };
       
-      const response = await fetch(`${this.API_BASE}/api/favorites/${favoriteId}, {
+      const response = await fetch(`${this.API_BASE}/api/favorites/${favoriteId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
