@@ -8,6 +8,7 @@ class AuthManager {
   init() {
     this.updateAuthUI();
     this.setupScrollHeader();
+    this.checkRedirect(); // Check if we need to redirect from auth pages
   }
 
   setupScrollHeader() {
@@ -21,6 +22,17 @@ class AuthManager {
         header.classList.remove('scrolled');
       }
     });
+  }
+
+  // Check if we need to redirect from auth pages
+  checkRedirect() {
+    if (this.isAuthenticated()) {
+      // Check if we're on auth pages
+      const currentPage = window.location.pathname.split('/').pop();
+      if (currentPage === 'signin.html' || currentPage === 'signup.html') {
+        window.location.href = 'profile.html';
+      }
+    }
   }
 
   async signIn(email, password, remember) {
@@ -263,7 +275,7 @@ class AuthManager {
       const token = this.getToken();
       if (!token) return { success: false, error: 'Not authenticated' };
       
-      const response = await fetch(`${this.API_BASE}/api/favorites/${favoriteId}`, {
+      const response = await fetch(`${this.API_BASE}/api/favorites/${favoriteId}, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
