@@ -8,7 +8,7 @@ class AuthManager {
   init() {
     this.updateAuthUI();
     this.setupScrollHeader();
-    this.setupMobileMenu();
+    // Don't setup mobile menu here to avoid conflicts
   }
 
   setupScrollHeader() {
@@ -22,49 +22,6 @@ class AuthManager {
         header.classList.remove('scrolled');
       }
     });
-  }
-
-  setupMobileMenu() {
-    const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    
-    if (hamburger && navLinks) {
-      // Remove any existing event listeners to avoid duplicates
-      const newHamburger = hamburger.cloneNode(true);
-      hamburger.parentNode.replaceChild(newHamburger, hamburger);
-      
-      // Add new event listener
-      newHamburger.addEventListener('click', () => {
-        newHamburger.classList.toggle('active');
-        navLinks.classList.toggle('active');
-        
-        // Toggle body scroll when menu is open
-        if (navLinks.classList.contains('active')) {
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.body.style.overflow = '';
-        }
-      });
-      
-      // Close menu when clicking on links
-      const navItems = navLinks.querySelectorAll('a');
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          newHamburger.classList.remove('active');
-          navLinks.classList.remove('active');
-          document.body.style.overflow = '';
-        });
-      });
-      
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!newHamburger.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
-          newHamburger.classList.remove('active');
-          navLinks.classList.remove('active');
-          document.body.style.overflow = '';
-        }
-      });
-    }
   }
 
   async signIn(email, password, remember) {
@@ -162,6 +119,11 @@ class AuthManager {
   }
 
   updateAuthUI() {
+    this.updateDesktopAuthUI();
+    this.updateMobileAuthUI();
+  }
+
+  updateDesktopAuthUI() {
     const authButtons = document.querySelector('.auth-buttons');
     
     if (this.isAuthenticated()) {
@@ -214,6 +176,37 @@ class AuthManager {
           <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
         `;
       }
+    }
+  }
+
+  updateMobileAuthUI() {
+    const mobileAuth = document.querySelector('.mobile-auth');
+    if (!mobileAuth) return;
+    
+    if (this.isAuthenticated()) {
+      const user = this.getCurrentUser();
+      
+      mobileAuth.innerHTML = `
+        <div class="user-menu-mobile">
+          <a href="profile.html" class="btn btn-outline"><i class="fas fa-user"></i> Profile</a>
+          <a href="favorites.html" class="btn btn-outline"><i class="fas fa-heart"></i> Favorites</a>
+          ${user.role === 'admin' ? '<a href="admin.html" class="btn btn-outline"><i class="fas fa-cog"></i> Admin</a>' : ''}
+          <button class="btn btn-outline" id="mobile-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+      `;
+      
+      // Add logout event
+      const logoutBtn = document.getElementById('mobile-logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          this.signOut();
+        });
+      }
+    } else {
+      mobileAuth.innerHTML = `
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
+      `;
     }
   }
 
