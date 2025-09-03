@@ -119,6 +119,7 @@ class AuthWall {
       .login-wall-features .feature span {
         color: var(--text);
         font-weight: 500;
+        font-size: 14px;
       }
       
       .login-wall-buttons {
@@ -134,6 +135,16 @@ class AuthWall {
         
         .login-wall-content {
           padding: 30px 20px;
+        }
+        
+        .login-wall-features .feature {
+          flex-direction: column;
+          text-align: center;
+        }
+        
+        .login-wall-features .feature i {
+          margin-right: 0;
+          margin-bottom: 8px;
         }
       }
     `;
