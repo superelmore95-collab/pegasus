@@ -1249,6 +1249,11 @@ footer {
     text-align: center;
     justify-content: center;
     padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
   .user-menu-mobile {
@@ -1261,6 +1266,12 @@ footer {
     width: 100%;
     text-align: center;
     justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
   /* Ensure auth buttons are visible on mobile */
