@@ -326,6 +326,40 @@
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script>
+    // Immediate redirect check for auth pages
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is already authenticated
+    const user = localStorage.getItem('pegasus_user');
+    const token = localStorage.getItem('pegasus_token');
+    
+    if (user && token) {
+      // User is authenticated, redirect to profile
+      window.location.href = 'profile.html';
+    }
+    
+    // Hide preloader
+    setTimeout(() => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.classList.add('hide');
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }
+    }, 1000);
+    
+    // Initialize mobile menu
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+      });
+    }
+  });
+    
     // Password strength indicator
     const passwordInput = document.getElementById('password');
     const passwordStrength = document.querySelector('.password-strength');
