@@ -8,7 +8,6 @@ class AuthManager {
   init() {
     this.updateAuthUI();
     this.setupScrollHeader();
-    // Don't setup mobile menu here to avoid conflicts
   }
 
   setupScrollHeader() {
