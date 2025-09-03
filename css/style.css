@@ -1,7 +1,7 @@
 /* ===== BASE STYLES ===== */
 :root {
-  --primary: #0a0a12;
-  --secondary: #141420;
+  --primary: #030101;
+  --secondary: #030101;
   --accent: #ff003c;
   --accent-light: #ff2d5f;
   --text: #ffffff;
@@ -142,7 +142,7 @@ header {
 }
 
 header.scrolled {
-  background-color: rgba(10, 10, 18, 0.95);
+  background-color: rgba(3, 1, 1, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
