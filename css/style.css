@@ -621,6 +621,7 @@ header.scrolled {
   position: relative;
   width: 100%;
   background: #000;
+  z-index: 1; /* Added to ensure proper stacking */
 }
 
 .player-wrapper {
@@ -637,6 +638,7 @@ header.scrolled {
   width: 100%;
   height: 100%;
   background: #000;
+  z-index: 2; /* Increased z-index for better click handling */
 }
 
 .player-controls {
@@ -727,7 +729,7 @@ header.scrolled {
   color: white;
   font-size: 4rem;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3; /* Increased z-index for better click handling */
 }
 
 .player-info {
@@ -1249,11 +1251,27 @@ footer {
     text-align: center;
     justify-content: center;
     padding: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 30px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  }
+  
+  /* Mobile button styling fixes */
+  .mobile-auth .btn.btn-outline {
+    color: white !important;
+    border-color: white !important;
+  }
+  
+  .mobile-auth .btn.btn-outline:hover {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .mobile-auth .subscribe-btn {
+    color: black !important;
+    background: var(--off-white) !important;
+  }
+  
+  .mobile-auth .subscribe-btn:hover {
+    background: white !important;
+    color: black !important;
   }
   
   .user-menu-mobile {
@@ -1266,12 +1284,6 @@ footer {
     width: 100%;
     text-align: center;
     justify-content: center;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 30px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
   
   /* Ensure auth buttons are visible on mobile */
@@ -1638,7 +1650,7 @@ footer {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   border-radius: 30px;
-  color: var(--text);
+  color: white;
   cursor: pointer;
   transition: var(--transition);
   font-size: 14px;
