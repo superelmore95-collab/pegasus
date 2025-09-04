@@ -14,7 +14,6 @@
       min-height: 500px;
       position: relative;
       overflow: hidden;
-      margin-top: 40px;
     }
     
     .explore-hero .slide {
@@ -61,154 +60,6 @@
       margin: 0 auto 15px;
     }
 
-    .upcoming-events {
-      padding: 60px 0;
-      background: var(--secondary);
-    }
-
-    .events-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-
-    .event-tab {
-      padding: 10px 20px;
-      background: var(--card-bg);
-      border-radius: 30px;
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-
-    .event-tab.active {
-      background: var(--accent);
-      color: #000;
-    }
-
-    .events-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .event-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-
-    .event-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .event-date {
-      padding: 10px 15px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .event-info {
-      padding: 15px;
-    }
-
-    .event-teams {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .team {
-      text-align: center;
-      flex: 1;
-    }
-
-    .team-logo {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      margin-bottom: 5px;
-    }
-
-    .vs {
-      font-weight: 600;
-      margin: 0 10px;
-    }
-
-    .event-league {
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 12px;
-      margin-top: 10px;
-    }
-
-    .fight-cards-section {
-      padding: 60px 0;
-    }
-
-    .fight-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 30px;
-    }
-
-    .fight-card-header {
-      padding: 15px;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .fight-card-content {
-      padding: 20px;
-    }
-
-    .fight {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .fight:last-child {
-      border-bottom: none;
-    }
-
-    .fighter {
-      text-align: center;
-      flex: 1;
-    }
-
-    .fighter-name {
-      font-weight: 600;
-      margin-top: 10px;
-    }
-
-    .fighter-record {
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-
-    .weight-class {
-      text-align: center;
-      margin: 0 15px;
-      color: var(--text-secondary);
-      font-size: 12px;
-    }
-
     .sports-leagues {
       padding: 60px 0;
       background: var(--secondary);
@@ -221,6 +72,7 @@
       padding: 20px 0;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
+      position: relative;
     }
 
     .league-item {
@@ -237,6 +89,39 @@
       margin-bottom: 10px;
     }
 
+    .leagues-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      z-index: 5;
+    }
+
+    .leagues-nav:hover {
+      background: var(--accent);
+    }
+
+    .leagues-nav.prev {
+      left: 10px;
+    }
+
+    .leagues-nav.next {
+      right: 10px;
+    }
+
+    .leagues-nav i {
+      font-size: 14px;
+    }
+
     @media (max-width: 768px) {
       .explore-hero .slide-content {
         max-width: 90%;
@@ -246,31 +131,6 @@
       
       .leagues-grid {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      }
-      
-      .events-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .event-teams {
-        flex-direction: column;
-      }
-      
-      .team {
-        margin: 10px 0;
-      }
-      
-      .vs {
-        margin: 10px 0;
-      }
-      
-      .fight {
-        flex-direction: column;
-        text-align: center;
-      }
-      
-      .weight-class {
-        margin: 10px 0;
       }
 
       .leagues-scroll {
@@ -285,6 +145,10 @@
       .league-item img {
         width: 60px;
         height: 60px;
+      }
+      
+      .leagues-nav {
+        display: none;
       }
     }
   </style>
@@ -344,7 +208,28 @@
         <h2>Explore All Sports</h2>
         <p>Discover live games, highlights, and channels across all categories</p>
         <a href="#featured" class="btn">Explore Now</a>
+        <div class="slider-dots">
+          <div class="slider-dot active"></div>
+        </div>
       </div>
+    </div>
+    
+    <div class="slider-arrows">
+      <div class="arrow prev">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+      <div class="arrow next">
+        <i class="fas fa-chevron-right"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner 1 -->
+  <section class="promo-banner" style="background: url('images/promo-banner-1.jpg') center/cover;">
+    <div class="promo-banner-content">
+      <h2 class="promo-banner-title">Premium Sports Experience</h2>
+      <p class="promo-banner-subtitle">Get access to exclusive content, live events, and premium features with PEGASUS PRO</p>
+      <a href="signup.html" class="btn subscribe-btn">Upgrade Now</a>
     </div>
   </section>
 
@@ -356,6 +241,10 @@
       </div>
       
       <div class="leagues-scroll">
+        <div class="leagues-nav prev">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        
         <div class="league-item">
           <img src="images/premier-league.png" alt="Premier League">
           <div>Premier League</div>
@@ -395,6 +284,10 @@
           <img src="images/nhl.png" alt="NHL">
           <div>NHL</div>
         </div>
+        
+        <div class="leagues-nav next">
+          <i class="fas fa-chevron-right"></i>
+        </div>
       </div>
     </div>
   </section>
@@ -416,8 +309,17 @@
     </div>
   </section>
 
+  <!-- Promotional Banner 2 -->
+  <section class="promo-banner" style="background: url('images/promo-banner-2.jpg') center/cover;">
+    <div class="promo-banner-content">
+      <h2 class="promo-banner-title">Never Miss a Game</h2>
+      <p class="promo-banner-subtitle">Set reminders for your favorite teams and get notified before every match</p>
+      <a href="signup.html" class="btn">Get Started</a>
+    </div>
+  </section>
+
   <!-- MMA Content Section -->
-  <section class="fight-cards-section">
+  <section class="section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">MMA Content</h2>
@@ -434,20 +336,13 @@
   </section>
 
   <!-- Upcoming Events Section -->
-  <section class="upcoming-events">
+  <section class="section" style="background: var(--secondary);">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Upcoming Events</h2>
       </div>
       
-      <div class="events-tabs">
-        <div class="event-tab active" data-day="today">Today</div>
-        <div class="event-tab" data-day="tomorrow">Tomorrow</div>
-        <div class="event-tab" data-day="week">This Week</div>
-        <div class="event-tab" data-day="month">This Month</div>
-      </div>
-      
-      <div class="events-grid" id="upcoming-events-container">
+      <div class="stream-grid" id="upcoming-events-container">
         <div class="loading-placeholder">
           <div class="loading-spinner"></div>
           <p>Loading upcoming events...</p>
@@ -491,17 +386,6 @@
       // Load upcoming events
       loadUpcomingEvents();
       
-      // Event tabs functionality
-      const eventTabs = document.querySelectorAll('.event-tab');
-      eventTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          eventTabs.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-          const day = this.getAttribute('data-day');
-          loadUpcomingEvents(day);
-        });
-      });
-
       // League items click handling
       const leagueItems = document.querySelectorAll('.league-item');
       leagueItems.forEach(item => {
@@ -510,6 +394,21 @@
           loadContentByLeague(leagueName);
         });
       });
+      
+      // League navigation
+      const leaguesScroll = document.querySelector('.leagues-scroll');
+      const leaguesNavPrev = document.querySelector('.leagues-nav.prev');
+      const leaguesNavNext = document.querySelector('.leagues-nav.next');
+      
+      if (leaguesNavPrev && leaguesNavNext) {
+        leaguesNavPrev.addEventListener('click', () => {
+          leaguesScroll.scrollBy({ left: -200, behavior: 'smooth' });
+        });
+        
+        leaguesNavNext.addEventListener('click', () => {
+          leaguesScroll.scrollBy({ left: 200, behavior: 'smooth' });
+        });
+      }
     });
     
     // Load featured content from backend
@@ -679,7 +578,7 @@
     }
     
     // Load upcoming events
-    async function loadUpcomingEvents(filter = 'today') {
+    async function loadUpcomingEvents() {
       try {
         const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
         const container = document.getElementById('upcoming-events-container');
@@ -701,7 +600,7 @@
           headers['Authorization'] = `Bearer ${token}`;
         }
         
-        // In a real implementation, you would filter by date based on the filter parameter
+        // In a real implementation, you would filter by date
         const response = await fetch(`${API_BASE}/api/content?type=live&is_upcoming=true`, { headers });
         
         if (!response.ok) {
@@ -721,6 +620,10 @@
         
         // Display events
         upcomingEvents.forEach(event => {
+          const card = document.createElement('a');
+          card.href = `player.html?type=live&id=${event.id}`;
+          card.className = 'stream-card';
+          
           const eventDate = new Date(event.start_time || event.created_at);
           const formattedDate = eventDate.toLocaleDateString('en-US', { 
             weekday: 'short', 
@@ -730,25 +633,20 @@
             minute: '2-digit'
           });
           
-          const card = document.createElement('div');
-          card.className = 'event-card';
-          card.onclick = function() {
-            window.location.href = `player.html?type=live&id=${event.id}`;
-          };
-          
           card.innerHTML = `
-            <div class="event-date">${formattedDate}</div>
-            <div class="event-info">
-              <div class="event-teams">
-                <div class="team">
-                  <div>${event.title.split(' vs ')[0] || 'Team 1'}</div>
-                </div>
-                <div class="vs">VS</div>
-                <div class="team">
-                  <div>${event.title.split(' vs ')[1] || 'Team 2'}</div>
+            <div class="card-img">
+              <img src="${event.thumbnail || event.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+                   alt="${event.title}" 
+                   onerror="this.src='https://via.placeholder.com/400x225'">
+              <div class="live-badge">UPCOMING</div>
+              ${event.requires_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+              <div class="card-content">
+                <h3 class="card-title">${event.title}</h3>
+                <div class="card-meta">
+                  <span>${event.category || 'Sports'}</span>
+                  <span class="card-views">${formattedDate}</span>
                 </div>
               </div>
-              <div class="event-league">${event.category || 'Sports'}</div>
             </div>
           `;
           
