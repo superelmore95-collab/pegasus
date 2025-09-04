@@ -49,11 +49,11 @@
 
     /* Hero banner styles */
     .content-hero {
-      height: 50vh;
-      min-height: 400px;
+      height: 60vh;
+      min-height: 500px;
       position: relative;
       overflow: hidden;
-      margin-top: 60px;
+      margin-top: 0;
     }
     
     .content-hero .slide {
@@ -73,12 +73,12 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
     }
     
     .content-hero .slide-content {
       position: absolute;
-      bottom: 60px;
+      bottom: 100px;
       left: 40px;
       max-width: 60%;
       text-align: left;
@@ -87,14 +87,14 @@
     
     @media (max-width: 768px) {
       .content-hero {
-        height: 40vh;
-        min-height: 300px;
+        height: 50vh;
+        min-height: 400px;
       }
       
       .content-hero .slide-content {
         max-width: 90%;
         left: 20px;
-        bottom: 40px;
+        bottom: 60px;
         text-align: center;
       }
       
@@ -160,7 +160,28 @@
         <h2>Top Highlights</h2>
         <p>Best moments from all sports in one place</p>
         <a href="#highlights-container" class="btn">Watch Now</a>
+        <div class="slider-dots">
+          <div class="slider-dot active"></div>
+        </div>
       </div>
+    </div>
+    
+    <div class="slider-arrows">
+      <div class="arrow prev">
+        <i class="fas fa-chevron-left"></i>
+      </div>
+      <div class="arrow next">
+        <i class="fas fa-chevron-right"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner -->
+  <section class="promo-banner" style="background: url('images/promo-banner-5.jpg') center/cover;">
+    <div class="promo-banner-content">
+      <h2 class="promo-banner-title">Relive the Greatest Moments</h2>
+      <p class="promo-banner-subtitle">Access our extensive library of highlight reels from the most iconic sports moments</p>
+      <a href="signup.html" class="btn subscribe-btn">Subscribe Now</a>
     </div>
   </section>
 
