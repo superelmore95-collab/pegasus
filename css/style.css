@@ -37,14 +37,14 @@ body {
 
 .btn {
   display: inline-block;
-  background: var(--accent);
+  background: white;
   color: #000;
   font-weight: 600;
   padding: 12px 24px;
-  border-radius: 30px;
+  border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-size: 14px;
+  font-size: 12px;
   border: none;
   cursor: pointer;
   transition: var(--transition);
@@ -52,19 +52,19 @@ body {
 }
 
 .btn:hover {
-  background: var(--accent-light);
+  background: #f0f0f0;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 0, 60, 0.3);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
 .btn-outline {
   background: transparent;
-  border: 2px solid var(--accent);
-  color: var(--accent);
+  border: 2px solid white;
+  color: white;
 }
 
 .btn-outline:hover {
-  background: var(--accent);
+  background: white;
   color: #000;
 }
 
@@ -138,7 +138,8 @@ header {
   width: 100%;
   z-index: 1000;
   transition: var(--transition);
-  padding: 10px 0;
+  padding: 5px 0;
+  height: 60px;
 }
 
 header.scrolled {
@@ -152,7 +153,7 @@ header.scrolled {
   justify-content: space-between;
   align-items: center;
   padding: 0;
-  height: 40px;
+  height: 50px;
 }
 
 .logo {
@@ -166,7 +167,7 @@ header.scrolled {
 }
 
 .logo img {
-  height: 50px;
+  height: 40px;
   margin-right: 8px;
 }
 
@@ -215,6 +216,11 @@ header.scrolled {
   display: flex;
   gap: 8px;
   z-index: 1001;
+}
+
+.auth-buttons .btn {
+  padding: 8px 16px;
+  font-size: 11px;
 }
 
 .hamburger {
@@ -349,12 +355,11 @@ header.scrolled {
 
 /* ===== HERO SECTION - DAZN STYLE ===== */
 .hero {
-  height: 80vh;
-  min-height: 600px;
+  height: 85vh;
+  min-height: 700px;
   position: relative;
   overflow: hidden;
-  margin-bottom: 40px;
-  margin-top: 40px;
+  margin-top: 0;
 }
 
 .hero-slider {
@@ -384,7 +389,7 @@ header.scrolled {
 
 .slide-content {
   position: absolute;
-  bottom: 100px;
+  bottom: 120px;
   left: 40px;
   width: 100%;
   text-align: left;
@@ -394,14 +399,14 @@ header.scrolled {
 }
 
 .slide-content h2 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 15px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .slide-content p {
-  font-size: 1.2rem;
-  margin-bottom: 25px;
+  font-size: 1.4rem;
+  margin-bottom: 30px;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
 }
 
@@ -411,7 +416,7 @@ header.scrolled {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+  background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
 }
 
 /* DAZN-style navigation arrows */
@@ -421,14 +426,14 @@ header.scrolled {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 20px;
   z-index: 10;
   transform: translateY(-50%);
 }
 
 .arrow {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
@@ -444,22 +449,33 @@ header.scrolled {
   transform: scale(1.1);
 }
 
-/* Mini progress bar for slides */
-.mini-progress {
+.arrow i {
+  font-size: 14px;
+}
+
+/* Dots indicator for slides */
+.slider-dots {
   position: absolute;
-  bottom: 70px;
-  left: 40px;
-  width: 200px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.2);
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
   z-index: 10;
 }
 
-.mini-progress-bar {
-  height: 100%;
-  width: 0%;
+.slider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slider-dot.active {
   background: var(--accent);
-  transition: width 0.1s linear;
+  transform: scale(1.2);
 }
 
 /* ===== CONTENT SECTIONS ===== */
@@ -861,7 +877,6 @@ header.scrolled {
   min-height: 500px;
   position: relative;
   overflow: hidden;
-  margin-top: 40px;
 }
 
 .explore-hero .slide {
@@ -947,6 +962,7 @@ header.scrolled {
   overflow: hidden;
   transition: var(--transition);
   cursor: pointer;
+  aspect-ratio: 16/9;
 }
 
 .event-card:hover {
@@ -997,65 +1013,6 @@ header.scrolled {
   margin-top: 10px;
 }
 
-.fight-cards-section {
-  padding: 60px 0;
-}
-
-.fight-card {
-  background: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-
-.fight-card-header {
-  padding: 15px;
-  background: var(--accent);
-  color: #000;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.fight-card-content {
-  padding: 20px;
-}
-
-.fight {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.fight:last-child {
-  border-bottom: none;
-}
-
-.fighter {
-  text-align: center;
-  flex: 1;
-}
-
-.fighter-name {
-  font-weight: 600;
-  margin-top: 10px;
-}
-
-.fighter-record {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.weight-class {
-  text-align: center;
-  margin: 0 15px;
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
 .sports-leagues {
   padding: 60px 0;
   background: var(--secondary);
@@ -1068,6 +1025,7 @@ header.scrolled {
   padding: 20px 0;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  position: relative;
 }
 
 .league-item {
@@ -1082,6 +1040,39 @@ header.scrolled {
   height: 80px;
   object-fit: contain;
   margin-bottom: 10px;
+}
+
+.leagues-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  z-index: 5;
+}
+
+.leagues-nav:hover {
+  background: var(--accent);
+}
+
+.leagues-nav.prev {
+  left: 10px;
+}
+
+.leagues-nav.next {
+  right: 10px;
+}
+
+.leagues-nav i {
+  font-size: 14px;
 }
 
 /* ===== FOOTER ===== */
@@ -1168,7 +1159,7 @@ footer {
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 992px) {
   .slide-content h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .slide-content {
@@ -1218,7 +1209,7 @@ footer {
   
   .slide-content {
     left: 15px;
-    bottom: 60px;
+    bottom: 80px;
     max-width: 90%;
     text-align: center;
   }
@@ -1308,8 +1299,8 @@ footer {
   }
   
   .arrow {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
   }
   
   .slider-arrows {
@@ -1322,11 +1313,8 @@ footer {
     font-size: 12px;
   }
 
-  .mini-progress {
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
+  .slider-dots {
+    bottom: 30px;
   }
 
   /* Mobile explore adjustments */
@@ -1356,15 +1344,6 @@ footer {
     margin: 10px 0;
   }
   
-  .fight {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .weight-class {
-    margin: 10px 0;
-  }
-  
   /* Horizontal scrolling for mobile */
   .stream-grid {
     display: flex;
@@ -1379,6 +1358,10 @@ footer {
     flex: 0 0 auto;
     width: 85%;
     scroll-snap-align: start;
+  }
+  
+  .leagues-nav {
+    display: none;
   }
 }
 
@@ -1591,11 +1574,11 @@ footer {
 
 /* Content page hero styles */
 .content-hero {
-  height: 50vh;
-  min-height: 400px;
+  height: 60vh;
+  min-height: 500px;
   position: relative;
   overflow: hidden;
-  margin-top: 60px;
+  margin-top: 0;
 }
 
 .content-hero .slide {
@@ -1615,12 +1598,12 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+  background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
 }
 
 .content-hero .slide-content {
   position: absolute;
-  bottom: 60px;
+  bottom: 100px;
   left: 40px;
   max-width: 60%;
   text-align: left;
@@ -1629,14 +1612,14 @@ footer {
 
 @media (max-width: 768px) {
   .content-hero {
-    height: 40vh;
-    min-height: 300px;
+    height: 50vh;
+    min-height: 400px;
   }
   
   .content-hero .slide-content {
     max-width: 90%;
     left: 20px;
-    bottom: 40px;
+    bottom: 60px;
     text-align: center;
   }
 }
@@ -1718,59 +1701,96 @@ header.scrolled {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Hero banner styles */
-.content-hero {
-  height: 50vh;
-  min-height: 400px;
-  position: relative;
-  overflow: hidden;
-  margin-top: 60px;
+/* Hero banner styles - FIXED */
+.hero, .content-hero, .explore-hero {
+  margin-top: 0 !important; /* Removed all top margins to eliminate gap */
 }
 
-.content-hero .slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* Ensure the header stays on top with proper z-index */
+header {
+  z-index: 1001;
 }
 
-.content-hero .slide-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
-}
-
-.content-hero .slide-content {
-  position: absolute;
-  bottom: 60px;
-  left: 40px;
-  max-width: 60%;
-  text-align: left;
+/* Make sure hero content is properly positioned */
+.hero .slide-content, 
+.content-hero .slide-content, 
+.explore-hero .slide-content {
   z-index: 10;
 }
 
+/* Mobile adjustments for hero sections */
 @media (max-width: 768px) {
-  .content-hero {
-    height: 40vh;
-    min-height: 300px;
+  .hero, .content-hero, .explore-hero {
+    margin-top: 0;
   }
   
   .content-hero .slide-content {
     max-width: 90%;
     left: 20px;
-    bottom: 40px;
+    bottom: 60px;
     text-align: center;
   }
   
   .content-hero .btn {
     width: 100%;
     max-width: 300px;
+  }
+}
+
+/* Promotional banner styles */
+.promo-banner {
+  margin: 60px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  height: 250px;
+}
+
+.promo-banner-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+  color: white;
+}
+
+.promo-banner-title {
+  font-size: 32px;
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.promo-banner-subtitle {
+  font-size: 18px;
+  margin-bottom: 25px;
+  opacity: 0.9;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+  max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  .promo-banner {
+    height: 200px;
+    margin: 40px 0;
+  }
+  
+  .promo-banner-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .promo-banner-title {
+    font-size: 24px;
+  }
+  
+  .promo-banner-subtitle {
+    font-size: 16px;
   }
 }
