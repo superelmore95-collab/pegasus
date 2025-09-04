@@ -93,11 +93,11 @@
 
     /* Hero banner styles */
     .content-hero {
-      height: 50vh;
-      min-height: 400px;
+      height: 60vh;
+      min-height: 500px;
       position: relative;
       overflow: hidden;
-      margin-top: 60px;
+      margin-top: 0;
     }
     
     .content-hero .slide {
@@ -117,12 +117,12 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
     }
     
     .content-hero .slide-content {
       position: absolute;
-      bottom: 60px;
+      bottom: 100px;
       left: 40px;
       max-width: 60%;
       text-align: left;
@@ -131,14 +131,14 @@
     
     @media (max-width: 768px) {
       .content-hero {
-        height: 40vh;
-        min-height: 300px;
+        height: 50vh;
+        min-height: 400px;
       }
       
       .content-hero .slide-content {
         max-width: 90%;
         left: 20px;
-        bottom: 40px;
+        bottom: 60px;
         text-align: center;
       }
       
@@ -220,7 +220,28 @@
           <h2>Video On Demand</h2>
           <p>Watch full matches and events anytime</p>
           <a href="#vod-container" class="btn">Browse Content</a>
+          <div class="slider-dots">
+            <div class="slider-dot active"></div>
+          </div>
         </div>
+      </div>
+      
+      <div class="slider-arrows">
+        <div class="arrow prev">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="arrow next">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promotional Banner -->
+    <section class="promo-banner" style="background: url('images/promo-banner-4.jpg') center/cover;">
+      <div class="promo-banner-content">
+        <h2 class="promo-banner-title">Unlimited Access to Full Matches</h2>
+        <p class="promo-banner-subtitle">Relive the greatest moments in sports history with our extensive VOD library</p>
+        <a href="signup.html" class="btn subscribe-btn">Subscribe Now</a>
       </div>
     </section>
 
@@ -245,7 +266,6 @@
           <div class="loading-placeholder">
             <div class="loading-spinner"></div>
             <p>Loading VOD content...</p>
-          </div>
         </div>
       </div>
     </section>
@@ -285,16 +305,6 @@
           link.classList.add('active');
         } else {
           link.classList.remove('active');
-        }
-      });
-      
-      // Add scroll event for header
-      window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
         }
       });
       
