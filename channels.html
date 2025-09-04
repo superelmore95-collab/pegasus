@@ -49,11 +49,11 @@
 
     /* Hero banner styles */
     .content-hero {
-      height: 50vh;
-      min-height: 400px;
+      height: 60vh;
+      min-height: 500px;
       position: relative;
       overflow: hidden;
-      margin-top: 60px;
+      margin-top: 0;
     }
     
     .content-hero .slide {
@@ -73,34 +73,29 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(to top, rgba(10, 10, 18, 0.9) 0%, rgba(10, 10, 18, 0.4) 50%, rgba(10, 10, 18, 0.1) 100%);
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
     }
     
     .content-hero .slide-content {
       position: absolute;
-      bottom: 60px;
+      bottom: 100px;
       left: 40px;
       max-width: 60%;
-      text-align: left;
+  text-align: left;
       z-index: 10;
     }
     
     @media (max-width: 768px) {
       .content-hero {
-        height: 40vh;
-        min-height: 300px;
+        height: 50vh;
+        min-height: 400px;
       }
       
       .content-hero .slide-content {
         max-width: 90%;
         left: 20px;
-        bottom: 40px;
+        bottom: 60px;
         text-align: center;
-      }
-      
-      .content-hero .btn {
-        width: 100%;
-        max-width: 300px;
       }
     }
   </style>
@@ -160,7 +155,19 @@
         <h2>Sports Channels</h2>
         <p>24/7 coverage of your favorite sports</p>
         <a href="#channels-container" class="btn">Browse Channels</a>
+        <div class="slider-dots">
+          <div class="slider-dot active"></div>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner 1 -->
+  <section class="promo-banner" style="background: url('images/promo-banner-1.jpg') center/cover;">
+    <div class="promo-banner-content">
+      <h2 class="promo-banner-title">Premium Sports Experience</h2>
+      <p class="promo-banner-subtitle">Get access to exclusive content, live events, and premium features with PEGASUS PRO</p>
+      <a href="signup.html" class="btn subscribe-btn">Upgrade Now</a>
     </div>
   </section>
 
@@ -187,58 +194,16 @@
           <div class="loading-spinner"></div>
           <p>Loading channels...</p>
         </div>
-        <!-- Channel Card 1 -->
-        <a href="channels.html?channel=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-1.jpg" alt="Premier League Channel">
-            <div class="card-content">
-              <h3 class="card-title">Premier League Channel</h3>
-              <div class="card-meta">
-                <span>24/7 Football</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 2 -->
-        <a href="channels.html?channel=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-2.jpg" alt="NBA TV">
-            <div class="card-content">
-              <h3 class="card-title">NBA TV International</h3>
-              <div class="card-meta">
-                <span>Basketball</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 3 -->
-        <a href="channels.html?channel=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-3.jpg" alt="F1 Channel">
-            <div class="card-content">
-              <h3 class="card-title">Formula 1 Channel</h3>
-              <div class="card-meta">
-                <span>Racing</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 4 -->
-        <a href="channels.html?channel=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-4.jpg" alt="ESPN Classics">
-            <div class="card-content">
-              <h3 class="card-title">PEGASUS Classics</h3>
-              <div class="card-meta">
-                <span>Historic Matches</span>
-              </div>
-            </div>
-          </div>
-        </a>
       </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner 2 -->
+  <section class="promo-banner" style="background: url('images/promo-banner-2.jpg') center/cover;">
+    <div class="promo-banner-content">
+      <h2 class="promo-banner-title">Never Miss a Game</h2>
+      <p class="promo-banner-subtitle">Set reminders for your favorite teams and get notified before every match</p>
+      <a href="signup.html" class="btn">Get Started</a>
     </div>
   </section>
 
