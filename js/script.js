@@ -1,4 +1,4 @@
-// script.js - Main Application Script
+// script.js - Main Application Script with Popup Integration
 class PegasusApp {
   constructor() {
     this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
@@ -35,6 +35,33 @@ class PegasusApp {
     
     // Setup content cards for popup
     this.setupContentCards();
+  }
+
+  setupContentCards() {
+    const contentCards = document.querySelectorAll('.stream-card');
+    
+    contentCards.forEach(card => {
+      // Remove existing click handlers
+      card.replaceWith(card.cloneNode(true));
+      
+      // Add new click handler
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const contentId = this.getAttribute('data-content-id');
+        const contentType = this.getAttribute('data-content-type');
+        
+        if (contentId && contentType) {
+          // Use the global function from vod.html
+          if (typeof window.showContentPopup === 'function') {
+            window.showContentPopup(contentId, contentType);
+          } else {
+            // Fallback to direct navigation if popup function is not available
+            window.location.href = `player.html?type=${contentType}&id=${contentId}`;
+          }
+        }
+      });
+    });
   }
 
   setupScrollHeader() {
@@ -295,48 +322,6 @@ class PegasusApp {
     }
   }
 
-  // Setup content cards for popup functionality
-  setupContentCards() {
-    // Add event listeners to all content cards
-    const contentCards = document.querySelectorAll('.stream-card');
-    
-    contentCards.forEach(card => {
-      // Check if card already has click handler
-      if (!card.hasAttribute('data-content-id')) {
-        // Extract content ID and type from href if it's a link
-        if (card.tagName === 'A' && card.href) {
-          const url = new URL(card.href);
-          const params = new URLSearchParams(url.search);
-          const contentId = params.get('id');
-          const contentType = params.get('type');
-          
-          if (contentId && contentType) {
-            card.setAttribute('data-content-id', contentId);
-            card.setAttribute('data-content-type', contentType);
-            
-            // Prevent default link behavior
-            card.addEventListener('click', function(e) {
-              e.preventDefault();
-              if (typeof showContentPopup === 'function') {
-                showContentPopup(contentId, contentType);
-              }
-            });
-          }
-        }
-      } else {
-        // Card already has data attributes, just ensure it has click handler
-        card.addEventListener('click', function() {
-          const contentId = this.getAttribute('data-content-id');
-          const contentType = this.getAttribute('data-content-type');
-          
-          if (contentId && contentType && typeof showContentPopup === 'function') {
-            showContentPopup(contentId, contentType);
-          }
-        });
-      }
-    });
-  }
-
   async loadContent(type, containerId, filter = 'all', limit = 8) {
     try {
       const container = document.getElementById(containerId);
@@ -413,9 +398,7 @@ class PegasusApp {
       
       // Add content to container
       contentArray.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'stream-card';
-        card.setAttribute('data-content-id', item.id);
+        const card = document.createElement('a');
         
         // Determine content type for URL
         let itemType = 'vod';
@@ -423,6 +406,9 @@ class PegasusApp {
         if (item.type === 'highlight') itemType = 'highlight';
         if (item.type === 'channel') itemType = 'channel';
         
+        card.href = 'javascript:void(0)';
+        card.className = 'stream-card';
+        card.setAttribute('data-content-id', item.id);
         card.setAttribute('data-content-type', itemType);
         
         const isLive = item.is_live || false;
@@ -449,8 +435,11 @@ class PegasusApp {
         
         // Add click event to show popup
         card.addEventListener('click', function() {
-          if (typeof showContentPopup === 'function') {
-            showContentPopup(item.id, itemType);
+          if (typeof window.showContentPopup === 'function') {
+            window.showContentPopup(item.id, itemType);
+          } else {
+            // Fallback to direct navigation if popup function is not available
+            window.location.href = `player.html?type=${itemType}&id=${item.id}`;
           }
         });
         
