@@ -34,6 +34,229 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* Popup overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Popup container */
+    .content-popup {
+      width: 90%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .popup-overlay.active .content-popup {
+      transform: scale(1);
+    }
+
+    /* Close button */
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      transition: var(--transition);
+    }
+
+    .popup-close:hover {
+      background: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    /* Hero section */
+    .popup-hero {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .popup-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, transparent 100%);
+    }
+
+    /* Content badges */
+    .popup-badges {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .badge.live {
+      background: var(--danger);
+      color: white;
+    }
+
+    .badge.live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      margin-right: 4px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .badge.premium {
+      background: var(--warning);
+      color: #000;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Content info */
+    .popup-info {
+      padding: 20px;
+    }
+
+    .popup-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .popup-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Action buttons */
+    .popup-actions {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .popup-btn {
+      display: inline-block;
+      background: white;
+      color: #000;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      text-align: center;
+      flex: 1;
+    }
+
+    .popup-btn:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .popup-btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .popup-btn-primary:hover {
+      background: var(--accent-light);
+    }
+
+    .popup-btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .popup-btn-icon:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    .popup-btn-icon.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* Loading state */
+    .popup-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
   </style>
 </head>
 <body>
@@ -45,8 +268,8 @@
     </div>
   </div>
 
-<!-- Header -->
-<header>
+  <!-- Header -->
+  <header>
   <div class="container">
     <nav class="navbar">
       <a href="index.html" class="logo">
@@ -279,57 +502,11 @@
       </div>
       
       <div class="stream-grid" id="channels-content">
-        <!-- Channel Card 1 -->
-        <a href="channels.html?channel=1" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-1.jpg" alt="Premier League Channel">
-            <div class="card-content">
-              <h3 class="card-title">Premier League Channel</h3>
-              <div class="card-meta">
-                <span>24/7 Football</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 2 -->
-        <a href="channels.html?channel=2" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-2.jpg" alt="NBA TV">
-            <div class="card-content">
-              <h3 class="card-title">NBA TV International</h3>
-              <div class="card-meta">
-                <span>Basketball</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 3 -->
-        <a href="channels.html?channel=3" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-3.jpg" alt="F1 Channel">
-            <div class="card-content">
-              <h3 class="card-title">Formula 1 Channel</h3>
-              <div class="card-meta">
-                <span>Racing</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Channel Card 4 -->
-        <a href="channels.html?channel=4" class="stream-card">
-          <div class="card-img">
-            <img src="images/channel-thumb-4.jpg" alt="ESPN Classics">
-            <div class="card-content">
-              <h3 class="card-title">PEGASUS Classics</h3>
-              <div class="card-meta">
-                <span>Historic Matches</span>
-              </div>
-            </div>
-          </div>
-        </a>
+        <!-- Channel cards will be populated by JavaScript -->
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading channels...</p>
+        </div>
       </div>
     </div>
   </section>
@@ -376,8 +553,428 @@
     </div>
   </footer>
 
+  <!-- Content Popup -->
+  <div class="popup-overlay" id="content-popup">
+    <div class="content-popup">
+      <button class="popup-close" id="popup-close">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="popup-hero" id="popup-hero">
+        <div class="popup-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading content...</p>
+        </div>
+      </div>
+      
+      <div class="popup-info">
+        <h3 class="popup-title" id="popup-title">Content Title</h3>
+        <div class="popup-meta" id="popup-meta">
+          <span id="popup-category">Sports</span>
+          <span id="popup-views">0 views</span>
+        </div>
+      </div>
+      
+      <div class="popup-actions" id="popup-actions">
+        <!-- Content will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
+  <script>
+    // Global variables for popup functionality
+    let currentContentId = null;
+    let currentContentType = null;
+    let currentFavoriteId = null;
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load content for all sections
+      loadContent('live', 'live-content', 'all', 4);
+      loadContent('vod', 'vod-content', 'all', 4);
+      loadContent('highlight', 'highlights-content', 'all', 4);
+      loadContent('channel', 'channels-content', 'all', 4);
+      
+      // Initialize popup close button
+      const popupClose = document.getElementById('popup-close');
+      if (popupClose) {
+        popupClose.addEventListener('click', closePopup);
+      }
+      
+      // Close popup when clicking outside
+      const popupOverlay = document.getElementById('content-popup');
+      if (popupOverlay) {
+        popupOverlay.addEventListener('click', function(e) {
+          if (e.target === this) {
+            closePopup();
+          }
+        });
+      }
+    });
+
+    // Function to load content for a section
+    async function loadContent(type, containerId, filter = 'all', limit = 8) {
+      try {
+        const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+        const container = document.getElementById(containerId);
+        
+        if (!container) return;
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+          </div>
+        `;
+        
+        let url = `${API_BASE}/api/content`;
+        const params = new URLSearchParams();
+        
+        if (type !== 'all') {
+          params.append('type', type);
+        }
+        
+        if (filter !== 'all') {
+          params.append('category', filter);
+        }
+        
+        params.append('limit', limit);
+        
+        url += `?${params.toString()}`;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(url, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Handle different response structures
+        let contentArray = [];
+        if (content[type]) {
+          contentArray = content[type];
+        } else if (Array.isArray(content)) {
+          contentArray = content;
+        } else if (content.data && Array.isArray(content.data)) {
+          contentArray = content.data;
+        }
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        if (contentArray.length === 0) {
+          container.innerHTML = '<p class="no-content">No content available</p>';
+          return;
+        }
+        
+        // Add content to container
+        contentArray.forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = createContentCard(item, itemType);
+          container.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Error loading content:', error);
+        const container = document.getElementById(containerId);
+        if (container) {
+          container.innerHTML = `
+            <p class="error-message">
+              Failed to load content. ${error.message || 'Please try again later.'}
+            </p>
+          `;
+        }
+      }
+    }
+
+    // Function to create content card
+    function createContentCard(item, itemType) {
+      const isLive = item.is_live || false;
+      const viewsText = isLive ? 
+        `${item.viewers_count || 0} watching` : 
+        `${item.views_count || item.view_count || 0} views`;
+      
+      const card = document.createElement('a');
+      card.href = 'javascript:void(0)';
+      card.className = 'stream-card';
+      card.setAttribute('data-content-id', item.id);
+      card.setAttribute('data-content-type', itemType);
+      
+      card.innerHTML = `
+        <div class="card-img">
+          <img src="${item.thumbnail || item.thumbnail_url || 'https://via.placeholder.com/400x225'}" 
+               alt="${item.title || item.name}" 
+               onerror="this.src='https://via.placeholder.com/400x225'">
+          ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+          ${item.requires_premium || item.is_premium ? '<div class="premium-badge">PREMIUM</div>' : ''}
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">${item.title || item.name}</h3>
+          <div class="card-meta">
+            <span>${item.category || 'Sports'}</span>
+            <span class="card-views">${viewsText}</span>
+          </div>
+        </div>
+      `;
+      
+      // Add click event to show popup
+      card.addEventListener('click', function() {
+        showContentPopup(item.id, itemType);
+      });
+      
+      return card;
+    }
+    
+    // Function to show content popup
+    function showContentPopup(contentId, contentType) {
+      currentContentId = contentId;
+      currentContentType = contentType;
+      
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Load content details
+        loadContentDetails(contentId, contentType);
+      }
+    }
+    
+    // Function to close popup
+    function closePopup() {
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // Function to load content details from backend
+    async function loadContentDetails(contentId, contentType) {
+      try {
+        const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content/${contentType}/${contentId}`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Update popup with content details
+        updatePopupContent(content, contentType);
+        
+        // Check favorite status if user is logged in
+        if (window.authManager && window.authManager.isAuthenticated()) {
+          checkFavoriteStatus();
+        }
+      } catch (error) {
+        console.error('Error loading content details:', error);
+        showPopupError('Failed to load content details');
+      }
+    }
+    
+    // Function to update popup with content details
+    function updatePopupContent(content, contentType) {
+      // Update hero image
+      const popupHero = document.getElementById('popup-hero');
+      if (popupHero) {
+        const thumbnail = content.thumbnail || content.thumbnail_url || 'https://via.placeholder.com/400x225';
+        
+        popupHero.innerHTML = `
+          <img src="${thumbnail}" alt="${content.title || content.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+          <div class="popup-hero-overlay"></div>
+          <div class="popup-badges">
+            ${content.is_live ? '<div class="badge live">LIVE</div>' : ''}
+            ${content.requires_premium ? '<div class="badge premium">PREMIUM</div>' : ''}
+          </div>
+        `;
+      }
+      
+      // Update title
+      const popupTitle = document.getElementById('popup-title');
+      if (popupTitle) {
+        popupTitle.textContent = content.title || content.name;
+      }
+      
+      // Update metadata
+      const popupCategory = document.getElementById('popup-category');
+      const popupViews = document.getElementById('popup-views');
+      
+      if (popupCategory) {
+        popupCategory.textContent = content.category || 'Sports';
+      }
+      
+      if (popupViews) {
+        if (contentType === 'live' || content.is_live) {
+          popupViews.textContent = `${content.viewers_count || 0} watching`;
+        } else {
+          popupViews.textContent = `${content.views_count || content.view_count || 0} views`;
+        }
+      }
+      
+      // Update action buttons based on auth status
+      updatePopupActions();
+    }
+    
+    // Function to update popup action buttons based on auth status
+    function updatePopupActions() {
+      const popupActions = document.getElementById('popup-actions');
+      if (!popupActions) return;
+      
+      const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
+      
+      if (isAuthenticated) {
+        // User is logged in - show favorite and play buttons
+        popupActions.innerHTML = `
+          <button class="popup-btn-icon" id="popup-favorite">
+            <i class="far fa-heart"></i>
+          </button>
+          <a href="player.html?type=${currentContentType}&id=${currentContentId}" class="popup-btn popup-btn-primary">
+            <i class="fas fa-play"></i> Play Now
+          </a>
+        `;
+        
+        // Add event listener to favorite button
+        const favoriteBtn = document.getElementById('popup-favorite');
+        if (favoriteBtn) {
+          favoriteBtn.addEventListener('click', toggleFavorite);
+        }
+      } else {
+        // User is not logged in - show sign in button
+        popupActions.innerHTML = `
+          <a href="signin.html?redirect=${encodeURIComponent(window.location.href)}" class="popup-btn popup-btn-primary">
+            Sign In to Access
+          </a>
+        `;
+      }
+    }
+    
+    // Function to check favorite status
+    async function checkFavoriteStatus() {
+      if (!currentContentId || !currentContentType) return;
+      
+      try {
+        if (window.authManager && window.authManager.checkFavoriteStatus) {
+          const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+          if (result.success) {
+            currentFavoriteId = result.favoriteId;
+            const favoriteBtn = document.getElementById('popup-favorite');
+            if (favoriteBtn) {
+              if (result.isFavorited) {
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                favoriteBtn.classList.add('active');
+              } else {
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+                favoriteBtn.classList.remove('active');
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+      }
+    }
+    
+    // Function to toggle favorite status
+    async function toggleFavorite() {
+      if (!window.authManager || !window.authManager.isAuthenticated()) {
+        alert('Please sign in to add favorites');
+        window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
+      }
+      
+      const favoriteBtn = document.getElementById('popup-favorite');
+      if (!favoriteBtn) return;
+      
+      try {
+        // Show loading state
+        favoriteBtn.disabled = true;
+        const originalHtml = favoriteBtn.innerHTML;
+        favoriteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        if (currentFavoriteId) {
+          // Remove from favorites
+          if (window.authManager.removeFromFavorites) {
+            const result = await window.authManager.removeFromFavorites(currentFavoriteId);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+              favoriteBtn.classList.remove('active');
+              currentFavoriteId = null;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        } else {
+          // Add to favorites
+          if (window.authManager.addToFavorites) {
+            const result = await window.authManager.addToFavorites(currentContentId, currentContentType);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+              favoriteBtn.classList.add('active');
+              currentFavoriteId = result.favoriteId;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+        alert('An error occurred. Please try again.');
+        favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+      } finally {
+        favoriteBtn.disabled = false;
+      }
+    }
+    
+    // Function to show error in popup
+    function showPopupError(message) {
+      const popupHero = document.getElementById('popup-hero');
+      const popupActions = document.getElementById('popup-actions');
+      
+      if (popupHero) {
+        popupHero.innerHTML = `
+          <div class="popup-loading">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>${message}</p>
+          </div>
+        `;
+      }
+      
+      if (popupActions) {
+        popupActions.innerHTML = `
+          <button class="popup-btn" onclick="closePopup()">
+            Close
+          </button>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
