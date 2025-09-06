@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PEGASUS - Content Access</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Popup overlay */
     .popup-overlay {
@@ -164,6 +161,39 @@
       gap: 12px;
     }
 
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #000;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      text-align: center;
+      flex: 1;
+    }
+
+    .btn:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-light);
+    }
+
     .btn-icon {
       width: 44px;
       height: 44px;
@@ -196,6 +226,21 @@
       align-items: center;
       justify-content: center;
       padding: 60px 20px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -251,7 +296,34 @@
           }
         });
       }
+      
+      // Add event listeners to all content cards
+      setTimeout(() => {
+        setupContentCards();
+      }, 500);
     });
+
+    // Function to setup content card click handlers
+    function setupContentCards() {
+      const contentCards = document.querySelectorAll('.stream-card');
+      
+      contentCards.forEach(card => {
+        // Remove existing click handlers
+        card.replaceWith(card.cloneNode(true));
+        
+        // Add new click handler
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const contentId = this.getAttribute('data-content-id');
+          const contentType = this.getAttribute('data-content-type');
+          
+          if (contentId && contentType) {
+            showContentPopup(contentId, contentType);
+          }
+        });
+      });
+    }
 
     // Function to show content popup
     function showContentPopup(contentId, contentType) {
@@ -282,10 +354,7 @@
       try {
         const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
         
-        // Use the authManager to check authentication status
-        const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
-        const token = isAuthenticated ? window.authManager.getToken() : null;
-        
+        const token = window.authManager ? window.authManager.getToken() : null;
         const headers = {
           'Content-Type': 'application/json'
         };
@@ -306,7 +375,7 @@
         updatePopupContent(content, contentType);
         
         // Check favorite status if user is logged in
-        if (isAuthenticated) {
+        if (window.authManager && window.authManager.isAuthenticated()) {
           checkFavoriteStatus();
         }
       } catch (error) {
@@ -363,7 +432,6 @@
       const popupActions = document.getElementById('popup-actions');
       if (!popupActions) return;
       
-      // Use the authManager to check authentication status
       const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
       
       if (isAuthenticated) {
@@ -420,10 +488,7 @@
 
     // Function to toggle favorite status
     async function toggleFavorite() {
-      // Use the authManager to check authentication status
-      const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
-      
-      if (!isAuthenticated) {
+      if (!window.authManager || !window.authManager.isAuthenticated()) {
         alert('Please sign in to add favorites');
         window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
         return;
@@ -501,5 +566,8 @@
     window.showContentPopup = showContentPopup;
     window.closePopup = closePopup;
   </script>
+
+  <!-- Font Awesome for icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
