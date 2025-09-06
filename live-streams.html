@@ -8,50 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .login-wall-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 18, 0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    .login-wall-content {
-      background: #1a1a2e;
-      padding: 40px;
-      border-radius: 8px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-    }
-
-    .login-wall-content h2 {
-      margin-bottom: 15px;
-      color: #ff003c;
-    }
-
-    .login-wall-content p {
-      margin-bottom: 25px;
-      color: #b3b3b3;
-    }
-
-    .login-wall-buttons {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-    }
-
-    @media (max-width: 480px) {
-      .login-wall-buttons {
-        flex-direction: column;
-      }
-    }
-    
     .loading-placeholder {
       display: flex;
       flex-direction: column;
@@ -100,20 +56,6 @@
     <div class="preloader-content">
       <img src="images/pegasus-logo.png" alt="PEGASUS" class="preloader-logo">
       <div class="loading-circle"></div>
-    </div>
-  </div>
-
-  <!-- Login Wall -->
-  <div id="login-wall" style="display: none;">
-    <div class="login-wall-overlay">
-      <div class="login-wall-content">
-        <h2>Content Restricted</h2>
-        <p>You need to be logged in to access this content</p>
-        <div class="login-wall-buttons">
-          <a href="signin.html?redirect=live-streams.html" class="btn">Sign In</a>
-          <a href="signup.html?redirect=live-streams.html" class="btn btn-outline">Create Account</a>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -226,6 +168,9 @@
     </footer>
   </div>
 
+  <!-- Include the popup -->
+  <div id="popup-container"></div>
+
   <!-- In all HTML files, add this first -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
@@ -260,24 +205,26 @@
         updateAuthUI();
       }
       
-      // Check if user is authenticated
-      const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
-      if (!token) {
-        // Show login wall for protected content
-        document.getElementById('login-wall').style.display = 'block';
-        document.getElementById('main-content').style.display = 'none';
-      } else {
-        // Load live streams content
-        loadLiveStreams();
-        
-        // Set up filter
-        const sportFilter = document.getElementById('sport-filter');
-        if (sportFilter) {
-          sportFilter.addEventListener('change', function() {
-            loadLiveStreams(this.value);
-          });
-        }
+      // Load live streams content
+      loadLiveStreams();
+      
+      // Set up filter
+      const sportFilter = document.getElementById('sport-filter');
+      if (sportFilter) {
+        sportFilter.addEventListener('change', function() {
+          loadLiveStreams(this.value);
+        });
       }
+      
+      // Load popup HTML
+      fetch('popup.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('popup-container').innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error loading popup:', error);
+        });
     });
     
     async function loadLiveStreams(filter = 'all') {
@@ -285,28 +232,22 @@
         const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
         const token = localStorage.getItem('pegasus_token') || sessionStorage.getItem('pegasus_token');
         
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
-        
         let url = `${API_BASE}/api/content?type=live`;
         if (filter !== 'all') {
           url += `&category=${filter}`;
         }
         
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(url, { headers });
         
         if (!response.ok) {
-          if (response.status === 401) {
-            // Token is invalid, show login wall
-            document.getElementById('login-wall').style.display = 'block';
-            document.getElementById('main-content').style.display = 'none';
-            return;
-          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
@@ -347,9 +288,10 @@
     }
     
     function createLiveStreamCard(stream) {
-      const card = document.createElement('a');
-      card.href = `player.html?type=live&id=${stream.id}`;
+      const card = document.createElement('div');
       card.className = 'stream-card';
+      card.setAttribute('data-content-id', stream.id);
+      card.setAttribute('data-content-type', 'live');
       
       const isLive = stream.is_live;
       const viewersText = isLive ? `${stream.viewers_count || 0} watching` : 'Upcoming';
@@ -368,6 +310,13 @@
           </div>
         </div>
       `;
+      
+      // Add click event to show popup
+      card.addEventListener('click', function() {
+        if (typeof showContentPopup === 'function') {
+          showContentPopup(stream.id, 'live');
+        }
+      });
       
       return card;
     }
