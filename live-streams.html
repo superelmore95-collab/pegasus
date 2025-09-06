@@ -168,13 +168,11 @@
     </footer>
   </div>
 
-  <!-- Include the popup -->
-  <div id="popup-container"></div>
-
   <!-- In all HTML files, add this first -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
+  <script src="js/popup.js"></script>
   <script>
     // Live streams specific functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -215,16 +213,6 @@
           loadLiveStreams(this.value);
         });
       }
-      
-      // Load popup HTML
-      fetch('popup.html')
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('popup-container').innerHTML = html;
-        })
-        .catch(error => {
-          console.error('Error loading popup:', error);
-        });
     });
     
     async function loadLiveStreams(filter = 'all') {
@@ -237,15 +225,11 @@
           url += `&category=${filter}`;
         }
         
-        const headers = {
-          'Content-Type': 'application/json'
-        };
-        
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-        
-        const response = await fetch(url, { headers });
+        const response = await fetch(url, {
+          headers: token ? {
+            'Authorization': `Bearer ${token}`
+          } : {}
+        });
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -288,7 +272,8 @@
     }
     
     function createLiveStreamCard(stream) {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
+      card.href = 'javascript:void(0)';
       card.className = 'stream-card';
       card.setAttribute('data-content-id', stream.id);
       card.setAttribute('data-content-type', 'live');
@@ -310,13 +295,6 @@
           </div>
         </div>
       `;
-      
-      // Add click event to show popup
-      card.addEventListener('click', function() {
-        if (typeof showContentPopup === 'function') {
-          showContentPopup(stream.id, 'live');
-        }
-      });
       
       return card;
     }
