@@ -8,7 +8,103 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    .loading-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 20px;
+    }
     
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* DAZN-style header */
+    header {
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hero banner styles */
+    .content-hero {
+      height: 60vh;
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+    }
+    
+    .content-hero .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    
+    .content-hero .slide-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, rgba(10, 10, 18, 0.4) 40%, rgba(10, 10, 18, 0.1) 100%);
+    }
+    
+    .content-hero .slide-content {
+      position: absolute;
+      bottom: 100px;
+      left: 40px;
+      max-width: 60%;
+      text-align: left;
+      z-index: 10;
+    }
+    
+    @media (max-width: 768px) {
+      .content-hero {
+        height: 50vh;
+        min-height: 400px;
+      }
+      
+      .content-hero .slide-content {
+        max-width: 90%;
+        left: 20px;
+        bottom: 60px;
+        text-align: center;
+      }
+      
+      .content-hero .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Explore page specific styles */
     .explore-hero {
       height: 70vh;
       min-height: 500px;
@@ -162,210 +258,266 @@
     </div>
   </div>
 
-<!-- Header -->
-<header>
-  <div class="container">
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
-      </a>
-      
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="explore.html">Explore</a></li>
-        <li><a href="live-streams.html">Live</a></li>
-        <li><a href="vod.html">VOD</a></li>
-        <li><a href="highlights.html">Highlights</a></li>
-        <li><a href="channels.html">Channels</a></li>
-        
-        <!-- Mobile Auth Buttons (Hidden on Desktop) -->
-        <li class="mobile-auth-item">
-          <div class="mobile-auth">
+  <!-- Main Content -->
+  <div id="main-content">
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a href="index.html" class="logo">
+            <img src="images/pegasus-logo.png" alt="PEGASUS Logo">
+          </a>
+          
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="live-streams.html">Live</a></li>
+            <li><a href="vod.html">VOD</a></li>
+            <li><a href="highlights.html">Highlights</a></li>
+            <li><a href="channels.html">Channels</a></li>
+            
+            <!-- Mobile Auth Buttons (Hidden on Desktop) -->
+            <li class="mobile-auth-item">
+              <div class="mobile-auth">
+                <!-- This will be populated by JavaScript -->
+              </div>
+            </li>
+          </ul>
+          
+          <!-- Desktop Auth Buttons (Hidden on Mobile) -->
+          <div class="auth-buttons" id="auth-buttons">
             <!-- This will be populated by JavaScript -->
           </div>
-        </li>
-      </ul>
-      
-      <!-- Desktop Auth Buttons (Hidden on Mobile) -->
-      <div class="auth-buttons" id="auth-buttons">
-        <!-- This will be populated by JavaScript -->
+          
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </nav>
       </div>
-      
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
-  </div>
-</header>
+    </header>
 
-  <!-- Hero Banner -->
-  <section class="explore-hero">
-    <div style="background-image: url('images/explore-banner.jpg');" class="slide active">
-      <div class="slide-overlay"></div>
-      <div class="slide-content">
-        <h2>Explore All Sports</h2>
-        <p>Discover live games, highlights, and channels across all categories</p>
-        <a href="#featured" class="btn">Explore Now</a>
-        <div class="slider-dots">
-          <div class="slider-dot active"></div>
+    <!-- Hero Banner -->
+    <section class="explore-hero">
+      <div style="background-image: url('images/explore-banner.jpg');" class="slide active">
+        <div class="slide-overlay"></div>
+        <div class="slide-content">
+          <h2>Explore All Sports</h2>
+          <p>Discover live games, highlights, and channels across all categories</p>
+          <a href="#featured" class="btn">Explore Now</a>
+          <div class="slider-dots">
+            <div class="slider-dot active"></div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="slider-arrows">
-      <div class="arrow prev">
-        <i class="fas fa-chevron-left"></i>
-      </div>
-      <div class="arrow next">
-        <i class="fas fa-chevron-right"></i>
-      </div>
-    </div>
-  </section>
-
-  <!-- Promotional Banner 1 -->
-  <section class="promo-banner" style="background: url('images/promo-banner-1.jpg') center/cover;">
-    <div class="promo-banner-content">
-      <h2 class="promo-banner-title">Premium Sports Experience</h2>
-      <p class="promo-banner-subtitle">Get access to exclusive content, live events, and premium features with PEGASUS PRO</p>
-      <a href="signup.html" class="btn subscribe-btn">Upgrade Now</a>
-    </div>
-  </section>
-
-  <!-- Sports Leagues Scroll -->
-  <section class="sports-leagues">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Popular Leagues</h2>
-      </div>
       
-      <div class="leagues-scroll">
-        <div class="leagues-nav prev">
+      <div class="slider-arrows">
+        <div class="arrow prev">
           <i class="fas fa-chevron-left"></i>
         </div>
-        
-        <div class="league-item">
-          <img src="images/premier-league.png" alt="Premier League">
-          <div>Premier League</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/nba.png" alt="NBA">
-          <div>NBA</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/uefa.png" alt="UEFA">
-          <div>UEFA Champions League</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/nfl.png" alt="NFL">
-          <div>NFL</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/formula1.png" alt="Formula 1">
-          <div>Formula 1</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/ufc.png" alt="UFC">
-          <div>UFC</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/mlb.png" alt="MLB">
-          <div>MLB</div>
-        </div>
-        
-        <div class="league-item">
-          <img src="images/nhl.png" alt="NHL">
-          <div>NHL</div>
-        </div>
-        
-        <div class="leagues-nav next">
+        <div class="arrow next">
           <i class="fas fa-chevron-right"></i>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Content from Backend Section -->
-  <section id="featured" class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Featured Content</h2>
-        <a href="explore.html" class="view-all">View All</a>
+    <!-- Promotional Banner 1 -->
+    <section class="promo-banner" style="background: url('images/promo-banner-1.jpg') center/cover;">
+      <div class="promo-banner-content">
+        <h2 class="promo-banner-title">Premium Sports Experience</h2>
+        <p class="promo-banner-subtitle">Get access to exclusive content, live events, and premium features with PEGASUS PRO</p>
+        <a href="signup.html" class="btn subscribe-btn">Upgrade Now</a>
       </div>
-      
-      <div class="stream-grid" id="featured-content">
-        <div class="loading-placeholder">
-          <div class="loading-spinner"></div>
-          <p>Loading featured content...</p>
+    </section>
+
+    <!-- Sports Leagues Scroll -->
+    <section class="sports-leagues">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Popular Leagues</h2>
+        </div>
+        
+        <div class="leagues-scroll">
+          <div class="leagues-nav prev">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/premier-league.png" alt="Premier League">
+            <div>Premier League</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/nba.png" alt="NBA">
+            <div>NBA</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/uefa.png" alt="UEFA">
+            <div>UEFA Champions League</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/nfl.png" alt="NFL">
+            <div>NFL</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/formula1.png" alt="Formula 1">
+            <div>Formula 1</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/ufc.png" alt="UFC">
+            <div>UFC</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/mlb.png" alt="MLB">
+            <div>MLB</div>
+          </div>
+          
+          <div class="league-item">
+            <img src="images/nhl.png" alt="NHL">
+            <div>NHL</div>
+          </div>
+          
+          <div class="leagues-nav next">
+            <i class="fas fa-chevron-right"></i>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Promotional Banner 2 -->
-  <section class="promo-banner" style="background: url('images/promo-banner-2.jpg') center/cover;">
-    <div class="promo-banner-content">
-      <h2 class="promo-banner-title">Never Miss a Game</h2>
-      <p class="promo-banner-subtitle">Set reminders for your favorite teams and get notified before every match</p>
-      <a href="signup.html" class="btn">Get Started</a>
-    </div>
-  </section>
-
-  <!-- MMA Content Section -->
-  <section class="section">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">MMA Content</h2>
-        <a href="explore.html?category=MMA" class="view-all">View All</a>
-      </div>
-      
-      <div class="stream-grid" id="mma-content">
-        <div class="loading-placeholder">
-          <div class="loading-spinner"></div>
-          <p>Loading MMA content...</p>
+    <!-- Content from Backend Section -->
+    <section id="featured" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Featured Content</h2>
+          <a href="explore.html" class="view-all">View All</a>
+        </div>
+        
+        <div class="stream-grid" id="featured-content">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading featured content...</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Upcoming Events Section -->
-  <section class="section" style="background: var(--secondary);">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Upcoming Events</h2>
+    <!-- Promotional Banner 2 -->
+    <section class="promo-banner" style="background: url('images/promo-banner-2.jpg') center/cover;">
+      <div class="promo-banner-content">
+        <h2 class="promo-banner-title">Never Miss a Game</h2>
+        <p class="promo-banner-subtitle">Set reminders for your favorite teams and get notified before every match</p>
+        <a href="signup.html" class="btn">Get Started</a>
       </div>
-      
-      <div class="stream-grid" id="upcoming-events-container">
-        <div class="loading-placeholder">
-          <div class="loading-spinner"></div>
-          <p>Loading upcoming events...</p>
+    </section>
+
+    <!-- MMA Content Section -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">MMA Content</h2>
+          <a href="explore.html?category=MMA" class="view-all">View All</a>
+        </div>
+        
+        <div class="stream-grid" id="mma-content">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading MMA content...</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer>
-      
-      <div class="copyright">
-        &copy; 2026 PEGASUS Sports Streaming. All rights reserved.
+    <!-- Upcoming Events Section -->
+    <section class="section" style="background: var(--secondary);">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Upcoming Events</h2>
+        </div>
+        
+        <div class="stream-grid" id="upcoming-events-container">
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading upcoming events...</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </footer>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-column">
+            <h3>PEGASUS</h3>
+            <p>The ultimate sports streaming platform with live events, on-demand content, and exclusive coverage.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Legal</h3>
+            <ul class="footer-links">
+              <li><a href="terms.html">Terms of Service</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li><a href="dmca.html">DMCA Policy</a></li>
+              <li><a href="cookie.html">Cookie Policy</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Support</h3>
+            <ul class="footer-links">
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="contact.html">Contact Us</a></li>
+              <li><a href="faq.html">FAQs</a></li>
+              <li><a href="help.html">Help Center</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="copyright">
+          &copy; 2026 PEGASUS Sports Streaming. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Popup Container -->
+  <div id="popup-container"></div>
 
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
   <script>
+    // API base URL
+    const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
+    
+    // Global variables for popup functionality
+    let currentContentId = null;
+    let currentContentType = null;
+    let currentFavoriteId = null;
+
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Load popup component
+      fetch('popup.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('popup-container').innerHTML = html;
+          // Reinitialize any scripts if needed
+          initPopupFunctionality();
+        });
+
       // Initialize mobile menu
       const hamburger = document.querySelector('.hamburger');
       const navLinks = document.querySelector('.nav-links');
@@ -410,11 +562,264 @@
         });
       }
     });
-    
+
+    // Initialize popup functionality
+    function initPopupFunctionality() {
+      // Initialize popup close button
+      const popupClose = document.getElementById('popup-close');
+      if (popupClose) {
+        popupClose.addEventListener('click', closePopup);
+      }
+      
+      // Close popup when clicking outside
+      const popupOverlay = document.getElementById('content-popup');
+      if (popupOverlay) {
+        popupOverlay.addEventListener('click', function(e) {
+          if (e.target === this) {
+            closePopup();
+          }
+        });
+      }
+    }
+
+    // Function to show content popup
+    function showContentPopup(contentId, contentType) {
+      currentContentId = contentId;
+      currentContentType = contentType;
+      
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Load content details
+        loadContentDetails(contentId, contentType);
+      }
+    }
+
+    // Function to close popup
+    function closePopup() {
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Function to load content details from backend
+    async function loadContentDetails(contentId, contentType) {
+      try {
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content/${contentType}/${contentId}`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Update popup with content details
+        updatePopupContent(content, contentType);
+        
+        // Check favorite status if user is logged in
+        if (window.authManager && window.authManager.isAuthenticated()) {
+          checkFavoriteStatus();
+        }
+      } catch (error) {
+        console.error('Error loading content details:', error);
+        showPopupError('Failed to load content details');
+      }
+    }
+
+    // Function to update popup with content details
+    function updatePopupContent(content, contentType) {
+      // Update hero image
+      const popupHero = document.getElementById('popup-hero');
+      if (popupHero) {
+        const thumbnail = content.thumbnail || content.thumbnail_url || 'https://via.placeholder.com/400x225';
+        
+        popupHero.innerHTML = `
+          <img src="${thumbnail}" alt="${content.title || content.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+          <div class="popup-hero-overlay"></div>
+          <div class="popup-badges">
+            ${content.is_live ? '<div class="badge live">LIVE</div>' : ''}
+            ${content.requires_premium ? '<div class="badge premium">PREMIUM</div>' : ''}
+          </div>
+        `;
+      }
+      
+      // Update title
+      const popupTitle = document.getElementById('popup-title');
+      if (popupTitle) {
+        popupTitle.textContent = content.title || content.name;
+      }
+      
+      // Update metadata
+      const popupCategory = document.getElementById('popup-category');
+      const popupViews = document.getElementById('popup-views');
+      
+      if (popupCategory) {
+        popupCategory.textContent = content.category || 'Sports';
+      }
+      
+      if (popupViews) {
+        if (contentType === 'live' || content.is_live) {
+          popupViews.textContent = `${content.viewers_count || 0} watching`;
+        } else {
+          popupViews.textContent = `${content.views_count || content.view_count || 0} views`;
+        }
+      }
+      
+      // Update action buttons based on auth status
+      updatePopupActions();
+    }
+
+    // Function to update popup action buttons based on auth status
+    function updatePopupActions() {
+      const popupActions = document.getElementById('popup-actions');
+      if (!popupActions) return;
+      
+      const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
+      
+      if (isAuthenticated) {
+        // User is logged in - show favorite and play buttons
+        popupActions.innerHTML = `
+          <button class="popup-btn-icon" id="popup-favorite">
+            <i class="far fa-heart"></i>
+          </button>
+          <a href="player.html?type=${currentContentType}&id=${currentContentId}" class="popup-btn popup-btn-primary">
+            <i class="fas fa-play"></i> Play Now
+          </a>
+        `;
+        
+        // Add event listener to favorite button
+        const favoriteBtn = document.getElementById('popup-favorite');
+        if (favoriteBtn) {
+          favoriteBtn.addEventListener('click', toggleFavorite);
+        }
+      } else {
+        // User is not logged in - show sign in button
+        popupActions.innerHTML = `
+          <a href="signin.html?redirect=${encodeURIComponent(window.location.href)}" class="popup-btn popup-btn-primary">
+            Sign In to Access
+          </a>
+        `;
+      }
+    }
+
+    // Function to check favorite status
+    async function checkFavoriteStatus() {
+      if (!currentContentId || !currentContentType) return;
+      
+      try {
+        if (window.authManager && window.authManager.checkFavoriteStatus) {
+          const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+          if (result.success) {
+            currentFavoriteId = result.favoriteId;
+            const favoriteBtn = document.getElementById('popup-favorite');
+            if (favoriteBtn) {
+              if (result.isFavorited) {
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                favoriteBtn.classList.add('active');
+              } else {
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+                favoriteBtn.classList.remove('active');
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+      }
+    }
+
+    // Function to toggle favorite status
+    async function toggleFavorite() {
+      if (!window.authManager || !window.authManager.isAuthenticated()) {
+        alert('Please sign in to add favorites');
+        window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
+      }
+      
+      const favoriteBtn = document.getElementById('popup-favorite');
+      if (!favoriteBtn) return;
+      
+      try {
+        // Show loading state
+        favoriteBtn.disabled = true;
+        const originalHtml = favoriteBtn.innerHTML;
+        favoriteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        if (currentFavoriteId) {
+          // Remove from favorites
+          if (window.authManager.removeFromFavorites) {
+            const result = await window.authManager.removeFromFavorites(currentFavoriteId);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+              favoriteBtn.classList.remove('active');
+              currentFavoriteId = null;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        } else {
+          // Add to favorites
+          if (window.authManager.addToFavorites) {
+            const result = await window.authManager.addToFavorites(currentContentId, currentContentType);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+              favoriteBtn.classList.add('active');
+              currentFavoriteId = result.favoriteId;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+        alert('An error occurred. Please try again.');
+        favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+      } finally {
+        favoriteBtn.disabled = false;
+      }
+    }
+
+    // Function to show error in popup
+    function showPopupError(message) {
+      const popupHero = document.getElementById('popup-hero');
+      const popupActions = document.getElementById('popup-actions');
+      
+      if (popupHero) {
+        popupHero.innerHTML = `
+          <div class="popup-loading">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>${message}</p>
+          </div>
+        `;
+      }
+      
+      if (popupActions) {
+        popupActions.innerHTML = `
+          <button class="popup-btn" onclick="closePopup()">
+            Close
+          </button>
+        `;
+      }
+    }
+
     // Load featured content from backend
     async function loadFeaturedContent() {
       try {
-        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
         const container = document.getElementById('featured-content');
         
         // Show loading state
@@ -464,8 +869,10 @@
           const isLive = item.is_live || false;
           const itemType = isLive ? 'live' : (item.type || 'vod');
           const card = document.createElement('a');
-          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.href = 'javascript:void(0)';
           card.className = 'stream-card';
+          card.setAttribute('data-content-id', item.id);
+          card.setAttribute('data-content-type', itemType);
           
           card.innerHTML = `
             <div class="card-img">
@@ -484,6 +891,11 @@
             </div>
           `;
           
+          // Add click event to show popup
+          card.addEventListener('click', function() {
+            showContentPopup(item.id, itemType);
+          });
+          
           container.appendChild(card);
         });
         
@@ -497,7 +909,6 @@
     // Load MMA content
     async function loadMMAContent() {
       try {
-        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
         const container = document.getElementById('mma-content');
         
         // Show loading state
@@ -547,8 +958,10 @@
           const isLive = item.is_live || false;
           const itemType = isLive ? 'live' : (item.type || 'vod');
           const card = document.createElement('a');
-          card.href = `player.html?type=${itemType}&id=${item.id}`;
+          card.href = 'javascript:void(0)';
           card.className = 'stream-card';
+          card.setAttribute('data-content-id', item.id);
+          card.setAttribute('data-content-type', itemType);
           
           card.innerHTML = `
             <div class="card-img">
@@ -567,6 +980,11 @@
             </div>
           `;
           
+          // Add click event to show popup
+          card.addEventListener('click', function() {
+            showContentPopup(item.id, itemType);
+          });
+          
           container.appendChild(card);
         });
         
@@ -580,7 +998,6 @@
     // Load upcoming events
     async function loadUpcomingEvents() {
       try {
-        const API_BASE = 'https://pegasus-backend.super-elmore95.workers.dev';
         const container = document.getElementById('upcoming-events-container');
         
         // Show loading state
@@ -621,8 +1038,10 @@
         // Display events
         upcomingEvents.forEach(event => {
           const card = document.createElement('a');
-          card.href = `player.html?type=live&id=${event.id}`;
+          card.href = 'javascript:void(0)';
           card.className = 'stream-card';
+          card.setAttribute('data-content-id', event.id);
+          card.setAttribute('data-content-type', 'live');
           
           const eventDate = new Date(event.start_time || event.created_at);
           const formattedDate = eventDate.toLocaleDateString('en-US', { 
@@ -649,6 +1068,11 @@
               </div>
             </div>
           `;
+          
+          // Add click event to show popup
+          card.addEventListener('click', function() {
+            showContentPopup(event.id, 'live');
+          });
           
           container.appendChild(card);
         });
