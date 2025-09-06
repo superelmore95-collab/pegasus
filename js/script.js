@@ -32,6 +32,9 @@ class PegasusApp {
     if (document.getElementById('channels-content')) {
       this.loadContent('channel', 'channels-content', 'all', 4);
     }
+    
+    // Setup content cards for popup
+    this.setupContentCards();
   }
 
   setupScrollHeader() {
@@ -292,6 +295,48 @@ class PegasusApp {
     }
   }
 
+  // Setup content cards for popup functionality
+  setupContentCards() {
+    // Add event listeners to all content cards
+    const contentCards = document.querySelectorAll('.stream-card');
+    
+    contentCards.forEach(card => {
+      // Check if card already has click handler
+      if (!card.hasAttribute('data-content-id')) {
+        // Extract content ID and type from href if it's a link
+        if (card.tagName === 'A' && card.href) {
+          const url = new URL(card.href);
+          const params = new URLSearchParams(url.search);
+          const contentId = params.get('id');
+          const contentType = params.get('type');
+          
+          if (contentId && contentType) {
+            card.setAttribute('data-content-id', contentId);
+            card.setAttribute('data-content-type', contentType);
+            
+            // Prevent default link behavior
+            card.addEventListener('click', function(e) {
+              e.preventDefault();
+              if (typeof showContentPopup === 'function') {
+                showContentPopup(contentId, contentType);
+              }
+            });
+          }
+        }
+      } else {
+        // Card already has data attributes, just ensure it has click handler
+        card.addEventListener('click', function() {
+          const contentId = this.getAttribute('data-content-id');
+          const contentType = this.getAttribute('data-content-type');
+          
+          if (contentId && contentType && typeof showContentPopup === 'function') {
+            showContentPopup(contentId, contentType);
+          }
+        });
+      }
+    });
+  }
+
   async loadContent(type, containerId, filter = 'all', limit = 8) {
     try {
       const container = document.getElementById(containerId);
@@ -368,7 +413,9 @@ class PegasusApp {
       
       // Add content to container
       contentArray.forEach(item => {
-        const card = document.createElement('a');
+        const card = document.createElement('div');
+        card.className = 'stream-card';
+        card.setAttribute('data-content-id', item.id);
         
         // Determine content type for URL
         let itemType = 'vod';
@@ -376,8 +423,7 @@ class PegasusApp {
         if (item.type === 'highlight') itemType = 'highlight';
         if (item.type === 'channel') itemType = 'channel';
         
-        card.href = `player.html?type=${itemType}&id=${item.id}`;
-        card.className = 'stream-card';
+        card.setAttribute('data-content-type', itemType);
         
         const isLive = item.is_live || false;
         const viewsText = isLive ? 
@@ -400,6 +446,13 @@ class PegasusApp {
             </div>
           </div>
         `;
+        
+        // Add click event to show popup
+        card.addEventListener('click', function() {
+          if (typeof showContentPopup === 'function') {
+            showContentPopup(item.id, itemType);
+          }
+        });
         
         container.appendChild(card);
       });
