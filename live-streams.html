@@ -168,12 +168,25 @@
     </footer>
   </div>
 
+  <!-- Include the popup component -->
+  <div id="popup-container"></div>
+
   <!-- In all HTML files, add this first -->
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/script.js"></script>
-  <script src="js/popup.js"></script>
   <script>
+    // Load popup component
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load popup HTML
+      fetch('popup.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('popup-container').innerHTML = html;
+          // Reinitialize any scripts if needed
+        });
+    });
+
     // Live streams specific functionality
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize mobile menu
@@ -226,9 +239,9 @@
         }
         
         const response = await fetch(url, {
-          headers: token ? {
-            'Authorization': `Bearer ${token}`
-          } : {}
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+          }
         });
         
         if (!response.ok) {
@@ -295,6 +308,11 @@
           </div>
         </div>
       `;
+      
+      // Add click event
+      card.addEventListener('click', function() {
+        showContentPopup(stream.id, 'live');
+      });
       
       return card;
     }
