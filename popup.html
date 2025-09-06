@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PEGASUS - Content Access</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Popup overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 18, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Popup container */
+    .content-popup {
+      width: 90%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .popup-overlay.active .content-popup {
+      transform: scale(1);
+    }
+
+    /* Close button */
+    .popup-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      transition: var(--transition);
+    }
+
+    .popup-close:hover {
+      background: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    /* Hero section */
+    .popup-hero {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .popup-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup-hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, transparent 100%);
+    }
+
+    /* Content badges */
+    .popup-badges {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .badge.live {
+      background: var(--danger);
+      color: white;
+    }
+
+    .badge.live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      margin-right: 4px;
+      animation: pulse 1.5s infinite;
+    }
+
+    .badge.premium {
+      background: var(--warning);
+      color: #000;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Content info */
+    .popup-info {
+      padding: 20px;
+    }
+
+    .popup-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .popup-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Action buttons */
+    .popup-actions {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+      background: var(--accent);
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    .btn-icon.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* Loading state */
+    .popup-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Popup Structure -->
+  <div class="popup-overlay" id="content-popup">
+    <div class="content-popup">
+      <button class="popup-close" id="popup-close">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="popup-hero" id="popup-hero">
+        <div class="popup-loading">
+          <div class="loading-spinner"></div>
+          <p>Loading content...</p>
+        </div>
+      </div>
+      
+      <div class="popup-info">
+        <h3 class="popup-title" id="popup-title">Content Title</h3>
+        <div class="popup-meta" id="popup-meta">
+          <span id="popup-category">Sports</span>
+          <span id="popup-views">0 views</span>
+        </div>
+      </div>
+      
+      <div class="popup-actions" id="popup-actions">
+        <!-- Content will be populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let currentContentId = null;
+    let currentContentType = null;
+    let currentFavoriteId = null;
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize popup close button
+      const popupClose = document.getElementById('popup-close');
+      if (popupClose) {
+        popupClose.addEventListener('click', closePopup);
+      }
+      
+      // Close popup when clicking outside
+      const popupOverlay = document.getElementById('content-popup');
+      if (popupOverlay) {
+        popupOverlay.addEventListener('click', function(e) {
+          if (e.target === this) {
+            closePopup();
+          }
+        });
+      }
+    });
+
+    // Function to show content popup
+    function showContentPopup(contentId, contentType) {
+      currentContentId = contentId;
+      currentContentType = contentType;
+      
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Load content details
+        loadContentDetails(contentId, contentType);
+      }
+    }
+
+    // Function to close popup
+    function closePopup() {
+      const popup = document.getElementById('content-popup');
+      if (popup) {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Function to load content details from backend
+    async function loadContentDetails(contentId, contentType) {
+      try {
+        const API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
+        
+        // Use the authManager to check authentication status
+        const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
+        const token = isAuthenticated ? window.authManager.getToken() : null;
+        
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`${API_BASE}/api/content/${contentType}/${contentId}`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Update popup with content details
+        updatePopupContent(content, contentType);
+        
+        // Check favorite status if user is logged in
+        if (isAuthenticated) {
+          checkFavoriteStatus();
+        }
+      } catch (error) {
+        console.error('Error loading content details:', error);
+        showPopupError('Failed to load content details');
+      }
+    }
+
+    // Function to update popup with content details
+    function updatePopupContent(content, contentType) {
+      // Update hero image
+      const popupHero = document.getElementById('popup-hero');
+      if (popupHero) {
+        const thumbnail = content.thumbnail || content.thumbnail_url || 'https://via.placeholder.com/400x225';
+        
+        popupHero.innerHTML = `
+          <img src="${thumbnail}" alt="${content.title || content.name}" onerror="this.src='https://via.placeholder.com/400x225'">
+          <div class="popup-hero-overlay"></div>
+          <div class="popup-badges">
+            ${content.is_live ? '<div class="badge live">LIVE</div>' : ''}
+            ${content.requires_premium ? '<div class="badge premium">PREMIUM</div>' : ''}
+          </div>
+        `;
+      }
+      
+      // Update title
+      const popupTitle = document.getElementById('popup-title');
+      if (popupTitle) {
+        popupTitle.textContent = content.title || content.name;
+      }
+      
+      // Update metadata
+      const popupCategory = document.getElementById('popup-category');
+      const popupViews = document.getElementById('popup-views');
+      
+      if (popupCategory) {
+        popupCategory.textContent = content.category || 'Sports';
+      }
+      
+      if (popupViews) {
+        if (contentType === 'live' || content.is_live) {
+          popupViews.textContent = `${content.viewers_count || 0} watching`;
+        } else {
+          popupViews.textContent = `${content.views_count || content.view_count || 0} views`;
+        }
+      }
+      
+      // Update action buttons based on auth status
+      updatePopupActions();
+    }
+
+    // Function to update popup action buttons based on auth status
+    function updatePopupActions() {
+      const popupActions = document.getElementById('popup-actions');
+      if (!popupActions) return;
+      
+      // Use the authManager to check authentication status
+      const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
+      
+      if (isAuthenticated) {
+        // User is logged in - show favorite and play buttons
+        popupActions.innerHTML = `
+          <button class="btn-icon" id="popup-favorite">
+            <i class="far fa-heart"></i>
+          </button>
+          <a href="player.html?type=${currentContentType}&id=${currentContentId}" class="btn btn-primary">
+            <i class="fas fa-play"></i> Play Now
+          </a>
+        `;
+        
+        // Add event listener to favorite button
+        const favoriteBtn = document.getElementById('popup-favorite');
+        if (favoriteBtn) {
+          favoriteBtn.addEventListener('click', toggleFavorite);
+        }
+      } else {
+        // User is not logged in - show sign in button
+        popupActions.innerHTML = `
+          <a href="signin.html?redirect=${encodeURIComponent(window.location.href)}" class="btn btn-primary">
+            Sign In to Access
+          </a>
+        `;
+      }
+    }
+
+    // Function to check favorite status
+    async function checkFavoriteStatus() {
+      if (!currentContentId || !currentContentType) return;
+      
+      try {
+        if (window.authManager && window.authManager.checkFavoriteStatus) {
+          const result = await window.authManager.checkFavoriteStatus(currentContentId, currentContentType);
+          if (result.success) {
+            currentFavoriteId = result.favoriteId;
+            const favoriteBtn = document.getElementById('popup-favorite');
+            if (favoriteBtn) {
+              if (result.isFavorited) {
+                favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                favoriteBtn.classList.add('active');
+              } else {
+                favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+                favoriteBtn.classList.remove('active');
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+      }
+    }
+
+    // Function to toggle favorite status
+    async function toggleFavorite() {
+      // Use the authManager to check authentication status
+      const isAuthenticated = window.authManager && window.authManager.isAuthenticated();
+      
+      if (!isAuthenticated) {
+        alert('Please sign in to add favorites');
+        window.location.href = 'signin.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
+      }
+      
+      const favoriteBtn = document.getElementById('popup-favorite');
+      if (!favoriteBtn) return;
+      
+      try {
+        // Show loading state
+        favoriteBtn.disabled = true;
+        const originalHtml = favoriteBtn.innerHTML;
+        favoriteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        if (currentFavoriteId) {
+          // Remove from favorites
+          if (window.authManager.removeFromFavorites) {
+            const result = await window.authManager.removeFromFavorites(currentFavoriteId);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+              favoriteBtn.classList.remove('active');
+              currentFavoriteId = null;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        } else {
+          // Add to favorites
+          if (window.authManager.addToFavorites) {
+            const result = await window.authManager.addToFavorites(currentContentId, currentContentType);
+            if (result.success) {
+              favoriteBtn.innerHTML = '<i class="fas fa-heart"></i>';
+              favoriteBtn.classList.add('active');
+              currentFavoriteId = result.favoriteId;
+            } else {
+              alert('Error: ' + result.error);
+              favoriteBtn.innerHTML = originalHtml;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+        alert('An error occurred. Please try again.');
+        favoriteBtn.innerHTML = '<i class="far fa-heart"></i>';
+      } finally {
+        favoriteBtn.disabled = false;
+      }
+    }
+
+    // Function to show error in popup
+    function showPopupError(message) {
+      const popupHero = document.getElementById('popup-hero');
+      const popupActions = document.getElementById('popup-actions');
+      
+      if (popupHero) {
+        popupHero.innerHTML = `
+          <div class="popup-loading">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>${message}</p>
+          </div>
+        `;
+      }
+      
+      if (popupActions) {
+        popupActions.innerHTML = `
+          <button class="btn" onclick="closePopup()">
+            Close
+          </button>
+        `;
+      }
+    }
+
+    // Make functions available globally
+    window.showContentPopup = showContentPopup;
+    window.closePopup = closePopup;
+  </script>
+</body>
+</html>
