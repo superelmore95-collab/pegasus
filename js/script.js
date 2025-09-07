@@ -1,4 +1,4 @@
-// script.js - Main Application Script with Popup Integration
+// script.js - Enhanced Main Application Script for PEGASUS Sports Streaming
 class PegasusApp {
   constructor() {
     this.API_BASE = window.PEGASUS_CONFIG ? window.PEGASUS_CONFIG.API_BASE : 'https://pegasus-backend.super-elmore95.workers.dev';
@@ -16,25 +16,104 @@ class PegasusApp {
       this.initHeroSlider();
     }
     
+    // Load content sections based on page structure
+    this.loadAllContentSections();
+    
+    // Setup content cards for popup
+    this.setupContentCards();
+  }
+
+  // Load all content sections on the page
+  loadAllContentSections() {
+    // Live content
     if (document.getElementById('live-content')) {
       this.loadContent('live', 'live-content', 'all', 4);
     }
     
+    // VOD content
     if (document.getElementById('vod-content')) {
       this.loadContent('vod', 'vod-content', 'all', 4);
     }
     
+    // Highlights content
     if (document.getElementById('highlights-content')) {
       this.loadContent('highlight', 'highlights-content', 'all', 4);
     }
     
-    // Add this line to load channels
+    // Channels content
     if (document.getElementById('channels-content')) {
       this.loadContent('channel', 'channels-content', 'all', 4);
     }
     
-    // Setup content cards for popup
-    this.setupContentCards();
+    // HOT ON PEGASUS (trending content)
+    if (document.getElementById('hot-content')) {
+      this.loadContent('all', 'hot-content', 'all', 6, 'views');
+    }
+    
+    // MMA content
+    if (document.getElementById('mma-content')) {
+      this.loadContent('all', 'mma-content', 'MMA', 6);
+    }
+    
+    // PEGASUS Originals
+    if (document.getElementById('originals-content')) {
+      this.loadContent('all', 'originals-content', 'Originals', 6);
+    }
+    
+    // Sports Documentaries
+    if (document.getElementById('documentaries-content')) {
+      this.loadContent('all', 'documentaries-content', 'Documentaries', 6);
+    }
+    
+    // Sports News
+    if (document.getElementById('news-content')) {
+      this.loadContent('all', 'news-content', 'News', 6);
+    }
+    
+    // PEGASUS Beyond Track
+    if (document.getElementById('beyond-content')) {
+      this.loadContent('all', 'beyond-content', 'Beyond', 6);
+    }
+    
+    // Discover More
+    if (document.getElementById('discover-content')) {
+      this.loadContent('all', 'discover-content', 'all', 6);
+    }
+    
+    // Football content
+    if (document.getElementById('football-content')) {
+      this.loadContent('all', 'football-content', 'Football', 6);
+    }
+    
+    // Basketball content
+    if (document.getElementById('basketball-content')) {
+      this.loadContent('all', 'basketball-content', 'Basketball', 6);
+    }
+    
+    // Racing content
+    if (document.getElementById('racing-content')) {
+      this.loadContent('all', 'racing-content', 'Racing', 6);
+    }
+    
+    // Tennis content
+    if (document.getElementById('tennis-content')) {
+      this.loadContent('all', 'tennis-content', 'Tennis', 6);
+    }
+    
+    // NFL content
+    if (document.getElementById('nfl-content')) {
+      this.loadContent('all', 'nfl-content', 'NFL', 6);
+    }
+    
+    // FBS content
+    if (document.getElementById('fbs-content')) {
+      this.loadContent('all', 'fbs-content', 'FBS', 6);
+    }
+    
+    // Featured content
+    if (document.getElementById('featured-content')) {
+      this.loadContent('all', 'featured-content', 'all', 8);
+    }
   }
 
   setupContentCards() {
@@ -52,7 +131,7 @@ class PegasusApp {
         const contentType = this.getAttribute('data-content-type');
         
         if (contentId && contentType) {
-          // Use the global function from vod.html
+          // Use the global function from explore.html
           if (typeof window.showContentPopup === 'function') {
             window.showContentPopup(contentId, contentType);
           } else {
@@ -322,7 +401,7 @@ class PegasusApp {
     }
   }
 
-  async loadContent(type, containerId, filter = 'all', limit = 8) {
+  async loadContent(type, containerId, filter = 'all', limit = 8, sort = 'date') {
     try {
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -347,6 +426,7 @@ class PegasusApp {
       }
       
       params.append('limit', limit);
+      params.append('sort', sort);
       
       url += `?${params.toString()}`;
       
@@ -386,6 +466,14 @@ class PegasusApp {
         contentArray = content;
       } else if (content.data && Array.isArray(content.data)) {
         contentArray = content.data;
+      } else {
+        // Combine all content types for 'all' requests
+        contentArray = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
       }
       
       // Clear container
