@@ -589,12 +589,7 @@
               <label for="live-category">Category *</label>
               <select id="live-category" class="admin-form-control" required>
                 <option value="">Select Category</option>
-                <option value="Football">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Formula 1">Formula 1</option>
-                <option value="MMA">MMA</option>
-                <option value="other">Other</option>
+                <!-- Categories will be populated dynamically -->
               </select>
             </div>
           </div>
@@ -664,12 +659,7 @@
               <label for="vod-category">Category *</label>
               <select id="vod-category" class="admin-form-control" required>
                 <option value="">Select Category</option>
-                <option value="Football">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Formula 1">Formula 1</option>
-                <option value="MMA">MMA</option>
-                <option value="other">Other</option>
+                <!-- Categories will be populated dynamically -->
               </select>
             </div>
           </div>
@@ -724,12 +714,7 @@
               <label for="highlight-category">Category *</label>
               <select id="highlight-category" class="admin-form-control" required>
                 <option value="">Select Category</option>
-                <option value="Football">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Formula 1">Formula 1</option>
-                <option value="MMA">MMA</option>
-                <option value="other">Other</option>
+                <!-- Categories will be populated dynamically -->
               </select>
             </div>
           </div>
@@ -784,12 +769,7 @@
               <label for="channel-category">Category *</label>
               <select id="channel-category" class="admin-form-control" required>
                 <option value="">Select Category</option>
-                <option value="Football">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Formula 1">Formula 1</option>
-                <option value="MMA">MMA</option>
-                <option value="other">Other</option>
+                <!-- Categories will be populated dynamically -->
               </select>
             </div>
           </div>
@@ -1058,6 +1038,9 @@
       subscriptions: []
     };
 
+    // Available categories (will be populated from backend)
+    let availableCategories = [];
+
     // Check if user is authenticated
     function isAuthenticated() {
       const user = localStorage.getItem('pegasus_user');
@@ -1095,8 +1078,9 @@
           initAdminPanel();
           
           // Load initial data
-          loadDashboardData();
-          loadContentData();
+          await loadDashboardData();
+          await loadCategories(); // Load categories first
+          await loadContentData();
         } else {
           alert('Admin access required');
           window.location.href = 'index.html';
@@ -1174,6 +1158,83 @@
           }
         });
       }
+    }
+
+    // Load categories from backend
+    async function loadCategories() {
+      try {
+        const token = getToken();
+        const response = await fetch(`${API_BASE}/api/content`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Extract unique categories from all content types
+        const categories = new Set();
+        
+        // Extract from live streams
+        if (content.live) {
+          content.live.forEach(item => {
+            if (item.category) categories.add(item.category);
+          });
+        }
+        
+        // Extract from VOD
+        if (content.vod) {
+          content.vod.forEach(item => {
+            if (item.category) categories.add(item.category);
+          });
+        }
+        
+        // Extract from highlights
+        if (content.highlights) {
+          content.highlights.forEach(item => {
+            if (item.category) categories.add(item.category);
+          });
+        }
+        
+        // Extract from channels
+        if (content.channels) {
+          content.channels.forEach(item => {
+            if (item.category) categories.add(item.category);
+          });
+        }
+        
+        // Convert Set to Array and sort
+        availableCategories = Array.from(categories).sort();
+        
+        // Populate category dropdowns in all forms
+        populateCategoryDropdowns();
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      }
+    }
+
+    // Populate category dropdowns in all forms
+    function populateCategoryDropdowns() {
+      const categoryDropdowns = document.querySelectorAll('select[id$="-category"]');
+      
+      categoryDropdowns.forEach(dropdown => {
+        // Clear existing options except the first one
+        while (dropdown.options.length > 1) {
+          dropdown.remove(1);
+        }
+        
+        // Add categories from availableCategories
+        availableCategories.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          dropdown.appendChild(option);
+        });
+      });
     }
 
     async function loadDashboardData() {
@@ -1397,12 +1458,24 @@
       document.querySelectorAll('.content-type-form').forEach(form => {
         form.style.display = 'none';
         form.reset();
+        
+        // Clear edit mode
+        form.removeAttribute('data-edit-mode');
+        form.removeAttribute('data-edit-id');
+        
+        // Reset submit button text
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const contentType = form.id.split('-')[0];
+        submitBtn.textContent = `Save ${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`;
       });
     }
 
     async function handleFormSubmit(contentType) {
       try {
         const token = getToken();
+        const form = document.getElementById(`${contentType}-form`);
+        const isEditMode = form.getAttribute('data-edit-mode') === 'true';
+        const editId = form.getAttribute('data-edit-id');
         
         // Get form data based on content type
         let formData = {};
@@ -1479,29 +1552,37 @@
           }
         });
         
-        const response = await fetch(`${API_BASE}/api/admin/content`, {
-          method: 'POST',
+        let url, method;
+        if (isEditMode) {
+          // Update existing content
+          url = `${API_BASE}/api/admin/content/${contentType}/${editId}`;
+          method = 'PUT';
+        } else {
+          // Create new content
+          url = `${API_BASE}/api/admin/content`;
+          method = 'POST';
+        }
+        
+        const response = await fetch(url, {
+          method: method,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({
-            type: contentType,
-            data: formData
-          }),
+          body: JSON.stringify(isEditMode ? { data: formData } : { type: contentType, data: formData }),
         });
         
         if (response.ok) {
-          alert(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} added successfully!`);
+          alert(`${contentType.charAt(0).toUpperCase() + contentType.slice(1)} ${isEditMode ? 'updated' : 'added'} successfully!`);
           hideAllForms();
           loadContentData();
         } else {
           const errorText = await response.text();
-          alert(`Error adding ${contentType}: ${errorText}`);
+          alert(`Error ${isEditMode ? 'updating' : 'adding'} ${contentType}: ${errorText}`);
         }
       } catch (error) {
         console.error('Error:', error);
-        alert(`Error adding ${contentType}: ${error.message}`);
+        alert(`Error ${isEditMode ? 'updating' : 'adding'} ${contentType}: ${error.message}`);
       }
     }
 
@@ -1624,6 +1705,8 @@
     }
 
     function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      
       const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
       return new Date(dateString).toLocaleDateString(undefined, options);
     }
