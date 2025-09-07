@@ -151,6 +151,32 @@
       }
     }
 
+    /* Section tabs styling */
+    .section-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    .section-tab {
+      padding: 8px 16px;
+      background: var(--card-bg);
+      border: none;
+      border-radius: 30px;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    
+    .section-tab.active {
+      background: var(--accent);
+      color: #000;
+    }
+
     /* Popup overlay */
     .popup-overlay {
       position: fixed;
@@ -558,6 +584,23 @@
     </div>
   </section>
 
+  <!-- HOT ON PEGASUS Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">HOT ON PEGASUS</h2>
+        <a href="explore.html?filter=trending" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="hot-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading hot content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Promotional Banner 2 -->
   <section class="promo-banner" style="background: url('images/promo-banner-2.jpg') center/cover;">
     <div class="promo-banner-content">
@@ -584,8 +627,195 @@
     </div>
   </section>
 
-  <!-- Upcoming Events Section -->
+  <!-- PEGASUS Originals Section -->
   <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">PEGASUS Originals</h2>
+        <a href="explore.html?category=Originals" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="originals-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading originals content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPORTS Documentaries Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">SPORTS Documentaries</h2>
+        <a href="explore.html?category=Documentaries" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="documentaries-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading documentaries...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sports News Section -->
+  <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Sports News</h2>
+        <a href="explore.html?category=News" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="news-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading sports news...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEGASUS Beyond Track Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">PEGASUS Beyond Track</h2>
+        <a href="explore.html?category=Beyond" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="beyond-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading beyond track content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discover More Section -->
+  <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Discover More</h2>
+        <a href="explore.html" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="discover-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading discovery content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Football Content Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Football</h2>
+        <a href="explore.html?category=Football" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="football-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading football content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Basketball Content Section -->
+  <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Basketball</h2>
+        <a href="explore.html?category=Basketball" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="basketball-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading basketball content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Racing Content Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Racing</h2>
+        <a href="explore.html?category=Racing" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="racing-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading racing content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tennis Content Section -->
+  <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Tennis</h2>
+        <a href="explore.html?category=Tennis" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="tennis-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading tennis content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NFL Content Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">NFL</h2>
+        <a href="explore.html?category=NFL" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="nfl-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading NFL content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FBS Content Section -->
+  <section class="section" style="background: var(--secondary);">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">FBS</h2>
+        <a href="explore.html?category=FBS" class="view-all">View All</a>
+      </div>
+      
+      <div class="stream-grid" id="fbs-content">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+          <p>Loading FBS content...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Events Section -->
+  <section class="section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Upcoming Events</h2>
@@ -695,13 +925,21 @@
         });
       }
       
-      // Load featured content from backend
+      // Load all content sections
       loadFeaturedContent();
-      
-      // Load MMA content
+      loadHotContent();
       loadMMAContent();
-      
-      // Load upcoming events
+      loadOriginalsContent();
+      loadDocumentariesContent();
+      loadNewsContent();
+      loadBeyondContent();
+      loadDiscoverContent();
+      loadFootballContent();
+      loadBasketballContent();
+      loadRacingContent();
+      loadTennisContent();
+      loadNFLContent();
+      loadFBSContent();
       loadUpcomingEvents();
       
       // League items click handling
@@ -807,7 +1045,69 @@
       }
     }
     
-    // Load MMA content
+    // Load HOT ON PEGASUS content
+    async function loadHotContent() {
+      try {
+        const container = document.getElementById('hot-content');
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading hot content...</p>
+          </div>
+        `;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        // Get trending content (most viewed)
+        const response = await fetch(`${API_BASE}/api/content?limit=6&sort=views`, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        // Combine all content types
+        const hotContent = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
+        
+        if (hotContent.length === 0) {
+          container.innerHTML = '<p class="no-content">No hot content available at the moment.</p>';
+          return;
+        }
+        
+        // Display hot content
+        hotContent.slice(0, 6).forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = createContentCard(item, itemType);
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error('Error loading hot content:', error);
+        const container = document.getElementById('hot-content');
+        container.innerHTML = '<p class="error-message">Failed to load hot content. Please try again later.</p>';
+      }
+    }
+    
+    // Load MMA content - FIXED
     async function loadMMAContent() {
       try {
         const container = document.getElementById('mma-content');
@@ -829,11 +1129,45 @@
           headers['Authorization'] = `Bearer ${token}`;
         }
         
-        // Get MMA content from backend
+        // Get MMA content from backend - FIXED category parameter
         const response = await fetch(`${API_BASE}/api/content?category=MMA&limit=6`, { headers });
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          // If category filtering fails, fall back to general content
+          console.warn('Category filtering failed, loading general content');
+          const fallbackResponse = await fetch(`${API_BASE}/api/content?limit=6`, { headers });
+          
+          if (!fallbackResponse.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const content = await fallbackResponse.json();
+          
+          // Clear loading state
+          container.innerHTML = '';
+          
+          // Combine all content types
+          const mmaContent = [
+            ...(content.live || []),
+            ...(content.vod || []),
+            ...(content.highlights || []),
+            ...(content.channels || [])
+          ];
+          
+          if (mmaContent.length === 0) {
+            container.innerHTML = '<p class="no-content">No MMA content available at the moment.</p>';
+            return;
+          }
+          
+          // Display MMA content
+          mmaContent.slice(0, 6).forEach(item => {
+            const isLive = item.is_live || false;
+            const itemType = isLive ? 'live' : (item.type || 'vod');
+            const card = createContentCard(item, itemType);
+            container.appendChild(card);
+          });
+          
+          return;
         }
         
         const content = await response.json();
@@ -866,6 +1200,127 @@
         console.error('Error loading MMA content:', error);
         const container = document.getElementById('mma-content');
         container.innerHTML = '<p class="error-message">Failed to load MMA content. Please try again later.</p>';
+      }
+    }
+    
+    // Load PEGASUS Originals content
+    async function loadOriginalsContent() {
+      await loadContentWithFilter('originals-content', 'Originals', 6);
+    }
+    
+    // Load SPORTS Documentaries content
+    async function loadDocumentariesContent() {
+      await loadContentWithFilter('documentaries-content', 'Documentaries', 6);
+    }
+    
+    // Load Sports News content
+    async function loadNewsContent() {
+      await loadContentWithFilter('news-content', 'News', 6);
+    }
+    
+    // Load PEGASUS Beyond Track content
+    async function loadBeyondContent() {
+      await loadContentWithFilter('beyond-content', 'Beyond', 6);
+    }
+    
+    // Load Discover More content
+    async function loadDiscoverContent() {
+      await loadContentWithFilter('discover-content', '', 6);
+    }
+    
+    // Load Football content
+    async function loadFootballContent() {
+      await loadContentWithFilter('football-content', 'Football', 6);
+    }
+    
+    // Load Basketball content
+    async function loadBasketballContent() {
+      await loadContentWithFilter('basketball-content', 'Basketball', 6);
+    }
+    
+    // Load Racing content
+    async function loadRacingContent() {
+      await loadContentWithFilter('racing-content', 'Racing', 6);
+    }
+    
+    // Load Tennis content
+    async function loadTennisContent() {
+      await loadContentWithFilter('tennis-content', 'Tennis', 6);
+    }
+    
+    // Load NFL content
+    async function loadNFLContent() {
+      await loadContentWithFilter('nfl-content', 'NFL', 6);
+    }
+    
+    // Load FBS content
+    async function loadFBSContent() {
+      await loadContentWithFilter('fbs-content', 'FBS', 6);
+    }
+    
+    // Generic function to load content with category filter
+    async function loadContentWithFilter(containerId, category, limit) {
+      try {
+        const container = document.getElementById(containerId);
+        
+        // Show loading state
+        container.innerHTML = `
+          <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+          </div>
+        `;
+        
+        const token = window.authManager ? window.authManager.getToken() : null;
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        let url = `${API_BASE}/api/content?limit=${limit}`;
+        if (category) {
+          url += `&category=${encodeURIComponent(category)}`;
+        }
+        
+        const response = await fetch(url, { headers });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.json();
+        
+        // Clear loading state
+        container.innerHTML = '';
+        
+        // Combine all content types
+        const filteredContent = [
+          ...(content.live || []),
+          ...(content.vod || []),
+          ...(content.highlights || []),
+          ...(content.channels || [])
+        ];
+        
+        if (filteredContent.length === 0) {
+          container.innerHTML = `<p class="no-content">No ${category || 'discovery'} content available at the moment.</p>`;
+          return;
+        }
+        
+        // Display content
+        filteredContent.slice(0, limit).forEach(item => {
+          const isLive = item.is_live || false;
+          const itemType = isLive ? 'live' : (item.type || 'vod');
+          const card = createContentCard(item, itemType);
+          container.appendChild(card);
+        });
+        
+      } catch (error) {
+        console.error(`Error loading ${containerId} content:`, error);
+        const container = document.getElementById(containerId);
+        container.innerHTML = '<p class="error-message">Failed to load content. Please try again later.</p>';
       }
     }
     
