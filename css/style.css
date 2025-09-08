@@ -399,14 +399,14 @@ header.scrolled {
 }
 
 .slide-content h2 {
-  font-size: 2.8rem; /* Reduced from 3.5rem */
-  margin-bottom: 12px; /* Adjusted */
+  font-size: 2.5rem; /* Reduced from 2.8rem */
+  margin-bottom: 12px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .slide-content p {
-  font-size: 1.2rem; /* Reduced from 1.4rem */
-  margin-bottom: 25px; /* Adjusted */
+  font-size: 1.1rem; /* Reduced from 1.2rem */
+  margin-bottom: 25px;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
 }
 
@@ -432,8 +432,8 @@ header.scrolled {
 }
 
 .arrow {
-  width: 28px; /* Reduced from 32px */
-  height: 28px; /* Reduced from 32px */
+  width: 28px;
+  height: 28px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
@@ -488,6 +488,7 @@ header.scrolled {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .section-title {
@@ -519,11 +520,12 @@ header.scrolled {
   text-decoration: underline;
 }
 
-/* ===== STREAM CARDS ===== */
+/* ===== STREAM CARDS - MODIFIED ===== */
 .stream-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  position: relative;
 }
 
 .stream-card {
@@ -602,12 +604,19 @@ header.scrolled {
   width: 100%;
   padding: 15px;
   background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stream-card:hover .card-content {
+  opacity: 1;
 }
 
 .card-title {
   font-size: 14px;
   margin-bottom: 8px;
   font-weight: 600;
+  color: white !important; /* Force white color */
 }
 
 .card-meta {
@@ -628,6 +637,56 @@ header.scrolled {
   font-size: 10px;
 }
 
+/* Desktop horizontal scrolling */
+@media (min-width: 769px) {
+  .stream-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+    padding: 10px 0 30px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .stream-grid::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .stream-card {
+    flex: 0 0 auto;
+    width: 300px;
+    scroll-snap-align: start;
+  }
+  
+  .stream-nav {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .stream-nav-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+  }
+  
+  .stream-nav-btn:hover {
+    background: var(--accent);
+    color: #000;
+  }
+}
+
 /* ===== VIDEO PLAYER PAGE ===== */
 .player-page {
   padding-top: 0;
@@ -637,7 +696,7 @@ header.scrolled {
   position: relative;
   width: 100%;
   background: #000;
-  z-index: 1; /* Added to ensure proper stacking */
+  z-index: 1;
 }
 
 .player-wrapper {
@@ -654,7 +713,7 @@ header.scrolled {
   width: 100%;
   height: 100%;
   background: #000;
-  z-index: 2; /* Increased z-index for better click handling */
+  z-index: 2;
 }
 
 .player-controls {
@@ -745,7 +804,7 @@ header.scrolled {
   color: white;
   font-size: 4rem;
   cursor: pointer;
-  z-index: 3; /* Increased z-index for better click handling */
+  z-index: 3;
 }
 
 .player-info {
@@ -1159,7 +1218,7 @@ footer {
 /* ===== RESPONSIVE STYLES ===== */
 @media (max-width: 992px) {
   .slide-content h2 {
-    font-size: 2.2rem; /* Adjusted for tablet */
+    font-size: 2.2rem;
   }
   
   .slide-content {
@@ -1209,16 +1268,16 @@ footer {
   
   /* Hero banner mobile adjustments */
   .hero, .content-hero, .explore-hero {
-    height: 55vh; /* Increased height for mobile */
+    height: 55vh;
     min-height: 400px;
   }
   
   .slide-content {
     left: 15px;
-    bottom: 40px; /* Moved content down */
+    bottom: 40px;
     max-width: 90%;
     text-align: center;
-    padding: 0 20px; /* Added padding */
+    padding: 0 20px;
   }
   
   .slide-content h2 {
@@ -1234,7 +1293,7 @@ footer {
   .slide-content .btn {
     width: 80%;
     max-width: 300px;
-    padding: 14px 20px; /* Increased padding for better touch */
+    padding: 14px 20px;
     font-size: 14px;
   }
   
@@ -1387,16 +1446,16 @@ footer {
   /* Promo banner mobile adjustments */
   .promo-banner-content {
     padding: 20px;
-    text-align: left; /* Move text to left on mobile */
+    text-align: left;
   }
   
   .promo-banner-title {
-    font-size: 22px; /* Smaller on mobile */
+    font-size: 22px;
   }
   
   .promo-banner-subtitle {
-    font-size: 14px; /* Smaller on mobile */
-    max-width: 100%; /* Allow full width */
+    font-size: 14px;
+    max-width: 100%;
   }
 }
 
@@ -1654,7 +1713,7 @@ footer {
   .content-hero .slide-content {
     max-width: 90%;
     left: 20px;
-    bottom: 40px; /* Adjusted for mobile */
+    bottom: 40px;
     text-align: center;
   }
 }
@@ -1738,7 +1797,7 @@ header.scrolled {
 
 /* Hero banner styles - FIXED */
 .hero, .content-hero, .explore-hero {
-  margin-top: 0 !important; /* Removed all top margins to eliminate gap */
+  margin-top: 0 !important;
 }
 
 /* Ensure the header stays on top with proper z-index */
@@ -1762,7 +1821,7 @@ header {
   .content-hero .slide-content {
     max-width: 90%;
     left: 20px;
-    bottom: 40px; /* Adjusted for mobile */
+    bottom: 40px;
     text-align: center;
   }
   
@@ -1796,25 +1855,25 @@ header {
 }
 
 .promo-banner-title {
-  font-size: 28px; /* Reduced from 32px */
-  margin-bottom: 12px; /* Adjusted */
+  font-size: 24px; /* Reduced from 28px */
+  margin-bottom: 10px; /* Adjusted */
   font-weight: 700;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .promo-banner-subtitle {
-  font-size: 16px; /* Reduced from 18px */
-  margin-bottom: 20px; /* Adjusted */
+  font-size: 14px; /* Reduced from 16px */
+  margin-bottom: 20px;
   opacity: 0.9;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
   max-width: 600px;
 }
 
-/* Make promo banner buttons rectangle on desktop */
+/* Make promo banner buttons smaller on desktop */
 .promo-banner .btn {
-  border-radius: 4px; /* Rectangle shape */
-  padding: 10px 20px; /* Adjusted padding */
-  font-size: 12px; /* Smaller font */
+  border-radius: 4px;
+  padding: 8px 16px; /* Reduced padding */
+  font-size: 11px; /* Smaller font */
 }
 
 @media (max-width: 768px) {
@@ -1825,33 +1884,36 @@ header {
   
   .promo-banner-content {
     padding: 20px;
-    text-align: left; /* Move text to left on mobile */
+    text-align: left;
   }
   
   .promo-banner-title {
-    font-size: 22px; /* Smaller on mobile */
+    font-size: 22px;
   }
   
   .promo-banner-subtitle {
-    font-size: 14px; /* Smaller on mobile */
-    max-width: 100%; /* Allow full width */
+    font-size: 14px;
+    max-width: 100%;
   }
   
-  /* Keep promo banner buttons normal on mobile (not wider) */
+  /* Keep promo banner buttons normal on mobile */
   .promo-banner .btn {
     width: auto;
     max-width: none;
+    padding: 10px 20px; /* Restore normal padding on mobile */
+    font-size: 12px; /* Restore normal font size on mobile */
   }
+}
 
-  /* ===== POPUP STYLES ===== */
+/* ===== POPUP STYLES - MODIFIED ===== */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(10, 10, 18, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.95); /* Darker black background */
+  backdrop-filter: blur(10px); /* Blurred background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1869,13 +1931,14 @@ header {
 .content-popup {
   width: 90%;
   max-width: 400px;
-  background: var(--card-bg);
+  background: #000; /* Pure black background */
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8); /* Darker shadow */
   transform: scale(0.9);
   transition: transform 0.3s ease;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
 }
 
 .popup-overlay.active .content-popup {
@@ -1888,7 +1951,7 @@ header {
   right: 15px;
   width: 32px;
   height: 32px;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8); /* Darker background */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1898,6 +1961,7 @@ header {
   cursor: pointer;
   z-index: 10;
   transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
 }
 
 .popup-close:hover {
@@ -1923,7 +1987,7 @@ header {
   left: 0;
   width: 100%;
   height: 60%;
-  background: linear-gradient(to top, rgba(10, 10, 18, 0.95) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 100%); /* Darker gradient */
 }
 
 .popup-badges {
@@ -1965,12 +2029,14 @@ header {
 
 .popup-info {
   padding: 20px;
+  background: #000; /* Pure black background */
 }
 
 .popup-title {
   font-size: 18px;
   margin-bottom: 8px;
   font-weight: 600;
+  color: white; /* White text */
 }
 
 .popup-meta {
@@ -1985,6 +2051,7 @@ header {
   padding: 0 20px 20px;
   display: flex;
   gap: 12px;
+  background: #000; /* Pure black background */
 }
 
 .btn-icon {
@@ -2018,5 +2085,5 @@ header {
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-}
+  background: #000; /* Pure black background */
 }
