@@ -21,6 +21,48 @@ class PegasusApp {
     
     // Setup content cards for popup
     this.setupContentCards();
+    
+    // Initialize horizontal scrolling for desktop
+    this.initHorizontalScrolling();
+  }
+
+  // Initialize horizontal scrolling for desktop
+  initHorizontalScrolling() {
+    if (window.innerWidth < 769) return; // Only for desktop
+    
+    const streamGrids = document.querySelectorAll('.stream-grid');
+    
+    streamGrids.forEach(grid => {
+      // Create navigation buttons
+      const navHtml = `
+        <div class="stream-nav">
+          <button class="stream-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="stream-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      `;
+      
+      // Find the section header and add navigation buttons
+      const sectionHeader = grid.closest('.section').querySelector('.section-header');
+      if (sectionHeader && !sectionHeader.querySelector('.stream-nav')) {
+        sectionHeader.insertAdjacentHTML('beforeend', navHtml);
+        
+        // Add event listeners
+        const prevBtn = sectionHeader.querySelector('.stream-nav-btn.prev');
+        const nextBtn = sectionHeader.querySelector('.stream-nav-btn.next');
+        
+        prevBtn.addEventListener('click', () => {
+          grid.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+        
+        nextBtn.addEventListener('click', () => {
+          grid.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+      }
+    });
   }
 
   // Load all content sections on the page
@@ -257,7 +299,7 @@ class PegasusApp {
     } else {
       // User is not logged in - show sign in/up buttons
       mobileAuth.innerHTML = `
-        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signin.html" край class="btn btn-outline">Sign In</a>
         <a href="signup.html" class="btn subscribe-btn">Subscribe</a>
       `;
     }
@@ -533,6 +575,9 @@ class PegasusApp {
         
         container.appendChild(card);
       });
+      
+      // Reinitialize horizontal scrolling after content is loaded
+      this.initHorizontalScrolling();
     } catch (error) {
       console.error('Error loading content:', error);
       const container = document.getElementById(containerId);
