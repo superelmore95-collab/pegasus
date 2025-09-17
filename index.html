@@ -308,67 +308,19 @@
 </header>
 
   <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-slider">
-      <!-- Slide 1 -->
-      <div class="slide active" style="background-image: url('https://i.ibb.co/kVBw5XHt/E38-EFD8-B-4-A13-4-FB9-8-DD8-EEC5179-CFE0-C.jpg');">
-        <div class="slide-overlay"></div>
-        <div class="slide-content">
-          <h2>MAJOR SPORTS EVENTS LIVE</h2>
-          <p>Watch championships matchs live with exclusive commentary and analysis</p>
-          <a href="player.html?type=live&id=1" class="btn">Watch Live Now</a>
-          <div class="slider-dots">
-            <div class="slider-dot active"></div>
-            <div class="slider-dot"></div>
-            <div class="slider-dot"></div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Slide 2 -->
-      <div class="slide" style="background-image: url('https://i.ibb.co/PshdDH7w/2036-BC11-6-AAE-4-DD6-BBC4-5-D2-D4-A050-B7-F.webp');">
-        <div class="slide-overlay"></div>
-        <div class="slide-content">
-          <h2>EXTREME SPORT SHOCKS</h2>
-          <p>All matches available live and on demand. Subscribe now!</p>
-          <a href="player.html?type=live&id=2" class="btn">Watch Live Now</a>
-          <div class="slider-dots">
-            <div class="slider-dot"></div>
-            <div class="slider-dot active"></div>
-            <div class="slider-dot"></div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Slide 3 -->
-      <div class="slide" style="background-image: url('images/hero-banner-3.webp');">
-        <div class="slide-overlay"></div>
-        <div class="slide-content">
-          <h2>NBA Finals Game 7</h2>
-          <p>Don't miss the decisive game of the season. Exclusive coverage.</p>
-          <a href="player.html?type=live&id=3" class="btn">Watch Live Now</a>
-          <div class="slider-dots">
-            <div class="slider-dot"></div>
-            <div class="slider-dot"></div>
-            <div class="slider-dot active"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="slider-arrows">
-      <div class="arrow prev">
-        <i class="fas fa-chevron-left"></i>
-      </div>
-      <div class="arrow next">
-        <i class="fas fa-chevron-right"></i>
-      </div>
-    </div>
-  </section>
+<section class="hero" id="dynamic-hero">
+  <div class="loading-placeholder">
+    <div class="loading-spinner"></div>
+    <p>Loading hero banner...</p>
+  </div>
+</section>
 
-  <!-- Promotional Banner 1 -->
-  <section class="promo-banner" style="background: url('https://i.ibb.co/4nbfLB0d/18-C589-E8-549-C-470-F-830-B-0-CB2-DC637456.jpg') center/cover;">
-  </section>
+<section class="promo-banner" id="promo-banner-1">
+  <div class="loading-placeholder">
+    <div class="loading-spinner"></div>
+    <p>Loading promotional content...</p>
+  </div>
+</section>
 
   <!-- Live & Upcoming Section -->
   <section class="section" id="live-section">
@@ -388,8 +340,12 @@
   </section>
 
   <!-- Promotional Banner 2 -->
-  <section class="promo-banner" style="background: url('https://i.ibb.co/2YNRjN2Y/5906520995366291783-1.jpg') center/cover;">
-  </section>
+<section class="promo-banner" id="promo-banner-1">
+  <div class="loading-placeholder">
+    <div class="loading-spinner"></div>
+    <p>Loading promotional content...</p>
+  </div>
+</section>
 
   <!-- Video On Demand Section -->
   <section class="section" style="background: var(--secondary);" id="vod-section">
@@ -956,6 +912,76 @@
           </button>
         `;
       }
+      
+      // Load banners function
+async function loadBanners() {
+  try {
+    // Load hero banner
+    const heroResponse = await fetch(`${API_BASE}/api/banners?page=index&type=hero`);
+    if (heroResponse.ok) {
+      const heroBanners = await heroResponse.json();
+      if (heroBanners.length > 0) {
+        const heroBanner = heroBanners[0];
+        const heroSection = document.getElementById('dynamic-hero');
+        
+        heroSection.innerHTML = `
+          <div class="hero-slider">
+            <div class="slide active" style="background-image: url('${heroBanner.image_url}');">
+              <div class="slide-overlay"></div>
+              <div class="slide-content">
+                <h2>${heroBanner.title}</h2>
+                <p>${heroBanner.description}</p>
+                <a href="${heroBanner.target_url || '#'}" class="btn">${heroBanner.target_url ? 'Watch Now' : 'Learn More'}</a>
+                ${heroBanner.show_live_badge ? '<div class="live-badge">LIVE</div>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Load promo banners
+    const promoResponse = await fetch(`${API_BASE}/api/banners?page=index&type=promo`);
+    if (promoResponse.ok) {
+      const promoBanners = await promoResponse.json();
+      
+      // Update first promo banner
+      if (promoBanners.length > 0) {
+        const promoBanner1 = promoBanners[0];
+        const promoSection1 = document.getElementById('promo-banner-1');
+        promoSection1.style.backgroundImage = `url('${promoBanner1.image_url}')`;
+        promoSection1.innerHTML = `
+          <div class="promo-banner-content">
+            <h2 class="promo-banner-title">${promoBanner1.title}</h2>
+            <p class="promo-banner-subtitle">${promoBanner1.description}</p>
+            <a href="${promoBanner1.target_url || '#'}" class="btn">${promoBanner1.target_url ? 'Explore Now' : 'Learn More'}</a>
+          </div>
+        `;
+      }
+      
+      // Update second promo banner
+      if (promoBanners.length > 1) {
+        const promoBanner2 = promoBanners[1];
+        const promoSection2 = document.getElementById('promo-banner-2');
+        promoSection2.style.backgroundImage = `url('${promoBanner2.image_url}')`;
+        promoSection2.innerHTML = `
+          <div class="promo-banner-content">
+            <h2 class="promo-banner-title">${promoBanner2.title}</h2>
+            <p class="promo-banner-subtitle">${promoBanner2.description}</p>
+            <a href="${promoBanner2.target_url || '#'}" class="btn">${promoBanner2.target_url ? 'Explore Now' : 'Learn More'}</a>
+          </div>
+        `;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading banners:', error);
+  }
+}
+
+// Call loadBanners when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  loadBanners();
+});
     }
   </script>
 </body>
